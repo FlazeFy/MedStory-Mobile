@@ -1,15 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:medstory/widgets/sideNav.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-void main() { runApp(const MyApp()); }
+
+bool shouldUseFirestoreEmulator = false;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  if (shouldUseFirestoreEmulator) {
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  }
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(scaffoldBackgroundColor: Color(0xFFF6F7F9)),
       title: "Leonardho R Sitanggang-1302194041",
       home: const NavBar(), //Navbar
     );
@@ -84,9 +100,8 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPage extends State<ForumPage> {
-  
   int _currentIndex=0;
-
+ 
   List cardList=[
     const Item1(),
     const Item2(),
@@ -104,6 +119,8 @@ class _ForumPage extends State<ForumPage> {
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('diskusi');
+
     return Scaffold(
       drawer: const NavDrawer(),
       appBar: AppBar(
@@ -140,212 +157,248 @@ class _ForumPage extends State<ForumPage> {
 
       //Body.
       body: Container(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text("  Informasi Kesehatan",
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500
-                  )         
-                ),
-              ),
-              CarouselSlider(
-              options: CarouselOptions(
-                height: 200.0,
-                autoPlay: true,
-                autoPlayInterval: const Duration(seconds: 4),
-                autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                autoPlayCurve: Curves.fastOutSlowIn,
-                pauseAutoPlayOnTouch: true,
-                aspectRatio: 2.0,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
-              ),
-              items: cardList.map((card){
-                return Builder(
-                  builder:(BuildContext context){
-                    return Container(
-                      height: MediaQuery.of(context).size.height*0.30,
-                      width: MediaQuery.of(context).size.width,
-                      child: Card(
-                        color: const Color(0xff22A7F0),
-                        child: card,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius : BorderRadius.circular(10),
-                      )
-                    );
-                  }
-                );
-              }).toList(),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: map<Widget>(cardList, (index, url) {
-                return Container(
-                  width: 10.0,
-                  height: 10.0,
-                  margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _currentIndex == index ? const Color(0xFF28CF36) : Colors.grey,
-                  ),
-                );
-              }),
-            ),
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
             const Align(
               alignment: Alignment.centerLeft,
-              child: Text("  Forum Diskusi",
+              child: Text("  Informasi Kesehatan",
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500
                 )         
               ),
             ),
-            Flexible(
-              // child: ListView(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5.0),
-                  height: 162,
-                  child: Card(
-                    child: Column(
-                    children: [
-                      Align(
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Row(
-                            children: [ 
-                              Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Image.asset(
-                                    'assets/images/User.jpg', width: 40),
-                                  ),
-                              ),
-                                     
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.73,
-                                child: Column (
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Container(
-                                        child: Text(                     
-                                          "Penyakit Dalam",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 16,
-                                          )
-                                        ),   
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Container(
-                                        child: Text(                     
-                                          "flazefy ~ yesterday at 09.00 pm",
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 13,
-                                          )
-                                        ),   
-                                      ),
-                                    )                          
-                                  ]
-                                ),
-                              ),
-                              Container(
-                                child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/verified.png', width: 30),
-                                ),
-                              ),
-                            ]
-                          )    
-                        )                   
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Text(                     
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13,
-                            )
-                          ),   
-                        ),
-                      ),
-                      Container(
-                        child: Row(
-                          children: [            
-                            TextButton.icon(
-                              onPressed: () {
-                                  // Respond to button press
-                              },
-                              icon: Icon(Icons.arrow_drop_down, size: 14),
-                              label: Text("Lihat komentar (3)"),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width*0.2,
-                            ),
-                            TextButton.icon(
-                              onPressed: () {
-                                  // Respond to button press
-                              },
-                              icon: Icon(Icons.arrow_upward, size: 14),
-                              label: Text("2"),
-                            ),
-                            TextButton.icon(
-                              onPressed: () {
-                                  // Respond to button press
-                              },
-                              icon: Icon(Icons.remove_red_eye, size: 14),
-                              label: Text("20"),
-                            ),
-                          ]
-                        ) 
-                      ),       
-                    ]
-
+            CarouselSlider(
+            options: CarouselOptions(
+              height: 200.0,
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 4),
+              autoPlayAnimationDuration: const Duration(milliseconds: 800),
+              autoPlayCurve: Curves.fastOutSlowIn,
+              pauseAutoPlayOnTouch: true,
+              aspectRatio: 2.0,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+            ),
+            items: cardList.map((card){
+              return Builder(
+                builder:(BuildContext context){
+                  return Container(
+                    height: MediaQuery.of(context).size.height*0.30,
+                    width: MediaQuery.of(context).size.width,
+                    child: Card(
+                      color: const Color(0xff22A7F0),
+                      child: card,
                     ),
-                    shape: RoundedRectangleBorder(
-                      side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
+                    decoration: BoxDecoration(
+                      borderRadius : BorderRadius.circular(10),
+                    )
+                  );
+                }
+              );
+            }).toList(),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: map<Widget>(cardList, (index, url) {
+              return Container(
+                width: 6.0,
+                height: 6.0,
+                margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _currentIndex == index ? const Color(0xFF28CF36) : Colors.grey,
+                ),
+              );
+            }),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("  Forum Diskusi",
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w500
+                    )         
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(80), 
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        blurRadius: 20.0, // soften the shadow
-                        spreadRadius: 0.0, //extend the shadow
-                        offset: const Offset(
-                          5.0, // Move to right 10  horizontally
-                          5.0, // Move to bottom 10 Vertically
-                        ),
-                      )
-                    ],
-                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width*0.3,
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+                    child: DropDown(),
+                  )
                 )
-                 
-              )
+              ]
+            ),
+          ),
+          Flexible(
+            child: GetUserName(),
+            // child: ListView(
+              // child: Container(
+              //   transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+              //   padding: EdgeInsets.symmetric(horizontal: 5.0),
+              //   height: 162,
+              //   child: Card(
+              //     child: Column(
+              //     children: [
+              //       Align(
+              //         child: Container(
+              //           margin: const EdgeInsets.symmetric(vertical: 10.0),
+              //           child: Row(
+              //             children: [ 
+              //               Container(
+              //                 margin: const EdgeInsets.symmetric(horizontal: 5.0),
+              //                 child: ClipRRect(
+              //                   borderRadius: BorderRadius.circular(20),
+              //                   child: Image.asset(
+              //                     'assets/images/User.jpg', width: 40),
+              //                   ),
+              //               ),
+                                    
+              //               Container(
+              //                 width: MediaQuery.of(context).size.width*0.73,
+              //                 child: Column (
+              //                   crossAxisAlignment: CrossAxisAlignment.start,
+              //                   children: [
+              //                     Align(
+              //                       alignment: Alignment.centerLeft,
+              //                       child: Container(
+              //                         child: Text(                     
+              //                           "flazefy",
+              //                           textAlign: TextAlign.left,
+              //                           style: TextStyle(
+              //                             color: Colors.black,
+              //                             fontWeight: FontWeight.w600,
+              //                             fontSize: 16,
+              //                           )
+              //                         ),   
+              //                       ),
+              //                     ),
+              //                     Align(
+              //                       alignment: Alignment.centerLeft,
+              //                       child: Container(
+              //                         child: Text(                     
+              //                           "Penyakit Dalam ~ yesterday at 09.00 pm",
+              //                           style: TextStyle(
+              //                             color: Colors.grey,
+              //                             fontSize: 13,
+              //                           )
+              //                         ),   
+              //                       ),
+              //                     )                          
+              //                   ]
+              //                 ),
+              //               ),
+              //               Container(
+              //                 child: ClipRRect(
+              //                 borderRadius: BorderRadius.circular(20),
+              //                 child: Image.asset(
+              //                   'assets/images/verified.png', width: 30),
+              //                 ),
+              //               ),
+              //             ]
+              //           )    
+              //         )                   
+              //       ),
+              //       Align(
+              //         alignment: Alignment.centerLeft,
+              //         child: Container(
+              //           margin: const EdgeInsets.symmetric(horizontal: 10.0),
+              //           child: Text(                     
+              //             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+              //             style: TextStyle(
+              //               color: Color(0xFF808080),
+              //               fontWeight: FontWeight.w400,
+              //               fontSize: 13,
+              //             )
+              //           ),   
+              //         ),
+              //       ),
+              //       Container(
+              //         child: Row(
+              //           children: [            
+              //             TextButton.icon(
+              //               onPressed: () {
+              //                 Navigator.push(
+              //                   context,
+              //                   PageRouteBuilder(
+              //                     pageBuilder: (c, a1, a2) => DiscussionPage(documentId: "1oZXx5nA1Gt7qHeBIpTV"),
+              //                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              //                       final tween = Tween(begin: Offset(0.0, 1.0), end: Offset.zero);
+              //                       final curvedAnimation = CurvedAnimation(
+              //                         parent: animation,
+              //                         curve: Curves.ease,
+              //                       );
 
-            ], 
+              //                       return SlideTransition(
+              //                         position: tween.animate(curvedAnimation),
+              //                         child: child,
+              //                       );
+              //                     }
+              //                   ),
+              //                 );
+              //               },
+              //               icon: Icon(Icons.arrow_drop_down, size: 14),
+              //               label: Text("Lihat komentar (3)"),
+              //             ),
+              //             SizedBox(
+              //               width: MediaQuery.of(context).size.width*0.2,
+              //             ),
+              //             TextButton.icon(
+              //               onPressed: () {
+              //                 //
+              //               },
+              //               icon: Icon(Icons.arrow_upward, size: 14),
+              //               label: Text("2"),
+              //             ),
+              //             TextButton.icon(
+              //               onPressed: () {
+              //                   // Respond to button press
+              //               },
+              //               icon: Icon(Icons.remove_red_eye, size: 14),
+              //               label: Text("20"),
+              //             ),
+              //           ]
+              //         ) 
+              //       ),       
+              //     ]
+
+              //     ),
+              //     shape: RoundedRectangleBorder(
+              //       side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+              //       borderRadius: BorderRadius.circular(6),
+              //     ),
+              //   ),
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(10), 
+              //     boxShadow: [
+              //       BoxShadow(
+              //         color: Colors.grey.withOpacity(0.3),
+              //         blurRadius: 10.0, // soften the shadow
+              //         spreadRadius: 0.0, //extend the shadow
+              //         offset: const Offset(
+              //           5.0, // Move to right 10  horizontally
+              //           5.0, // Move to bottom 10 Vertically
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // )
+                
+            )
+
+          ], 
 
         )
       )
@@ -353,6 +406,646 @@ class _ForumPage extends State<ForumPage> {
     );
   }
 }
+class GetUserName extends StatelessWidget {
+
+  final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('diskusi').snapshots();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _usersStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
+        }
+
+        return ListView(
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            return Container(
+                transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+                padding: EdgeInsets.symmetric(horizontal: 5.0),
+                child: Card(
+                  child: Column(
+                  children: [
+                    Align(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Row(
+                          children: [ 
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(
+                                  'assets/images/User.jpg', width: 40),
+                                ),
+                            ),
+                                    
+                            Container(
+                              width: MediaQuery.of(context).size.width*0.73,
+                              child: Column (
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      child: Text(                     
+                                        data['namaPengguna'],
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        )
+                                      ),   
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      child: Text(                     
+                                        "${data['kategori']} ~ ${DateFormat('dd MMM | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13,
+                                        )
+                                      ),   
+                                    ),
+                                  )                          
+                                ]
+                              ),
+                            ),
+                            Container(
+                              child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                'assets/images/verified.png', width: 30),
+                              ),
+                            ),
+                          ]
+                        )    
+                      )                   
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(                     
+                          data['pertanyaan'],
+                          style: TextStyle(
+                            color: Color(0xFF808080),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                          )
+                        ),   
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        children: [            
+                          TextButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (c, a1, a2) => DiscussionPage(documentId: "1oZXx5nA1Gt7qHeBIpTV"),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    final tween = Tween(begin: Offset(0.0, 1.0), end: Offset.zero);
+                                    final curvedAnimation = CurvedAnimation(
+                                      parent: animation,
+                                      curve: Curves.ease,
+                                    );
+
+                                    return SlideTransition(
+                                      position: tween.animate(curvedAnimation),
+                                      child: child,
+                                    );
+                                  }
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.arrow_drop_down, size: 14),
+                            label: Text("Lihat komentar (3)"),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width*0.2,
+                          ),
+                          TextButton.icon(
+                            onPressed: () {
+                              //
+                            },
+                            icon: Icon(Icons.arrow_upward, size: 14),
+                            label: Text(data['up'].toString()),
+                          ),
+                          TextButton.icon(
+                            onPressed: () {
+                                // Respond to button press
+                            },
+                            icon: Icon(Icons.remove_red_eye, size: 14),
+                            label: Text(data['view'].toString()),
+                          ),
+                        ]
+                      ) 
+                    ),       
+                  ]
+
+                  ),
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10), 
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 10.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: const Offset(
+                        5.0, // Move to right 10  horizontally
+                        5.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ],
+                ),
+            );
+
+          }).toList(),
+        );
+      },
+    );
+  }
+}
+
+//Dropdown kategori
+class DropDown extends StatefulWidget {
+  const DropDown({Key key}) : super(key: key);
+
+  @override
+  State<DropDown> createState() => _DropDownState();
+}
+
+class _DropDownState extends State<DropDown> {
+  String dropdownValue = 'Semua';
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      style: const TextStyle(color: Color(0xFF212121)),
+      underline: Container(
+        height: 2,
+        color: Color(0xFF4183D7),
+      ),
+      onChanged: (String newValue) {
+        setState(() {
+          dropdownValue = newValue;
+        });
+      },
+      items: <String>['Semua', 'Penyakit Dalam', 'Penyakit Menular', 'Vaksin & Imunisasi', 'Kulit & Kelamin', 'Otot & Saraf', 'THT & Mata', 'Penyakit Lansia', 'Obat-Obatan', 'Gaya Hidup Sehat', 'Kandungan & Bedah', 'Gigi', 'Anak']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+}
+
+class DiscussionPage extends StatefulWidget {
+  const DiscussionPage({Key key, this.documentId}) : super(key: key);
+  final String documentId;
+
+  @override
+
+  _DiscussionPage createState() => _DiscussionPage(documentId);
+}
+
+class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderStateMixin{
+  _DiscussionPage(documentId);
+
+  @override
+  Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('diskusi');
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: users.doc(widget.documentId).get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.hasData && !snapshot.data.exists) {
+          return Text("Document does not exist");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data = snapshot.data.data() as Map<String, dynamic>;
+          return Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                iconTheme: 
+                  const IconThemeData(
+                    color: const Color(0xFF4183D7),
+                    size: 35.0,
+                  ),
+                title: Text("Lihat Balasan", 
+                style: const TextStyle(
+                  color: Color(0xFF4183D7),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.home, color: Color(0xFF4183D7)),
+                  iconSize: 40,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+
+                //Transparent setting.
+                backgroundColor: const Color(0x44FFFFFF),
+                elevation: 0,
+              ),
+
+              //Body.
+              body: Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    children: [
+                      Align(
+                        child: Container(
+                          transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+                          padding: EdgeInsets.symmetric(horizontal: 5.0),
+                          height: 162,
+                          child: Card(
+                            child: Column(
+                            children: [
+                              Align(
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 10.0),
+                                  child: Row(
+                                    children: [ 
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(20),
+                                          child: Image.asset(
+                                            'assets/images/User.jpg', width: 40),
+                                          ),
+                                      ),
+                                            
+                                      Container(
+                                        width: MediaQuery.of(context).size.width*0.73,
+                                        child: Column (
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Container(
+                                                child: Text(                     
+                                                  data['namaPengguna'],
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 16,
+                                                  )
+                                                ),   
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Container(
+                                                child: Text(                     
+                                                  "${data['kategori']} ~ ${DateFormat('yyyy-MM-dd | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
+                                                  style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 13,
+                                                  )
+                                                ),   
+                                              ),
+                                            )                          
+                                          ]
+                                        ),
+                                      ),
+                                    ]
+                                  )    
+                                )                   
+                              ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: Text(                     
+                                    data['pertanyaan'],
+                                    style: TextStyle(
+                                      color: Color(0xFF808080),
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 13,
+                                    )
+                                  ),   
+                                ),
+                              ),
+                              Container(
+                                child: Row(
+                                  children: [            
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width*0.6,
+                                    ),
+                                    TextButton.icon(
+                                      onPressed: () {
+                                          // Respond to button press
+                                      },
+                                      icon: Icon(Icons.arrow_upward, size: 14),
+                                      label: Text(data['up'].toString()),
+                                    ),
+                                    TextButton.icon(
+                                      onPressed: () {
+                                          // Respond to button press
+                                      },
+                                      icon: Icon(Icons.remove_red_eye, size: 14),
+                                      label: Text(data['view'].toString()),
+                                    ),
+                                  ]
+                                ) 
+                              ),       
+                            ]
+
+                            ),
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10), 
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                blurRadius: 10.0, // soften the shadow
+                                spreadRadius: 0.0, //extend the shadow
+                                offset: const Offset(
+                                  5.0, // Move to right 10  horizontally
+                                  5.0, // Move to bottom 10 Vertically
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10.0),
+                          transform: Matrix4.translationValues(0.0, 5.0, 0.0),
+                          child: Text("  Balasan (3)",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold
+                            )         
+                          ),
+                        )
+                      ),
+                      Flexible(
+                        child: Column(
+                          children:[
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 5.0),
+                              height: 162,
+                              child: Card(
+                                child: Column(
+                                children: [
+                                  Align(
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(vertical: 10.0),
+                                      child: Row(
+                                        children: [ 
+                                          Container(
+                                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(20),
+                                              child: Image.asset(
+                                                'assets/images/User.jpg', width: 40),
+                                              ),
+                                          ),
+                                                
+                                          Container(
+                                            width: MediaQuery.of(context).size.width*0.73,
+                                            child: Column (
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Align(
+                                                  alignment: Alignment.centerLeft,
+                                                  child: Container(
+                                                    child: Text(                     
+                                                      "richardkyle",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: 16,
+                                                      )
+                                                    ),   
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment: Alignment.centerLeft,
+                                                  child: Container(
+                                                    child: Text(                     
+                                                      "yesterday at 09.00 pm",
+                                                      style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 13,
+                                                      )
+                                                    ),   
+                                                  ),
+                                                )                          
+                                              ]
+                                            ),
+                                          ),
+                                          Container(
+                                            child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(20),
+                                            child: Image.asset(
+                                              'assets/images/verified.png', width: 30),
+                                            ),
+                                          ),
+                                        ]
+                                      )    
+                                    )                   
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                      child: Text(                     
+                                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                                        style: TextStyle(
+                                          color: Color(0xFF808080),
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13,
+                                        )
+                                      ),   
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomLeft,
+                                    child: TextButton.icon(
+                                      onPressed: () {
+                                          // Respond to button press
+                                      },
+                                      icon: Icon(Icons.arrow_upward, size: 14),
+                                      label: Text("2"),
+                                    ),
+                                  ),       
+                                ]
+
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10), 
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    blurRadius: 10.0, // soften the shadow
+                                    spreadRadius: 0.0, //extend the shadow
+                                    offset: const Offset(
+                                      5.0, // Move to right 10  horizontally
+                                      5.0, // Move to bottom 10 Vertically
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ]
+                        )
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 10,bottom: 10,top: 10),
+                          margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
+                          height: 60,
+                          width: double.infinity,
+                          child: Row(
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: (){
+                                },
+                                child: Container(
+                                  height: 30,
+                                  width: 30,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlue,
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: const Icon(Icons.image, color: Colors.white, size: 20, ),
+                                ),
+                              ),
+                              const SizedBox(width: 15,),
+                              Expanded(
+                                child: TextField(
+                                  //controller: _messageTextCtrl,
+                                  decoration: const InputDecoration(
+                                    hintText: "Ketik balasan Anda...",
+                                    hintStyle: TextStyle(color: Color(0xFF808080)),
+                                    border: InputBorder.none
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 15,),
+                              FloatingActionButton(
+                                onPressed: () async{
+                                 //Send message
+                                },
+                                child: const Icon(Icons.send,color: Colors.white,size: 18,),
+                                backgroundColor: Colors.green,
+                                elevation: 0,
+                              ),
+                            ],
+                            
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.white, 
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                blurRadius: 10.0, // soften the shadow
+                                spreadRadius: 0.0, //extend the shadow
+                                offset: const Offset(
+                                  5.0, // Move to right 10  horizontally
+                                  5.0, // Move to bottom 10 Vertically
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+
+                    ], 
+
+                )
+              )
+              
+            
+          );
+        }
+
+        //Loading
+        return Scaffold(
+          body: Align(
+            alignment: Alignment.center,
+            child: Container(
+              transform: Matrix4.translationValues(0.0, 400.0, 0.0),
+              child: Column(
+                children:[
+                  //Error
+                  // SpinKitFoldingCube(
+                  //   color: Color(0xFF4183D7),
+                  //   controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 3000)),
+                  // ),
+                  Text(                     
+                    "Loading...",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    )
+                  ),
+                ]
+              )   
+            ),
+          ),
+          
+        );
+
+      },
+    );
+  }
+}
+
 
 class Item1 extends StatelessWidget {
   const Item1({Key key}) : super(key: key);
