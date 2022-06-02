@@ -5,7 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
+import 'package:flutter_spinbox/material.dart';
 
 bool shouldUseFirestoreEmulator = false;
 
@@ -344,7 +344,7 @@ class GetDiskusi extends StatelessWidget {
                         child: Text(                     
                           data['pertanyaan'],
                           style: const TextStyle(
-                            color: Color(0xFF808080),
+                            color: Color(0xFF6B6B6B),
                             fontWeight: FontWeight.w400,
                             fontSize: 13,
                           ),
@@ -599,7 +599,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                                   child: Text(                     
                                     data['pertanyaan'],
                                     style: const TextStyle(
-                                      color: Color(0xFF808080),
+                                      color: Color(0xFF6B6B6B),
                                       fontWeight: FontWeight.w400,
                                       fontSize: 13,
                                     )
@@ -695,7 +695,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                                   //controller: _messageTextCtrl,
                                   decoration: InputDecoration(
                                     hintText: "Ketik balasan Anda...",
-                                    hintStyle: TextStyle(color: Color(0xFF808080)),
+                                    hintStyle: TextStyle(color: Color(0xFF6B6B6B)),
                                     border: InputBorder.none
                                   ),
                                 ),
@@ -869,7 +869,7 @@ class _GetBalasanById extends State<GetBalasanById> {
                         child: Text(                     
                           data['isi'],
                           style: TextStyle(
-                            color: Color(0xFF808080),
+                            color: Color(0xFF6B6B6B),
                             fontWeight: FontWeight.w400,
                             fontSize: 13,
                           )
@@ -971,7 +971,7 @@ class _GetBalasanById extends State<GetBalasanById> {
                         child: Text(                     
                           data['isi'],
                           style: TextStyle(
-                            color: Color(0xFF808080),
+                            color: Color(0xFF6B6B6B),
                             fontWeight: FontWeight.w400,
                             fontSize: 13,
                           )
@@ -1332,15 +1332,414 @@ class _SmartDocPage extends State<SmartDocPage> {
 
       //Body.
       body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
-              
+        height: MediaQuery.of(context).size.height,
+        child: ListView(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      child: const Text(
+                        "Kalkulator BMI", 
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF212121)
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: const Text(
+                        "Body Mass Index (BMI) atau Indeks Massa Tubuh (IMT) adalah angka yang menjadi penilaian standar untuk menentukan apakah berat badan Anda tergolong normal, kurang, berlebih, atau obesitas.", 
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF6B6B6B)
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                    child: Row(
+                      children: [
+                        Container(
+                          width:120,
+                          height: 50,
+                          child: SpinBox(
+                            min: 1, max: 220,
+                            value: 170,
+                            spacing: 1,
+                            textStyle: TextStyle(
+                              fontSize: 16.0,
+                            ),
+                            decoration: InputDecoration(labelText: 'Tinggi Badan (Cm)'),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                          width:120,
+                          height: 50,
+                          child: SpinBox(
+                            min: 1, max: 160,
+                            value: 65,
+                            spacing: 1,
+                            textStyle: TextStyle(
+                              fontSize: 16.0,
+                            ),
+                            decoration: InputDecoration(labelText: 'Berat Badan (Kg)'),
+                          ),
+                        ),
+                        Container(
+                          height: 45,
+                          child: ElevatedButton(
+                            onPressed: () {
+                                // Respond to button press
+                            },
+                            child: Text("Hitung"),
+                          )
+                        )
+                      ],
+                    )
+                  )
+                ],
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10), 
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 10.0, // soften the shadow
+                    spreadRadius: 0.0, //extend the shadow
+                    offset: const Offset(
+                      5.0, // Move to right 10  horizontally
+                      5.0, // Move to bottom 10 Vertically
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      child: const Text(
+                        "RoboDoc", 
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF212121)
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: const Text(
+                        "RoboDoc adalah fitur yang dapat mendukung Anda untuk mengetahui penyakit yang Anda derita dengan cepat dan tanpa perlu diagnosa lansung dengan dokter. Anda cukup memberitahukan gejala yang Anda derita kepada RoboDoc. Dan kami akan menampilkan daftar kemungkinan penyakit yang Anda derita.", 
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF6B6B6B)
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: TextField(
+                            maxLines: 3, //or null 
+                            decoration: InputDecoration(hintText: "Sertakan tanda ',' untuk menambahkan gejala lainnya", labelText: "Gejala"),
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            )
+                          ),
+                        ),
+                        Container(
+                          height: 45,
+                          child: ElevatedButton(
+                            onPressed: () {
+                                // Respond to button press
+                            },
+                            child: Text("Hitung"),
+                          )
+                        )
+                      ],
+                    )
+                  ), 
+                  SizedBox(
+                    height: 10,
+                  )
+                ],
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10), 
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 10.0, // soften the shadow
+                    spreadRadius: 0.0, //extend the shadow
+                    offset: const Offset(
+                      5.0, // Move to right 10  horizontally
+                      5.0, // Move to bottom 10 Vertically
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      child: const Text(
+                        "Kalkulator Kalori", 
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF212121)
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: const Text(
+                        "Dengan alat ini Anda mengetahui berapa asupan kalori yang dibutuhkan. Hasil perhitungannya dapat Anda gunakan sebagai salah satu acuan untuk mengontrol asupan kalori per hari.", 
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF6B6B6B)
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                    child: Row(
+                      children: [
+                        Container(
+                          width:110,
+                          height: 50,
+                          child: SpinBox(
+                            min: 1, max: 220,
+                            value: 170,
+                            spacing: 1,
+                            textStyle: TextStyle(
+                              fontSize: 16.0,
+                            ),
+                            decoration: InputDecoration(labelText: 'Tinggi Badan (Cm)'),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                          width:110,
+                          height: 50,
+                          child: SpinBox(
+                            min: 1, max: 160,
+                            value: 65,
+                            spacing: 1,
+                            textStyle: TextStyle(
+                              fontSize: 16.0,
+                            ),
+                            decoration: InputDecoration(labelText: 'Berat Badan (Kg)'),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                          width:100,
+                          height: 50,
+                          child: SpinBox(
+                            min: 10, max: 110,
+                            value: 25,
+                            spacing: 1,
+                            textStyle: TextStyle(
+                              fontSize: 16.0,
+                            ),
+                            decoration: InputDecoration(labelText: 'Umur'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      children: [
+                        Container(
+                          child: Column(
+                            children:[
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  child: const Text(
+                                    "Jenis Kelamin", 
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Color(0xFF808080)
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                transform: Matrix4.translationValues(-5.0, 0.0, 0.0),
+                                child: DropDownJK()
+                              )
+                            ]
+                          ),
+                        ),
+                        Container(
+                          child: Column(
+                            children:[
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  child: const Text(
+                                    "Aktivitas Fisik / Olahraga", 
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Color(0xFF808080)
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                transform: Matrix4.translationValues(25.0, 0.0, 0.0),
+                                child: DropDownAktv()
+                              )
+                            ]
+                          ),
+                        ),
+                      ],
+                    )
+                  )
+                ],
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10), 
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 10.0, // soften the shadow
+                    spreadRadius: 0.0, //extend the shadow
+                    offset: const Offset(
+                      5.0, // Move to right 10  horizontally
+                      5.0, // Move to bottom 10 Vertically
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+
           ], 
 
         )
       )
       
+    );
+  }
+}
+
+//Dropdown Jenis Kelamin
+class DropDownJK extends StatefulWidget {
+  const DropDownJK({Key key}) : super(key: key);
+
+  @override
+  State<DropDownJK> createState() => _DropDownJKState();
+}
+
+class _DropDownJKState extends State<DropDownJK> {
+  String dropdownValue = 'Pria';
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      style: const TextStyle(color: Color(0xFF212121)),
+      underline: Container(
+        height: 2,
+        color: const Color(0xFF4183D7),
+      ),
+      onChanged: (String newValue) {
+        setState(() {
+          dropdownValue = newValue;
+        });
+      },
+      items: <String>['Pria', 'Wanita']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+}
+
+//Dropdown Jenis Kelamin
+class DropDownAktv extends StatefulWidget {
+  const DropDownAktv({Key key}) : super(key: key);
+
+  @override
+  State<DropDownAktv> createState() => _DropDownAktvState();
+}
+
+class _DropDownAktvState extends State<DropDownAktv> {
+  String dropdownValue = 'Tidak berolahraga';
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      style: const TextStyle(color: Color(0xFF212121)),
+      underline: Container(
+        height: 2,
+        color: const Color(0xFF4183D7),
+      ),
+      onChanged: (String newValue) {
+        setState(() {
+          dropdownValue = newValue;
+        });
+      },
+      items: <String>['Tidak berolahraga', '1-3 kali dalam seminggu', '3-5 kali dalam seminggu', '6-7 kali dalam seminggu', 'Setiap hari / Pekerjaan fisik']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 }
@@ -1468,100 +1867,100 @@ class _DaruratPage extends State<DaruratPage> {
 
       //Body.
       body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                child: Row(
-                  children:[
-                    Container(
-                      width: 120,
-                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: RaisedButton(
-                        color: Color(0xFF4183D7),
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Icon(
-                                Icons.local_hospital,
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+              child: Row(
+                children:[
+                  Container(
+                    width: 120,
+                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: RaisedButton(
+                      color: Color(0xFF4183D7),
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Icon(
+                              Icons.local_hospital,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Text(
+                              "FasKes",
+                              style: TextStyle(
                                 color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Text(
-                                "FasKes",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        onPressed: () {
-                          //Collapse
-                        },
+                          ),
+                        ],
                       ),
+                      onPressed: () {
+                        //Collapse
+                      },
                     ),
-                    Container(
-                      width: 120,
-                      // margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: RaisedButton(
-                        color: Color(0xFF4183D7),
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Icon(
-                                Icons.medical_services,
+                  ),
+                  Container(
+                    width: 120,
+                    // margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: RaisedButton(
+                      color: Color(0xFF4183D7),
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Icon(
+                              Icons.medical_services,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Text(
+                              "Praktek Dokter",
+                              style: TextStyle(
                                 color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Text(
-                                "Praktek Dokter",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        onPressed: () {
-                          //Collapse
-                        },
+                          ),
+                        ],
                       ),
+                      onPressed: () {
+                        //Collapse
+                      },
                     ),
-                  ]
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), 
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      blurRadius: 10.0, // soften the shadow
-                      spreadRadius: 0.0, //extend the shadow
-                      offset: const Offset(
-                        5.0, // Move to right 10  horizontally
-                        5.0, // Move to bottom 10 Vertically
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                ]
               ),
-              Flexible(
-                child: GetFaskes(),
-              )
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), 
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 10.0, // soften the shadow
+                    spreadRadius: 0.0, //extend the shadow
+                    offset: const Offset(
+                      5.0, // Move to right 10  horizontally
+                      5.0, // Move to bottom 10 Vertically
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Flexible(
+              child: GetFaskes(),
+            )
           ], 
 
         )
@@ -1638,7 +2037,7 @@ class GetFaskes extends StatelessWidget {
                                         data['alamat'],
                                         style: const TextStyle(
                                           color: Color(0xFF212121),
-                                          fontSize: 14,
+                                          fontSize: 13,
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
@@ -1652,7 +2051,7 @@ class GetFaskes extends StatelessWidget {
                                         data['kontak'],
                                         style: const TextStyle(
                                           color: Color(0xFF212121),
-                                          fontSize: 14,
+                                          fontSize: 13,
                                         )
                                       ),   
                                     ),
@@ -1703,7 +2102,7 @@ class GetFaskes extends StatelessWidget {
                         child: Text(                     
                           data['fasilitas'],
                           style: const TextStyle(
-                            color: Color(0xFF808080),
+                            color: Color(0xFF6B6B6B),
                             fontWeight: FontWeight.w400,
                             fontSize: 13,
                           ),
@@ -1736,7 +2135,7 @@ class GetFaskes extends StatelessWidget {
                         child: Text(                     
                           data['poliklinik'],
                           style: const TextStyle(
-                            color: Color(0xFF808080),
+                            color: Color(0xFF6B6B6B),
                             fontWeight: FontWeight.w400,
                             fontSize: 13,
                           ),
