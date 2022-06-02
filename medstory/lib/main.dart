@@ -16,7 +16,7 @@ Future<void> main() async {
   if (shouldUseFirestoreEmulator) {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: Color(0xFFF6F7F9)),
+      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFF6F7F9)),
       title: "Leonardho R Sitanggang-1302194041",
       home: const NavBar(), //Navbar
     );
@@ -41,7 +41,6 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
   int _selectedIndex = 0;
-  static var _usernamePass;
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +125,7 @@ class _ForumPage extends State<ForumPage> {
       appBar: AppBar(
         iconTheme: 
           const IconThemeData(
-            color: const Color(0xFF4183D7),
+            color: Color(0xFF4183D7),
             size: 35.0,
           ),
         title: Text("Welcome, ${widget.pass_username}", 
@@ -156,7 +155,7 @@ class _ForumPage extends State<ForumPage> {
       ),
 
       //Body.
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
@@ -216,11 +215,11 @@ class _ForumPage extends State<ForumPage> {
               );
             }),
           ),
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Row(
               children: [
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
                   child: Text("  Forum Diskusi",
                     style: TextStyle(
@@ -236,168 +235,15 @@ class _ForumPage extends State<ForumPage> {
                   alignment: Alignment.centerRight,
                   child: Container(
                     transform: Matrix4.translationValues(0.0, -5.0, 0.0),
-                    child: DropDown(),
+                    child: const DropDown(),
                   )
                 )
               ]
             ),
           ),
           Flexible(
-            child: GetUserName(),
-            // child: ListView(
-              // child: Container(
-              //   transform: Matrix4.translationValues(0.0, -5.0, 0.0),
-              //   padding: EdgeInsets.symmetric(horizontal: 5.0),
-              //   height: 162,
-              //   child: Card(
-              //     child: Column(
-              //     children: [
-              //       Align(
-              //         child: Container(
-              //           margin: const EdgeInsets.symmetric(vertical: 10.0),
-              //           child: Row(
-              //             children: [ 
-              //               Container(
-              //                 margin: const EdgeInsets.symmetric(horizontal: 5.0),
-              //                 child: ClipRRect(
-              //                   borderRadius: BorderRadius.circular(20),
-              //                   child: Image.asset(
-              //                     'assets/images/User.jpg', width: 40),
-              //                   ),
-              //               ),
-                                    
-              //               Container(
-              //                 width: MediaQuery.of(context).size.width*0.73,
-              //                 child: Column (
-              //                   crossAxisAlignment: CrossAxisAlignment.start,
-              //                   children: [
-              //                     Align(
-              //                       alignment: Alignment.centerLeft,
-              //                       child: Container(
-              //                         child: Text(                     
-              //                           "flazefy",
-              //                           textAlign: TextAlign.left,
-              //                           style: TextStyle(
-              //                             color: Colors.black,
-              //                             fontWeight: FontWeight.w600,
-              //                             fontSize: 16,
-              //                           )
-              //                         ),   
-              //                       ),
-              //                     ),
-              //                     Align(
-              //                       alignment: Alignment.centerLeft,
-              //                       child: Container(
-              //                         child: Text(                     
-              //                           "Penyakit Dalam ~ yesterday at 09.00 pm",
-              //                           style: TextStyle(
-              //                             color: Colors.grey,
-              //                             fontSize: 13,
-              //                           )
-              //                         ),   
-              //                       ),
-              //                     )                          
-              //                   ]
-              //                 ),
-              //               ),
-              //               Container(
-              //                 child: ClipRRect(
-              //                 borderRadius: BorderRadius.circular(20),
-              //                 child: Image.asset(
-              //                   'assets/images/verified.png', width: 30),
-              //                 ),
-              //               ),
-              //             ]
-              //           )    
-              //         )                   
-              //       ),
-              //       Align(
-              //         alignment: Alignment.centerLeft,
-              //         child: Container(
-              //           margin: const EdgeInsets.symmetric(horizontal: 10.0),
-              //           child: Text(                     
-              //             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-              //             style: TextStyle(
-              //               color: Color(0xFF808080),
-              //               fontWeight: FontWeight.w400,
-              //               fontSize: 13,
-              //             )
-              //           ),   
-              //         ),
-              //       ),
-              //       Container(
-              //         child: Row(
-              //           children: [            
-              //             TextButton.icon(
-              //               onPressed: () {
-              //                 Navigator.push(
-              //                   context,
-              //                   PageRouteBuilder(
-              //                     pageBuilder: (c, a1, a2) => DiscussionPage(documentId: "1oZXx5nA1Gt7qHeBIpTV"),
-              //                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              //                       final tween = Tween(begin: Offset(0.0, 1.0), end: Offset.zero);
-              //                       final curvedAnimation = CurvedAnimation(
-              //                         parent: animation,
-              //                         curve: Curves.ease,
-              //                       );
-
-              //                       return SlideTransition(
-              //                         position: tween.animate(curvedAnimation),
-              //                         child: child,
-              //                       );
-              //                     }
-              //                   ),
-              //                 );
-              //               },
-              //               icon: Icon(Icons.arrow_drop_down, size: 14),
-              //               label: Text("Lihat komentar (3)"),
-              //             ),
-              //             SizedBox(
-              //               width: MediaQuery.of(context).size.width*0.2,
-              //             ),
-              //             TextButton.icon(
-              //               onPressed: () {
-              //                 //
-              //               },
-              //               icon: Icon(Icons.arrow_upward, size: 14),
-              //               label: Text("2"),
-              //             ),
-              //             TextButton.icon(
-              //               onPressed: () {
-              //                   // Respond to button press
-              //               },
-              //               icon: Icon(Icons.remove_red_eye, size: 14),
-              //               label: Text("20"),
-              //             ),
-              //           ]
-              //         ) 
-              //       ),       
-              //     ]
-
-              //     ),
-              //     shape: RoundedRectangleBorder(
-              //       side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
-              //       borderRadius: BorderRadius.circular(6),
-              //     ),
-              //   ),
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(10), 
-              //     boxShadow: [
-              //       BoxShadow(
-              //         color: Colors.grey.withOpacity(0.3),
-              //         blurRadius: 10.0, // soften the shadow
-              //         spreadRadius: 0.0, //extend the shadow
-              //         offset: const Offset(
-              //           5.0, // Move to right 10  horizontally
-              //           5.0, // Move to bottom 10 Vertically
-              //         ),
-              //       )
-              //     ],
-              //   ),
-              // )
-                
-            )
-
+            child: GetDiskusi(),
+          )
           ], 
 
         )
@@ -406,21 +252,21 @@ class _ForumPage extends State<ForumPage> {
     );
   }
 }
-class GetUserName extends StatelessWidget {
+class GetDiskusi extends StatelessWidget {
 
-  final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('diskusi').snapshots();
+  final Stream<QuerySnapshot> _diskusi = FirebaseFirestore.instance.collection('diskusi').snapshots();
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _usersStream,
+      stream: _diskusi,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return const Text('Something went wrong');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading");
+          return const Text("Loading");
         }
 
         return ListView(
@@ -428,7 +274,7 @@ class GetUserName extends StatelessWidget {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             return Container(
                 transform: Matrix4.translationValues(0.0, -5.0, 0.0),
-                padding: EdgeInsets.symmetric(horizontal: 5.0),
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
                 child: Card(
                   child: Column(
                   children: [
@@ -446,7 +292,7 @@ class GetUserName extends StatelessWidget {
                                 ),
                             ),
                                     
-                            Container(
+                            SizedBox(
                               width: MediaQuery.of(context).size.width*0.73,
                               child: Column (
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -457,7 +303,7 @@ class GetUserName extends StatelessWidget {
                                       child: Text(                     
                                         data['namaPengguna'],
                                         textAlign: TextAlign.left,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.w600,
                                           fontSize: 16,
@@ -470,7 +316,7 @@ class GetUserName extends StatelessWidget {
                                     child: Container(
                                       child: Text(                     
                                         "${data['kategori']} ~ ${DateFormat('dd MMM | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Colors.grey,
                                           fontSize: 13,
                                         )
@@ -497,11 +343,13 @@ class GetUserName extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: Text(                     
                           data['pertanyaan'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xFF808080),
                             fontWeight: FontWeight.w400,
                             fontSize: 13,
-                          )
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
                         ),   
                       ),
                     ),
@@ -513,9 +361,9 @@ class GetUserName extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(
-                                  pageBuilder: (c, a1, a2) => DiscussionPage(documentId: "1oZXx5nA1Gt7qHeBIpTV"),
+                                  pageBuilder: (c, a1, a2) => DiscussionPage(documentId: document.id),
                                   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    final tween = Tween(begin: Offset(0.0, 1.0), end: Offset.zero);
+                                    final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
                                     final curvedAnimation = CurvedAnimation(
                                       parent: animation,
                                       curve: Curves.ease,
@@ -529,8 +377,8 @@ class GetUserName extends StatelessWidget {
                                 ),
                               );
                             },
-                            icon: Icon(Icons.arrow_drop_down, size: 14),
-                            label: Text("Lihat komentar (3)"),
+                            icon: const Icon(Icons.arrow_drop_down, size: 14),
+                            label: const Text("Lihat komentar (3)"),
                           ),
                           SizedBox(
                             width: MediaQuery.of(context).size.width*0.2,
@@ -539,14 +387,14 @@ class GetUserName extends StatelessWidget {
                             onPressed: () {
                               //
                             },
-                            icon: Icon(Icons.arrow_upward, size: 14),
+                            icon: const Icon(Icons.arrow_upward, size: 14),
                             label: Text(data['up'].toString()),
                           ),
                           TextButton.icon(
                             onPressed: () {
                                 // Respond to button press
                             },
-                            icon: Icon(Icons.remove_red_eye, size: 14),
+                            icon: const Icon(Icons.remove_red_eye, size: 14),
                             label: Text(data['view'].toString()),
                           ),
                         ]
@@ -603,7 +451,7 @@ class _DropDownState extends State<DropDown> {
       style: const TextStyle(color: Color(0xFF212121)),
       underline: Container(
         height: 2,
-        color: Color(0xFF4183D7),
+        color: const Color(0xFF4183D7),
       ),
       onChanged: (String newValue) {
         setState(() {
@@ -643,11 +491,11 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 
         if (snapshot.hasError) {
-          return Text("Something went wrong");
+          return const Text("Something went wrong");
         }
 
         if (snapshot.hasData && !snapshot.data.exists) {
-          return Text("Document does not exist");
+          return const Text("Document does not exist");
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
@@ -657,11 +505,11 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                 automaticallyImplyLeading: false,
                 iconTheme: 
                   const IconThemeData(
-                    color: const Color(0xFF4183D7),
+                    color: Color(0xFF4183D7),
                     size: 35.0,
                   ),
-                title: Text("Lihat Balasan", 
-                style: const TextStyle(
+                title: const Text("Lihat Balasan", 
+                style: TextStyle(
                   color: Color(0xFF4183D7),
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -670,7 +518,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
               
               actions: [
                 IconButton(
-                  icon: Icon(Icons.home, color: Color(0xFF4183D7)),
+                  icon: const Icon(Icons.home, color: Color(0xFF4183D7)),
                   iconSize: 40,
                   onPressed: () {
                     Navigator.pop(context);
@@ -684,14 +532,14 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
               ),
 
               //Body.
-              body: Container(
+              body: SizedBox(
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: [
                       Align(
                         child: Container(
                           transform: Matrix4.translationValues(0.0, -5.0, 0.0),
-                          padding: EdgeInsets.symmetric(horizontal: 5.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           height: 162,
                           child: Card(
                             child: Column(
@@ -710,35 +558,31 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                                           ),
                                       ),
                                             
-                                      Container(
+                                      SizedBox(
                                         width: MediaQuery.of(context).size.width*0.73,
                                         child: Column (
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Align(
                                               alignment: Alignment.centerLeft,
-                                              child: Container(
-                                                child: Text(                     
-                                                  data['namaPengguna'],
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 16,
-                                                  )
-                                                ),   
+                                              child: Text(                     
+                                                data['namaPengguna'],
+                                                textAlign: TextAlign.left,
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16,
+                                                )
                                               ),
                                             ),
                                             Align(
                                               alignment: Alignment.centerLeft,
-                                              child: Container(
-                                                child: Text(                     
-                                                  "${data['kategori']} ~ ${DateFormat('yyyy-MM-dd | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 13,
-                                                  )
-                                                ),   
+                                              child: Text(                     
+                                                "${data['kategori']} ~ ${DateFormat('yyyy-MM-dd | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
+                                                style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 13,
+                                                )
                                               ),
                                             )                          
                                           ]
@@ -754,7 +598,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                                   margin: const EdgeInsets.symmetric(horizontal: 10.0),
                                   child: Text(                     
                                     data['pertanyaan'],
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Color(0xFF808080),
                                       fontWeight: FontWeight.w400,
                                       fontSize: 13,
@@ -762,28 +606,26 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                                   ),   
                                 ),
                               ),
-                              Container(
-                                child: Row(
-                                  children: [            
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width*0.6,
-                                    ),
-                                    TextButton.icon(
-                                      onPressed: () {
-                                          // Respond to button press
-                                      },
-                                      icon: Icon(Icons.arrow_upward, size: 14),
-                                      label: Text(data['up'].toString()),
-                                    ),
-                                    TextButton.icon(
-                                      onPressed: () {
-                                          // Respond to button press
-                                      },
-                                      icon: Icon(Icons.remove_red_eye, size: 14),
-                                      label: Text(data['view'].toString()),
-                                    ),
-                                  ]
-                                ) 
+                              Row(
+                                children: [            
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width*0.6,
+                                  ),
+                                  TextButton.icon(
+                                    onPressed: () {
+                                        // Respond to button press
+                                    },
+                                    icon: const Icon(Icons.arrow_upward, size: 14),
+                                    label: Text(data['up'].toString()),
+                                  ),
+                                  TextButton.icon(
+                                    onPressed: () {
+                                        // Respond to button press
+                                    },
+                                    icon: const Icon(Icons.remove_red_eye, size: 14),
+                                    label: Text(data['view'].toString()),
+                                  ),
+                                ]
                               ),       
                             ]
 
@@ -814,7 +656,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 10.0),
                           transform: Matrix4.translationValues(0.0, 5.0, 0.0),
-                          child: Text("  Balasan (3)",
+                          child: const Text("  Balasan (3)",
                             style: TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold
@@ -823,122 +665,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                         )
                       ),
                       Flexible(
-                        child: Column(
-                          children:[
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 5.0),
-                              height: 162,
-                              child: Card(
-                                child: Column(
-                                children: [
-                                  Align(
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(vertical: 10.0),
-                                      child: Row(
-                                        children: [ 
-                                          Container(
-                                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(20),
-                                              child: Image.asset(
-                                                'assets/images/User.jpg', width: 40),
-                                              ),
-                                          ),
-                                                
-                                          Container(
-                                            width: MediaQuery.of(context).size.width*0.73,
-                                            child: Column (
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Align(
-                                                  alignment: Alignment.centerLeft,
-                                                  child: Container(
-                                                    child: Text(                     
-                                                      "richardkyle",
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 16,
-                                                      )
-                                                    ),   
-                                                  ),
-                                                ),
-                                                Align(
-                                                  alignment: Alignment.centerLeft,
-                                                  child: Container(
-                                                    child: Text(                     
-                                                      "yesterday at 09.00 pm",
-                                                      style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 13,
-                                                      )
-                                                    ),   
-                                                  ),
-                                                )                          
-                                              ]
-                                            ),
-                                          ),
-                                          Container(
-                                            child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(20),
-                                            child: Image.asset(
-                                              'assets/images/verified.png', width: 30),
-                                            ),
-                                          ),
-                                        ]
-                                      )    
-                                    )                   
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                      child: Text(                     
-                                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-                                        style: TextStyle(
-                                          color: Color(0xFF808080),
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 13,
-                                        )
-                                      ),   
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomLeft,
-                                    child: TextButton.icon(
-                                      onPressed: () {
-                                          // Respond to button press
-                                      },
-                                      icon: Icon(Icons.arrow_upward, size: 14),
-                                      label: Text("2"),
-                                    ),
-                                  ),       
-                                ]
-
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10), 
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
-                                    blurRadius: 10.0, // soften the shadow
-                                    spreadRadius: 0.0, //extend the shadow
-                                    offset: const Offset(
-                                      5.0, // Move to right 10  horizontally
-                                      5.0, // Move to bottom 10 Vertically
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ]
-                        )
+                        child: GetBalasanById(pass_documentId: widget.documentId)
                       ),
                       Align(
                         alignment: Alignment.bottomCenter,
@@ -964,9 +691,9 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                               ),
                               const SizedBox(width: 15,),
                               Expanded(
-                                child: TextField(
+                                child: const TextField(
                                   //controller: _messageTextCtrl,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     hintText: "Ketik balasan Anda...",
                                     hintStyle: TextStyle(color: Color(0xFF808080)),
                                     border: InputBorder.none
@@ -1019,7 +746,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
             child: Container(
               transform: Matrix4.translationValues(0.0, 400.0, 0.0),
               child: Column(
-                children:[
+                children:const [
                   //Error
                   // SpinKitFoldingCube(
                   //   color: Color(0xFF4183D7),
@@ -1041,6 +768,293 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
           
         );
 
+      },
+    );
+  }
+}
+class GetBalasanById extends StatefulWidget {
+  const GetBalasanById({Key key, this.pass_documentId}) : super(key: key);
+  final String pass_documentId;
+
+  @override
+
+  _GetBalasanById createState() => _GetBalasanById();
+}
+
+class _GetBalasanById extends State<GetBalasanById> {
+  // GetBalasanById(this.documentId);
+  final Stream<QuerySnapshot> _balasan = FirebaseFirestore.instance.collection('balasan').snapshots();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _balasan,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
+
+        return ListView(
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          
+            if((widget.pass_documentId == data['id_diskusi'])&&(data['status'] == 'verified')){
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                height: 162,
+                child: Card(
+                  child: Column(
+                  children: [
+                    Align(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Row(
+                          children: [ 
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(
+                                  'assets/images/User.jpg', width: 40),
+                                ),
+                            ),
+                                  
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width*0.73,
+                              child: Column (
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(                     
+                                      data['pengirim'],
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                      )
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(                     
+                                      "${DateFormat('dd MMM | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 13,
+                                      )
+                                    ),
+                                  )                          
+                                ]
+                              ),
+                            ),
+                            ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/images/verified.png', width: 30),
+                            ),
+                          ]
+                        )    
+                      )                   
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(                     
+                          data['isi'],
+                          style: TextStyle(
+                            color: Color(0xFF808080),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                          )
+                        ),   
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: TextButton.icon(
+                        onPressed: () {
+                            // Respond to button press
+                        },
+                        icon: const Icon(Icons.arrow_upward, size: 14),
+                        label: const Text("2"),
+                      ),
+                    ),       
+                  ]
+
+                  ),
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10), 
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 10.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: const Offset(
+                        5.0, // Move to right 10  horizontally
+                        5.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ],
+                ),
+              );
+            } else if((widget.pass_documentId == data['id_diskusi'])&&(data['status'] != 'verified')){
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                height: 162,
+                child: Card(
+                  child: Column(
+                  children: [
+                    Align(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Row(
+                          children: [ 
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(
+                                  'assets/images/User.jpg', width: 40),
+                                ),
+                            ),
+                                  
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width*0.73,
+                              child: Column (
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(                     
+                                      data['pengirim'],
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                      )
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(                     
+                                      "${DateFormat('dd MMM | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 13,
+                                      )
+                                    ),
+                                  )                          
+                                ]
+                              ),
+                            ),
+                          ]
+                        )    
+                      )                   
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(                     
+                          data['isi'],
+                          style: TextStyle(
+                            color: Color(0xFF808080),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                          )
+                        ),   
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: TextButton.icon(
+                        onPressed: () {
+                            // Respond to button press
+                        },
+                        icon: const Icon(Icons.arrow_upward, size: 14),
+                        label: const Text("2"),
+                      ),
+                    ),       
+                  ]
+
+                  ),
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10), 
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 10.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: const Offset(
+                        5.0, // Move to right 10  horizontally
+                        5.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ],
+                ),
+              );
+            } else if(widget.pass_documentId != data['id_diskusi']) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width*0.6,
+                      child: Image.asset('assets/images/EmptyError.png'),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
+                        child: const Text(
+                          "Maaf, pertanyaan ini belum dijawab...", 
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Color(0xFF212121)
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10), 
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 10.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: const Offset(
+                        5.0, // Move to right 10  horizontally
+                        5.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }
+
+          }).toList(),
+        );
       },
     );
   }
@@ -1083,7 +1097,7 @@ class Item1 extends StatelessWidget {
                 transform: Matrix4.translationValues(0.0, -2.0, 0.0),
                 child: const Text(
                   "Resmi! Kasus Aktif Covid-19 di Indonesia Kalahkan India",
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0,
                     fontWeight: FontWeight.w500
@@ -1137,7 +1151,7 @@ class Item2 extends StatelessWidget {
                 transform: Matrix4.translationValues(0.0, -2.0, 0.0),
                 child: const Text(
                   "Menkes: Vaksin Moderna untuk Nakes karena Stok Terbatas",
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0,
                     fontWeight: FontWeight.w500
@@ -1191,7 +1205,7 @@ class Item3 extends StatelessWidget {
                 transform: Matrix4.translationValues(0.0, -2.0, 0.0),
                 child: const Text(
                   "Susul Moderna, Vaksin Pfizer Sebentar Lagi Dapat Izin di RI",
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0,
                     fontWeight: FontWeight.w500
@@ -1245,7 +1259,7 @@ class Item4 extends StatelessWidget {
                 transform: Matrix4.translationValues(0.0, -2.0, 0.0),
                 child: const Text(
                   "Cara mengatasi penyakit maag agar tidak kambuh lagi",
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 16.0,
                     fontWeight: FontWeight.w500
@@ -1287,7 +1301,7 @@ class _SmartDocPage extends State<SmartDocPage> {
       appBar: AppBar(
         iconTheme: 
           const IconThemeData(
-            color: const Color(0xFF4183D7),
+            color: Color(0xFF4183D7),
             size: 35.0,
           ),
         title: Text("Welcome, ${widget.pass_username}", 
@@ -1317,10 +1331,10 @@ class _SmartDocPage extends State<SmartDocPage> {
       ),
 
       //Body.
-      body: Container(
+      body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
-            children: const [
+            children: [
               
           ], 
 
@@ -1360,7 +1374,7 @@ class _DataKuPage extends State<DataKuPage> {
           ),
         title: Text("Welcome, ${widget.pass_username}", 
         style: const TextStyle(
-          color: const Color(0xFF4183D7),
+          color: Color(0xFF4183D7),
           fontWeight: FontWeight.bold,
           fontSize: 18,
         ),
@@ -1385,7 +1399,7 @@ class _DataKuPage extends State<DataKuPage> {
       ),
 
       //Body.
-      body: Container(
+      body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
             children: const [
@@ -1428,7 +1442,7 @@ class _DaruratPage extends State<DaruratPage> {
           ),
         title: Text("Welcome, ${widget.pass_username}", 
         style: const TextStyle(
-          color: const Color(0xFF4183D7),
+          color: Color(0xFF4183D7),
           fontWeight: FontWeight.bold,
           fontSize: 18,
         ),
@@ -1453,16 +1467,382 @@ class _DaruratPage extends State<DaruratPage> {
       ),
 
       //Body.
-      body: Container(
+      body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
-            children: const [
-              
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                child: Row(
+                  children:[
+                    Container(
+                      width: 120,
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: RaisedButton(
+                        color: Color(0xFF4183D7),
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Icon(
+                                Icons.local_hospital,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                "FasKes",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: () {
+                          //Collapse
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: 120,
+                      // margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: RaisedButton(
+                        color: Color(0xFF4183D7),
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Icon(
+                                Icons.medical_services,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(
+                                "Praktek Dokter",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: () {
+                          //Collapse
+                        },
+                      ),
+                    ),
+                  ]
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10), 
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 10.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: const Offset(
+                        5.0, // Move to right 10  horizontally
+                        5.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Flexible(
+                child: GetFaskes(),
+              )
           ], 
 
         )
       )
       
+    );
+  }
+}
+
+class GetFaskes extends StatelessWidget {
+
+  final Stream<QuerySnapshot> _faskes = FirebaseFirestore.instance.collection('faskes').snapshots();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _faskes,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
+
+        return ListView(
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            return Container(
+                transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                child: Card(
+                  child: Column(
+                  children: [
+                    Align(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Row(
+                          children: [ 
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(6),
+                                child: Image.asset(
+                                  'assets/images/${data['namaFaskes']}.jpeg', width: 120, height: 80),
+                                ),
+                            ),
+                                    
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width*0.46,
+                              child: Column (
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      child: Text(                     
+                                        data['namaFaskes'],
+                                        textAlign: TextAlign.left,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),   
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      child: Text(                     
+                                        data['alamat'],
+                                        style: const TextStyle(
+                                          color: Color(0xFF212121),
+                                          fontSize: 14,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),   
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      child: Text(                     
+                                        data['kontak'],
+                                        style: const TextStyle(
+                                          color: Color(0xFF212121),
+                                          fontSize: 14,
+                                        )
+                                      ),   
+                                    ),
+                                  )                          
+                                ]
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  child: ClipRRect(
+                                  child: Image.asset(
+                                    'assets/images/Rating.png', width: 20),
+                                  ),
+                                ),
+                                Text(                     
+                                  data['rating'].toString(),
+                                  style: const TextStyle(
+                                    color: Color(0xFF212121),
+                                    fontSize: 14,
+                                  )
+                                ),   
+                              ],
+                            )
+                            
+                          ]
+                        )    
+                      )                   
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(                     
+                          'Fasilitas',
+                          style: const TextStyle(
+                            color: Color(0xFF212121),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          )
+                        ),   
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(                     
+                          data['fasilitas'],
+                          style: const TextStyle(
+                            color: Color(0xFF808080),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),   
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(                     
+                          'Poliklinik',
+                          style: const TextStyle(
+                            color: Color(0xFF212121),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          )
+                        ),   
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(                     
+                          data['poliklinik'],
+                          style: const TextStyle(
+                            color: Color(0xFF808080),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
+                        ),   
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical:5),
+                      child: Row(
+                        children: [            
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              // Navigator.push(
+                              //   context,
+                              //   PageRouteBuilder(
+                              //     pageBuilder: (c, a1, a2) => MapsPage(),
+                              //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              //       final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
+                              //       final curvedAnimation = CurvedAnimation(
+                              //         parent: animation,
+                              //         curve: Curves.ease,
+                              //       );
+
+                              //       return SlideTransition(
+                              //         position: tween.animate(curvedAnimation),
+                              //         child: child,
+                              //       );
+                              //     }
+                              //   ),
+                              // );
+                            },
+                            icon: const Icon(Icons.gps_fixed, size: 14),
+                            label: const Text("Lihat Lokasi"),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF1F9F2F)),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              // Navigator.push(
+                              //   context,
+                              //   PageRouteBuilder(
+                              //     pageBuilder: (c, a1, a2) => MapsPage(),
+                              //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              //       final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
+                              //       final curvedAnimation = CurvedAnimation(
+                              //         parent: animation,
+                              //         curve: Curves.ease,
+                              //       );
+
+                              //       return SlideTransition(
+                              //         position: tween.animate(curvedAnimation),
+                              //         child: child,
+                              //       );
+                              //     }
+                              //   ),
+                              // );
+                            },
+                            icon: const Icon(Icons.remove_red_eye, size: 14),
+                            label: const Text("Dokter"),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          TextButton.icon(
+                            onPressed: () {
+                              //
+                            },
+                            icon: const Icon(Icons.copy, size: 14),
+                            label: const Text("Kordinat"),
+                          ),
+                        ]
+                      ) 
+                    ),       
+                  ]
+
+                  ),
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10), 
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 10.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: const Offset(
+                        5.0, // Move to right 10  horizontally
+                        5.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ],
+                ),
+            );
+
+          }).toList(),
+        );
+      },
     );
   }
 }
