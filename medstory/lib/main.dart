@@ -229,15 +229,21 @@ class _ForumPage extends State<ForumPage> {
                   ),
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width*0.3,
+                  width: MediaQuery.of(context).size.width*0.1,
                 ),
                 Align(
                   alignment: Alignment.centerRight,
                   child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
                     transform: Matrix4.translationValues(0.0, -5.0, 0.0),
                     child: const DropDown(),
                   )
-                )
+                ),
+                Container(
+                  width: 60,
+                  height: 35,
+                  child: AddDiskusi(kategori: 'Mata', namaPengguna: 'flazefy', pertanyaan: 'test'),
+                ),
               ]
             ),
           ),
@@ -245,13 +251,55 @@ class _ForumPage extends State<ForumPage> {
             child: GetDiskusi(),
           )
           ], 
-
+          
         )
-      )
-      
+      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
+class AddDiskusi extends StatefulWidget {
+  const AddDiskusi({Key key, this.kategori, this.namaPengguna, this.pertanyaan}) : super(key: key);
+  final String kategori;
+  final String namaPengguna;
+  final String pertanyaan;
+
+  @override
+  State<AddDiskusi> createState() => _AddDiskusiState();
+}
+class _AddDiskusiState extends State<AddDiskusi> {
+
+  @override
+  Widget build(BuildContext context) {
+    // Create a CollectionReference called users that references the firestore collection
+    CollectionReference disc = FirebaseFirestore.instance.collection('diskusi');
+
+    Future<void> addDiskusi() {
+      // Call the user's CollectionReference to add a new user
+      return disc
+          .add({
+            'kategori': widget.kategori,
+            'namaPengguna': widget.namaPengguna, 
+            'pertanyaan': widget.pertanyaan,
+            'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
+            'imageURL': 'null', //initial user for now
+            'view': 0,
+            'up': 0, //initial user for now
+          })
+          .then((value) => print("Diskusi berhasil ditambah"))
+          .catchError((error) => print("Failed to add user: $error"));
+    }
+
+    return RaisedButton(
+      onPressed: () {
+        addDiskusi();
+      },
+      color: Colors.green,
+      child: const Icon(Icons.add, color: Colors.white),
+    );
+  }
+}
+
 class GetDiskusi extends StatelessWidget {
 
   final Stream<QuerySnapshot> _diskusi = FirebaseFirestore.instance.collection('diskusi').snapshots();
@@ -446,7 +494,7 @@ class _DropDownState extends State<DropDown> {
   Widget build(BuildContext context) {
     return DropdownButton<String>(
       value: dropdownValue,
-      icon: const Icon(Icons.arrow_downward),
+      icon: const Icon(Icons.arrow_drop_down),
       elevation: 16,
       style: const TextStyle(color: Color(0xFF212121)),
       underline: Container(
@@ -480,13 +528,29 @@ class DiscussionPage extends StatefulWidget {
 
 class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderStateMixin{
   _DiscussionPage(documentId);
+  var _isiCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('diskusi');
+    CollectionReference diskusi = FirebaseFirestore.instance.collection('diskusi');
+    CollectionReference balasan = FirebaseFirestore.instance.collection('balasan');
+
+    Future<void> replyDiscussion() {
+      return balasan
+        .add({
+          'id_diskusi': widget.documentId, 
+          'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
+          'imageURL': 'null', //initial user for now
+          'isi': _isiCtrl.text,
+          'pengirim': 'flazefy', //initial user for now
+          'status': 'null',
+        })
+        .then((value) => print("Balasan terkirim"))
+        .catchError((error) => print("Failed to add user: $error"));
+    }
 
     return FutureBuilder<DocumentSnapshot>(
-      future: users.doc(widget.documentId).get(),
+      future: diskusi.doc(widget.documentId).get(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 
@@ -691,8 +755,8 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                               ),
                               const SizedBox(width: 15,),
                               Expanded(
-                                child: const TextField(
-                                  //controller: _messageTextCtrl,
+                                child: TextField(
+                                  controller: _isiCtrl,
                                   decoration: InputDecoration(
                                     hintText: "Ketik balasan Anda...",
                                     hintStyle: TextStyle(color: Color(0xFF6B6B6B)),
@@ -703,7 +767,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                               const SizedBox(width: 15,),
                               FloatingActionButton(
                                 onPressed: () async{
-                                 //Send message
+                                  replyDiscussion();
                                 },
                                 child: const Icon(Icons.send,color: Colors.white,size: 18,),
                                 backgroundColor: Colors.green,
@@ -784,7 +848,7 @@ class GetBalasanById extends StatefulWidget {
 class _GetBalasanById extends State<GetBalasanById> {
   // GetBalasanById(this.documentId);
   final Stream<QuerySnapshot> _balasan = FirebaseFirestore.instance.collection('balasan').snapshots();
-
+  int count = 0;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -801,8 +865,22 @@ class _GetBalasanById extends State<GetBalasanById> {
         return ListView(
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-          
-            if((widget.pass_documentId == data['id_diskusi'])&&(data['status'] == 'verified')){
+            if(data['pengirim'] == 'flazefy'){
+              data['pengirim'] = 'Anda';
+            }
+            Widget getVerifiedAnswer() {
+              if(data['status'] == 'verified'){
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    'assets/images/verified.png', width: 30),
+                );
+              } else {
+                return SizedBox();
+              }
+            }
+            if(widget.pass_documentId == data['id_diskusi']){
+              count++;
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 5.0),
                 height: 162,
@@ -853,11 +931,7 @@ class _GetBalasanById extends State<GetBalasanById> {
                                 ]
                               ),
                             ),
-                            ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              'assets/images/verified.png', width: 30),
-                            ),
+                            getVerifiedAnswer(),
                           ]
                         )    
                       )                   
@@ -909,109 +983,8 @@ class _GetBalasanById extends State<GetBalasanById> {
                   ],
                 ),
               );
-            } else if((widget.pass_documentId == data['id_diskusi'])&&(data['status'] != 'verified')){
-              return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                height: 162,
-                child: Card(
-                  child: Column(
-                  children: [
-                    Align(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          children: [ 
-                            Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/User.jpg', width: 40),
-                                ),
-                            ),
-                                  
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width*0.73,
-                              child: Column (
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(                     
-                                      data['pengirim'],
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      )
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(                     
-                                      "${DateFormat('dd MMM | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 13,
-                                      )
-                                    ),
-                                  )                          
-                                ]
-                              ),
-                            ),
-                          ]
-                        )    
-                      )                   
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(                     
-                          data['isi'],
-                          style: TextStyle(
-                            color: Color(0xFF6B6B6B),
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13,
-                          )
-                        ),   
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: TextButton.icon(
-                        onPressed: () {
-                            // Respond to button press
-                        },
-                        icon: const Icon(Icons.arrow_upward, size: 14),
-                        label: const Text("2"),
-                      ),
-                    ),       
-                  ]
-
-                  ),
-                  shape: RoundedRectangleBorder(
-                    side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), 
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      blurRadius: 10.0, // soften the shadow
-                      spreadRadius: 0.0, //extend the shadow
-                      offset: const Offset(
-                        5.0, // Move to right 10  horizontally
-                        5.0, // Move to bottom 10 Vertically
-                      ),
-                    )
-                  ],
-                ),
-              );
-            } else if(widget.pass_documentId != data['id_diskusi']) {
+            } //Empty message still duplicate. even if count = 0 method still error 
+            if(widget.pass_documentId != data['id_diskusi']) {
               return Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
                 child: Column(
@@ -1402,7 +1375,7 @@ class _SmartDocPage extends State<SmartDocPage> {
                           height: 45,
                           child: ElevatedButton(
                             onPressed: () {
-                                // Respond to button press
+                              
                             },
                             child: Text("Hitung"),
                           )
@@ -1466,13 +1439,14 @@ class _SmartDocPage extends State<SmartDocPage> {
                     child: Row(
                       children: [
                         Flexible(
-                          child: TextField(
-                            maxLines: 3, //or null 
-                            decoration: InputDecoration(hintText: "Sertakan tanda ',' untuk menambahkan gejala lainnya", labelText: "Gejala"),
-                            style: TextStyle(
-                              fontSize: 16.0,
-                            )
-                          ),
+                          // child: TextField(
+                          //   maxLines: 3, //or null 
+                          //   decoration: InputDecoration(hintText: "Sertakan tanda ',' untuk menambahkan gejala lainnya", labelText: "Gejala"),
+                          //   style: TextStyle(
+                          //     fontSize: 16.0,
+                          //   )
+                          // ),
+                          child: AutocompleteBasicExample(),
                         ),
                         Container(
                           height: 45,
@@ -1668,6 +1642,73 @@ class _SmartDocPage extends State<SmartDocPage> {
   }
 }
 
+//Autocomplete still no data passing
+class AutocompleteBasicExample extends StatelessWidget {
+  AutocompleteBasicExample({Key key}) : super(key: key);
+
+  static List<String> _kOptions = <String>[
+    GetDiskusi().toString()
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Autocomplete<String>(
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text == '') {
+          return const Iterable<String>.empty();
+        }
+        return _kOptions.where((String option) {
+          return option.contains(textEditingValue.text.toLowerCase());
+        });
+      },
+      onSelected: (String selection) {
+        debugPrint('You just selected $selection');
+      },
+    );
+  }
+}
+
+class GetGejala extends StatefulWidget {
+  @override
+    _GetGejalaState createState() => _GetGejalaState();
+}
+
+class _GetGejalaState extends State<GetGejala> {
+ 
+  final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('gejala').snapshots();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _usersStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
+        }
+
+        // return ListView(
+        //   children: snapshot.data.docs.map((DocumentSnapshot document) {
+        //   Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        //     return ListTile(
+        //       title: Text(data['full_name']),
+        //       subtitle: Text(data['company']),
+        //     );
+        //   }).toList(),
+        // );
+        snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          return data['nama_gejala'].toString();
+        });
+        
+      },
+    );
+  }
+}
+
 //Dropdown Jenis Kelamin
 class DropDownJK extends StatefulWidget {
   const DropDownJK({Key key}) : super(key: key);
@@ -1683,7 +1724,7 @@ class _DropDownJKState extends State<DropDownJK> {
   Widget build(BuildContext context) {
     return DropdownButton<String>(
       value: dropdownValue,
-      icon: const Icon(Icons.arrow_downward),
+      icon: const Icon(Icons.arrow_drop_down),
       elevation: 16,
       style: const TextStyle(color: Color(0xFF212121)),
       underline: Container(
@@ -1721,7 +1762,7 @@ class _DropDownAktvState extends State<DropDownAktv> {
   Widget build(BuildContext context) {
     return DropdownButton<String>(
       value: dropdownValue,
-      icon: const Icon(Icons.arrow_downward),
+      icon: const Icon(Icons.arrow_drop_down),
       elevation: 16,
       style: const TextStyle(color: Color(0xFF212121)),
       underline: Container(
