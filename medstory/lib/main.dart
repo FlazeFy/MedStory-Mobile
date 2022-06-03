@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:medstory/widgets/sideNav.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -6,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_spinbox/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 bool shouldUseFirestoreEmulator = false;
 
@@ -2179,7 +2181,10 @@ class DataKuPage extends StatefulWidget {
 }
 
 class _DataKuPage extends State<DataKuPage> {
-  
+  CalendarFormat format = CalendarFormat.month;
+  DateTime selectedDay = DateTime.now();
+  DateTime focusedDay = DateTime.now();
+
   @override
   void initState(){
     super.initState();
@@ -2241,6 +2246,147 @@ class _DataKuPage extends State<DataKuPage> {
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF212121)
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      child: TableCalendar(
+                        focusedDay: selectedDay,
+                        firstDay: DateTime(2020),
+                        lastDay: DateTime(2050),
+                        calendarFormat: format,
+                        onFormatChanged: (CalendarFormat _format) {
+                          setState(() {
+                            format = _format;
+                          });
+                        },
+                        onDaySelected: (DateTime selectDay, DateTime focusDay) {
+                          setState(() {
+                            selectedDay = selectDay;
+                            focusedDay = focusDay;
+                          });
+                          print(focusedDay);
+                        },
+                        selectedDayPredicate: (DateTime date) {
+                          return isSameDay(selectedDay, date);
+                        },
+                        calendarStyle: CalendarStyle(
+                          isTodayHighlighted: true,
+                          selectedDecoration: BoxDecoration(
+                            color: Color(0xFF4183D7),
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(6), 
+                          ),
+                          todayDecoration: BoxDecoration(
+                            color: Color(0xFF62C2F5),
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(6), 
+                          ),
+                          defaultDecoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          weekendDecoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          selectedTextStyle: TextStyle(color: Colors.white),
+                        )
+                      )
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      child: const Text(
+                        "Detail Asupan", 
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF212121)
+                        ),
+                      ),
+                    ),
+                  ),
+                ]
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10), 
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 10.0, // soften the shadow
+                    spreadRadius: 0.0, //extend the shadow
+                    offset: const Offset(
+                      5.0, // Move to right 10  horizontally
+                      5.0, // Move to bottom 10 Vertically
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      child: const Text(
+                        "Statistik Kebutuhan Kalori", 
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF212121)
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      child: const Text(
+                        "Grafik Harian", 
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF363636)
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      child: const Text(
+                        "Rata-Rata", 
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF363636)
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      child: const Text(
+                        "Asupan Terfavorit", 
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF363636)
                         ),
                       ),
                     ),
@@ -2610,24 +2756,24 @@ class GetFaskes extends StatelessWidget {
                         children: [            
                           ElevatedButton.icon(
                             onPressed: () {
-                              // Navigator.push(
-                              //   context,
-                              //   PageRouteBuilder(
-                              //     pageBuilder: (c, a1, a2) => MapsPage(),
-                              //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              //       final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
-                              //       final curvedAnimation = CurvedAnimation(
-                              //         parent: animation,
-                              //         curve: Curves.ease,
-                              //       );
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (c, a1, a2) => MapsPage(pass_namafaskes: data['namaFaskes'], pass_coordinate_lat: double.tryParse(data['lat']), pass_coordinate_lng: double.tryParse(data['lng'])),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
+                                    final curvedAnimation = CurvedAnimation(
+                                      parent: animation,
+                                      curve: Curves.ease,
+                                    );
 
-                              //       return SlideTransition(
-                              //         position: tween.animate(curvedAnimation),
-                              //         child: child,
-                              //       );
-                              //     }
-                              //   ),
-                              // );
+                                    return SlideTransition(
+                                      position: tween.animate(curvedAnimation),
+                                      child: child,
+                                    );
+                                  }
+                                ),
+                              );
                             },
                             icon: const Icon(Icons.gps_fixed, size: 14),
                             label: const Text("Lihat Lokasi"),
@@ -2703,5 +2849,95 @@ class GetFaskes extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class MapsPage extends StatefulWidget {
+  MapsPage({Key key, this.pass_namafaskes, this.pass_coordinate_lat, this.pass_coordinate_lng}) : super(key: key);
+
+  final String pass_namafaskes;
+  final double pass_coordinate_lat;
+  final double pass_coordinate_lng;
+
+
+
+  @override
+  _MapsPageState createState() => _MapsPageState();
+}
+class _MapsPageState extends State<MapsPage> {
+  GoogleMapController _googleMapController;
+  Marker _origin;
+  Marker _destination;
+
+  @override
+  void dispose() {
+    _googleMapController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context){
+    final _initialCameraPosition = CameraPosition(
+      target: LatLng(widget.pass_coordinate_lat, widget.pass_coordinate_lng), //Bandung
+      zoom: 14, 
+    );
+    return Scaffold(     
+      appBar: AppBar(
+        iconTheme: 
+          IconThemeData(
+            color: Color(0xFF4169E1),
+            size: 35.0,
+          ),
+          title: Text("${widget.pass_namafaskes}", 
+          style: TextStyle(
+            color: Color(0xFF4169E1),
+            fontWeight: FontWeight.w800,
+            fontSize: 16,
+          ),
+        ),
+        //Transparent setting.
+        backgroundColor: Color(0x44FFFFFF),
+        elevation: 0,
+      ),
+      body: GoogleMap(
+        myLocationButtonEnabled: false,
+        zoomControlsEnabled: false,
+        initialCameraPosition: _initialCameraPosition,
+        onMapCreated: (controller) => _googleMapController = controller,
+        markers: {
+          if (_origin != null) _origin,
+          Marker(
+            markerId: MarkerId('destination'),
+            infoWindow: const InfoWindow(title: 'Destination'),
+            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+            position: LatLng(widget.pass_coordinate_lat, widget.pass_coordinate_lng),
+          )
+        },
+        onLongPress: _addMarker,
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFF1F9F2F),
+        foregroundColor: Colors.white,
+        onPressed: () => _googleMapController.animateCamera(
+          CameraUpdate.newCameraPosition(_initialCameraPosition),
+        ),
+        child: Icon(Icons.center_focus_strong),
+      )
+    );
+  }
+  void _addMarker(LatLng pos) async {
+    if (_origin == null || (_origin != null && _destination != null)) {
+      setState(() {
+        _origin = Marker(
+          markerId: MarkerId('origin'),
+          infoWindow: const InfoWindow(title: 'Your Location'),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          position: pos,
+        );
+        // Reset destination
+        _destination = null;
+      });
+    } 
   }
 }
