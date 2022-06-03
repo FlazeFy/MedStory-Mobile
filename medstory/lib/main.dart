@@ -100,7 +100,7 @@ class ForumPage extends StatefulWidget {
 
 class _ForumPage extends State<ForumPage> {
   int _currentIndex=0;
- 
+
   List cardList=[
     const Item1(),
     const Item2(),
@@ -240,9 +240,30 @@ class _ForumPage extends State<ForumPage> {
                   )
                 ),
                 Container(
-                  width: 60,
-                  height: 35,
-                  child: AddDiskusi(kategori: 'Mata', namaPengguna: 'flazefy', pertanyaan: 'test'),
+                  transform: Matrix4.translationValues(15.0, 0.0, 0.0),
+                  child: PopupMenuButton(
+                    icon: Icon(Icons.more_vert),
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                      PopupMenuItem(
+                        child: ListTile(
+                          leading: Icon(Icons.add),
+                          title: Text('Pertanyaan Ku'),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => MyDiscussionPage(pass_username: 'flazefy')),
+                            );
+                          },
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        child: ListTile(
+                          leading: Icon(Icons.auto_graph),
+                          title: Text('Statistik'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ]
             ),
@@ -258,44 +279,370 @@ class _ForumPage extends State<ForumPage> {
     );
   }
 }
-class AddDiskusi extends StatefulWidget {
-  const AddDiskusi({Key key, this.kategori, this.namaPengguna, this.pertanyaan}) : super(key: key);
-  final String kategori;
-  final String namaPengguna;
-  final String pertanyaan;
+
+class MyDiscussionPage extends StatefulWidget {
+  const MyDiscussionPage({Key key, this.pass_username}) : super(key: key);
+  final String pass_username;
 
   @override
-  State<AddDiskusi> createState() => _AddDiskusiState();
+
+  _MyDiscussionPage createState() => _MyDiscussionPage();
 }
-class _AddDiskusiState extends State<AddDiskusi> {
+
+class _MyDiscussionPage extends State<MyDiscussionPage> {
+  var _pertanyaanCtrl = TextEditingController();
+  String kategori = 'Mata';
 
   @override
   Widget build(BuildContext context) {
-    // Create a CollectionReference called users that references the firestore collection
     CollectionReference disc = FirebaseFirestore.instance.collection('diskusi');
 
     Future<void> addDiskusi() {
       // Call the user's CollectionReference to add a new user
       return disc
-          .add({
-            'kategori': widget.kategori,
-            'namaPengguna': widget.namaPengguna, 
-            'pertanyaan': widget.pertanyaan,
-            'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
-            'imageURL': 'null', //initial user for now
-            'view': 0,
-            'up': 0, //initial user for now
-          })
-          .then((value) => print("Diskusi berhasil ditambah"))
-          .catchError((error) => print("Failed to add user: $error"));
+        .add({
+          'kategori': kategori,
+          'namaPengguna': widget.pass_username, 
+          'pertanyaan': _pertanyaanCtrl.text,
+          'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
+          'imageURL': 'null', //initial user for now
+          'view': 0,
+          'up': 0, //initial user for now
+        })
+        .then((value) => print("Diskusi berhasil ditambah"))
+        .catchError((error) => print("Failed to add user: $error"));
     }
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: 
+          const IconThemeData(
+            color: Color(0xFF4183D7),
+            size: 35.0,
+          ),
+        title: Text("Pertanyaan Ku", 
+        style: const TextStyle(
+          color: Color(0xFF4183D7),
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+        ),
+      ),
+      automaticallyImplyLeading: false,
+      actions: [
+        IconButton(
+          icon: Icon(Icons.home, color: Color(0xFF4183D7)),
+          iconSize: 40,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NavBar(pass_usernameNav: widget.pass_username)),
+            );
+          },
+        )
+      ],
 
-    return RaisedButton(
-      onPressed: () {
-        addDiskusi();
+        //Transparent setting.
+        backgroundColor: const Color(0x44FFFFFF),
+        elevation: 0,
+      ),
+
+      //Body.
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Flexible(            
+          child : SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: <Widget>[
+                
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  leading: IconButton(
+                    iconSize: 30,
+                    icon: const Icon(Icons.add,
+                    color: Color(0xFF808080)),
+                    onPressed: () {},
+                  ),
+                  title: const Text(
+                    "Tambah Pertanyaan",
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w800
+                    ),
+                  ),
+                  children: <Widget>[                     
+                    SingleChildScrollView(               
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text("  Kategori",
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w500
+                              )         
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: DropDown2()
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text("  Pertanyaan",
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w500
+                              )         
+                            ),
+                          ),
+                          Align(
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: TextField(
+                                controller: _pertanyaanCtrl,
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Color(0xFF4169E1), width: 2.0),
+                                  ),
+                              
+                                  hintText: "Ketikkan pertanyaan Anda disini",
+                                ),
+                              ),
+                            )
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          RaisedButton.icon(
+                            onPressed: () {
+                              addDiskusi();
+                            },
+                            color: Colors.green,
+                            label: Text("Unggah Pertanyaan", style: TextStyle(color: Colors.white),),
+                            icon: Icon(Icons.send, color: Colors.white),
+                          )
+                        ]
+                      )
+                    )
+                  ]
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    children:[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("  Pertanyaan",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w500
+                          )         
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Flexible(
+                        child: GetMyDiskusi(pass_username: widget.pass_username)
+                      )
+                    ]
+                  )
+                )
+              ]
+            )
+          )
+        )
+      ),
+    );
+  }
+}
+
+class GetMyDiskusi extends StatefulWidget {
+  const GetMyDiskusi({Key key, this.pass_username}) : super(key: key);
+  final String pass_username;
+
+  @override
+    _GetMyDiskusiState createState() => _GetMyDiskusiState();
+}
+
+class _GetMyDiskusiState extends State<GetMyDiskusi> {
+  final Stream<QuerySnapshot> _diskusi = FirebaseFirestore.instance.collection('diskusi').where('namaPengguna', isEqualTo: 'flazefy').snapshots();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _diskusi,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
+
+        return ListView(
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            return Container(
+                transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                child: Card(
+                  child: Column(
+                  children: [
+                    Align(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Row(
+                          children: [ 
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.asset(
+                                  'assets/images/User.jpg', width: 40),
+                                ),
+                            ),
+                                    
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width*0.73,
+                              child: Column (
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      child: Text(                     
+                                        data['namaPengguna'],
+                                        textAlign: TextAlign.left,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        )
+                                      ),   
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      child: Text(                     
+                                        "${data['kategori']} ~ ${DateFormat('dd MMM | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13,
+                                        )
+                                      ),   
+                                    ),
+                                  )                          
+                                ]
+                              ),
+                            ),
+                            Container(
+                              child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                'assets/images/verified.png', width: 30),
+                              ),
+                            ),
+                          ]
+                        )    
+                      )                   
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(                     
+                          data['pertanyaan'],
+                          style: const TextStyle(
+                            color: Color(0xFF6B6B6B),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
+                        ),   
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        children: [            
+                          TextButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (c, a1, a2) => DiscussionPage(documentId: document.id),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
+                                    final curvedAnimation = CurvedAnimation(
+                                      parent: animation,
+                                      curve: Curves.ease,
+                                    );
+
+                                    return SlideTransition(
+                                      position: tween.animate(curvedAnimation),
+                                      child: child,
+                                    );
+                                  }
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.arrow_drop_down, size: 14),
+                            label: const Text("Lihat komentar (3)"),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width*0.2,
+                          ),
+                          TextButton.icon(
+                            onPressed: () {
+                              //
+                            },
+                            icon: const Icon(Icons.arrow_upward, size: 14),
+                            label: Text(data['up'].toString()),
+                          ),
+                          TextButton.icon(
+                            onPressed: () {
+                                // Respond to button press
+                            },
+                            icon: const Icon(Icons.remove_red_eye, size: 14),
+                            label: Text(data['view'].toString()),
+                          ),
+                        ]
+                      ) 
+                    ),       
+                  ]
+
+                  ),
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10), 
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 10.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: const Offset(
+                        5.0, // Move to right 10  horizontally
+                        5.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ],
+                ),
+            );
+
+          }).toList(),
+        );
       },
-      color: Colors.green,
-      child: const Icon(Icons.add, color: Colors.white),
     );
   }
 }
@@ -516,6 +863,43 @@ class _DropDownState extends State<DropDown> {
     );
   }
 }
+//Dropdown kategori untuk buat pertanyaan
+class DropDown2 extends StatefulWidget {
+  const DropDown2({Key key}) : super(key: key);
+
+  @override
+  State<DropDown2> createState() => _DropDown2State();
+}
+
+class _DropDown2State extends State<DropDown2> {
+  String dropdownValue = 'Penyakit Dalam';
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_drop_down),
+      elevation: 16,
+      style: const TextStyle(color: Color(0xFF212121)),
+      underline: Container(
+        height: 2,
+        color: const Color(0xFF4183D7),
+      ),
+      onChanged: (String newValue) {
+        setState(() {
+          dropdownValue = newValue;
+        });
+      },
+      items: <String>['Penyakit Dalam', 'Penyakit Menular', 'Vaksin & Imunisasi', 'Kulit & Kelamin', 'Otot & Saraf', 'THT & Mata', 'Penyakit Lansia', 'Obat-Obatan', 'Gaya Hidup Sehat', 'Kandungan & Bedah', 'Gigi', 'Anak']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+}
 
 class DiscussionPage extends StatefulWidget {
   const DiscussionPage({Key key, this.documentId}) : super(key: key);
@@ -597,204 +981,203 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
 
               //Body.
               body: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                    children: [
-                      Align(
-                        child: Container(
-                          transform: Matrix4.translationValues(0.0, -5.0, 0.0),
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          height: 162,
-                          child: Card(
-                            child: Column(
-                            children: [
-                              Align(
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(vertical: 10.0),
-                                  child: Row(
-                                    children: [ 
-                                      Container(
-                                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(20),
-                                          child: Image.asset(
-                                            'assets/images/User.jpg', width: 40),
-                                          ),
-                                      ),
-                                            
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width*0.73,
-                                        child: Column (
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(                     
-                                                data['namaPengguna'],
-                                                textAlign: TextAlign.left,
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 16,
-                                                )
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(                     
-                                                "${data['kategori']} ~ ${DateFormat('yyyy-MM-dd | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
-                                                style: const TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 13,
-                                                )
-                                              ),
-                                            )                          
-                                          ]
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  children: [
+                    Align(
+                      child: Container(
+                        transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        child: Card(
+                          child: Column(
+                          children: [
+                            Align(
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(vertical: 10.0),
+                                child: Row(
+                                  children: [ 
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Image.asset(
+                                          'assets/images/User.jpg', width: 40),
                                         ),
+                                    ),
+                                          
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width*0.73,
+                                      child: Column (
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(                     
+                                              data['namaPengguna'],
+                                              textAlign: TextAlign.left,
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16,
+                                              )
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(                     
+                                              "${data['kategori']} ~ ${DateFormat('yyyy-MM-dd | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 13,
+                                              )
+                                            ),
+                                          )                          
+                                        ]
                                       ),
-                                    ]
-                                  )    
-                                )                   
+                                    ),
+                                  ]
+                                )    
+                              )                   
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                child: Text(                     
+                                  data['pertanyaan'],
+                                  style: const TextStyle(
+                                    color: Color(0xFF6B6B6B),
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 13,
+                                  )
+                                ),   
                               ),
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                  child: Text(                     
-                                    data['pertanyaan'],
-                                    style: const TextStyle(
-                                      color: Color(0xFF6B6B6B),
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 13,
-                                    )
-                                  ),   
+                            ),
+                            Row(
+                              children: [            
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width*0.6,
                                 ),
-                              ),
-                              Row(
-                                children: [            
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width*0.6,
-                                  ),
-                                  TextButton.icon(
-                                    onPressed: () {
-                                        // Respond to button press
-                                    },
-                                    icon: const Icon(Icons.arrow_upward, size: 14),
-                                    label: Text(data['up'].toString()),
-                                  ),
-                                  TextButton.icon(
-                                    onPressed: () {
-                                        // Respond to button press
-                                    },
-                                    icon: const Icon(Icons.remove_red_eye, size: 14),
-                                    label: Text(data['view'].toString()),
-                                  ),
-                                ]
-                              ),       
-                            ]
+                                TextButton.icon(
+                                  onPressed: () {
+                                      // Respond to button press
+                                  },
+                                  icon: const Icon(Icons.arrow_upward, size: 14),
+                                  label: Text(data['up'].toString()),
+                                ),
+                                TextButton.icon(
+                                  onPressed: () {
+                                      // Respond to button press
+                                  },
+                                  icon: const Icon(Icons.remove_red_eye, size: 14),
+                                  label: Text(data['view'].toString()),
+                                ),
+                              ]
+                            ),       
+                          ]
 
-                            ),
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
                           ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10), 
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                blurRadius: 10.0, // soften the shadow
-                                spreadRadius: 0.0, //extend the shadow
-                                offset: const Offset(
-                                  5.0, // Move to right 10  horizontally
-                                  5.0, // Move to bottom 10 Vertically
-                                ),
-                              )
-                            ],
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10.0),
-                          transform: Matrix4.translationValues(0.0, 5.0, 0.0),
-                          child: const Text("  Balasan (3)",
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold
-                            )         
-                          ),
-                        )
-                      ),
-                      Flexible(
-                        child: GetBalasanById(pass_documentId: widget.documentId)
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 10,bottom: 10,top: 10),
-                          margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
-                          height: 60,
-                          width: double.infinity,
-                          child: Row(
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: (){
-                                },
-                                child: Container(
-                                  height: 30,
-                                  width: 30,
-                                  decoration: BoxDecoration(
-                                    color: Colors.lightBlue,
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  child: const Icon(Icons.image, color: Colors.white, size: 20, ),
-                                ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10), 
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              blurRadius: 10.0, // soften the shadow
+                              spreadRadius: 0.0, //extend the shadow
+                              offset: const Offset(
+                                5.0, // Move to right 10  horizontally
+                                5.0, // Move to bottom 10 Vertically
                               ),
-                              const SizedBox(width: 15,),
-                              Expanded(
-                                child: TextField(
-                                  controller: _isiCtrl,
-                                  decoration: InputDecoration(
-                                    hintText: "Ketik balasan Anda...",
-                                    hintStyle: TextStyle(color: Color(0xFF6B6B6B)),
-                                    border: InputBorder.none
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 15,),
-                              FloatingActionButton(
-                                onPressed: () async{
-                                  replyDiscussion();
-                                },
-                                child: const Icon(Icons.send,color: Colors.white,size: 18,),
-                                backgroundColor: Colors.green,
-                                elevation: 0,
-                              ),
-                            ],
-                            
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.white, 
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                blurRadius: 10.0, // soften the shadow
-                                spreadRadius: 0.0, //extend the shadow
-                                offset: const Offset(
-                                  5.0, // Move to right 10  horizontally
-                                  5.0, // Move to bottom 10 Vertically
-                                ),
-                              )
-                            ],
-                          ),
+                            )
+                          ],
                         ),
                       ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10.0),
+                        transform: Matrix4.translationValues(0.0, 5.0, 0.0),
+                        child: const Text("  Balasan (3)",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold
+                          )         
+                        ),
+                      )
+                    ),
+                    Flexible(
+                      child: GetBalasanById(pass_documentId: widget.documentId)
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 10,bottom: 10,top: 10),
+                        margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
+                        height: 60,
+                        width: double.infinity,
+                        child: Row(
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: (){
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 30,
+                                decoration: BoxDecoration(
+                                  color: Colors.lightBlue,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: const Icon(Icons.image, color: Colors.white, size: 20, ),
+                              ),
+                            ),
+                            const SizedBox(width: 15,),
+                            Expanded(
+                              child: TextField(
+                                controller: _isiCtrl,
+                                decoration: InputDecoration(
+                                  hintText: "Ketik balasan Anda...",
+                                  hintStyle: TextStyle(color: Color(0xFF6B6B6B)),
+                                  border: InputBorder.none
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 15,),
+                            FloatingActionButton(
+                              onPressed: () async{
+                                replyDiscussion();
+                              },
+                              child: const Icon(Icons.send,color: Colors.white,size: 18,),
+                              backgroundColor: Colors.green,
+                              elevation: 0,
+                            ),
+                          ],
+                          
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.white, 
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              blurRadius: 10.0, // soften the shadow
+                              spreadRadius: 0.0, //extend the shadow
+                              offset: const Offset(
+                                5.0, // Move to right 10  horizontally
+                                5.0, // Move to bottom 10 Vertically
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
 
-                    ], 
+                  ], 
 
                 )
               )
@@ -883,7 +1266,6 @@ class _GetBalasanById extends State<GetBalasanById> {
               count++;
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                height: 162,
                 child: Card(
                   child: Column(
                   children: [
@@ -1702,7 +2084,8 @@ class _GetGejalaState extends State<GetGejala> {
         snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
           return data['nama_gejala'].toString();
-        });
+        }).toList();
+        
         
       },
     );
@@ -1840,13 +2223,49 @@ class _DataKuPage extends State<DataKuPage> {
 
       //Body.
       body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: const [
-              
-          ], 
-
+        height: MediaQuery.of(context).size.height,
+        child: ListView(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      child: const Text(
+                        "Kalender Asupan", 
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF212121)
+                        ),
+                      ),
+                    ),
+                  ),
+                ]
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10), 
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 10.0, // soften the shadow
+                    spreadRadius: 0.0, //extend the shadow
+                    offset: const Offset(
+                      5.0, // Move to right 10  horizontally
+                      5.0, // Move to bottom 10 Vertically
+                    ),
+                  )
+                ],
+              ),
+            )
+          ]
         )
+        
       )
       
     );
@@ -1917,7 +2336,7 @@ class _DaruratPage extends State<DaruratPage> {
               child: Row(
                 children:[
                   Container(
-                    width: 120,
+                    width: 130,
                     margin: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: RaisedButton(
                       color: Color(0xFF4183D7),
@@ -1950,7 +2369,7 @@ class _DaruratPage extends State<DaruratPage> {
                     ),
                   ),
                   Container(
-                    width: 120,
+                    width: 130,
                     // margin: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: RaisedButton(
                       color: Color(0xFF4183D7),
