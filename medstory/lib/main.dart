@@ -2617,7 +2617,7 @@ class GetFaskes extends StatelessWidget {
                             ),
                                     
                             SizedBox(
-                              width: MediaQuery.of(context).size.width*0.46,
+                              width: MediaQuery.of(context).size.width*0.55,
                               child: Column (
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -2665,23 +2665,6 @@ class GetFaskes extends StatelessWidget {
                                 ]
                               ),
                             ),
-                            Row(
-                              children: [
-                                Container(
-                                  child: ClipRRect(
-                                  child: Image.asset(
-                                    'assets/images/Rating.png', width: 20),
-                                  ),
-                                ),
-                                Text(                     
-                                  data['rating'].toString(),
-                                  style: const TextStyle(
-                                    color: Color(0xFF212121),
-                                    fontSize: 14,
-                                  )
-                                ),   
-                              ],
-                            )
                             
                           ]
                         )    
@@ -2759,7 +2742,8 @@ class GetFaskes extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(
-                                  pageBuilder: (c, a1, a2) => MapsPage(pass_namafaskes: data['namaFaskes'], pass_coordinate_lat: double.tryParse(data['lat']), pass_coordinate_lng: double.tryParse(data['lng'])),
+                                  pageBuilder: (c, a1, a2) => MapsPage(pass_namafaskes: data['namaFaskes'], pass_coordinate_lat: double.tryParse(data['lat']), pass_coordinate_lng: double.tryParse(data['lng']), 
+                                    pass_alamat: data['alamat'], pass_kontak: data['kontak'], pass_fasilitas: data['fasilitas'], pass_poliklinik: data['poliklinik']),
                                   transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                     final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
                                     final curvedAnimation = CurvedAnimation(
@@ -2775,38 +2759,11 @@ class GetFaskes extends StatelessWidget {
                                 ),
                               );
                             },
-                            icon: const Icon(Icons.gps_fixed, size: 14),
-                            label: const Text("Lihat Lokasi"),
+                            icon: const Icon(Icons.info, size: 14),
+                            label: const Text("Detail"),
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF1F9F2F)),
                             ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              // Navigator.push(
-                              //   context,
-                              //   PageRouteBuilder(
-                              //     pageBuilder: (c, a1, a2) => MapsPage(),
-                              //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              //       final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
-                              //       final curvedAnimation = CurvedAnimation(
-                              //         parent: animation,
-                              //         curve: Curves.ease,
-                              //       );
-
-                              //       return SlideTransition(
-                              //         position: tween.animate(curvedAnimation),
-                              //         child: child,
-                              //       );
-                              //     }
-                              //   ),
-                              // );
-                            },
-                            icon: const Icon(Icons.remove_red_eye, size: 14),
-                            label: const Text("Dokter"),
                           ),
                           SizedBox(
                             width: 10,
@@ -2818,6 +2775,27 @@ class GetFaskes extends StatelessWidget {
                             icon: const Icon(Icons.copy, size: 14),
                             label: const Text("Kordinat"),
                           ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width*0.3,
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                child: ClipRRect(
+                                child: Image.asset(
+                                  'assets/images/Rating.png', width: 20),
+                                ),
+                              ),
+                              Text(                     
+                                data['rating'].toString(),
+                                style: const TextStyle(
+                                  color: Color(0xFF212121),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                )
+                              ),   
+                            ],
+                          )
                         ]
                       ) 
                     ),       
@@ -2853,13 +2831,15 @@ class GetFaskes extends StatelessWidget {
 }
 
 class MapsPage extends StatefulWidget {
-  MapsPage({Key key, this.pass_namafaskes, this.pass_coordinate_lat, this.pass_coordinate_lng}) : super(key: key);
+  MapsPage({Key key, this.pass_namafaskes, this.pass_coordinate_lat, this.pass_coordinate_lng, this.pass_alamat, this.pass_fasilitas, this.pass_kontak, this.pass_poliklinik}) : super(key: key);
 
   final String pass_namafaskes;
+  final String pass_alamat;
+  final String pass_kontak;
+  final String pass_fasilitas;
+  final String pass_poliklinik;
   final double pass_coordinate_lat;
   final double pass_coordinate_lng;
-
-
 
   @override
   _MapsPageState createState() => _MapsPageState();
@@ -2899,30 +2879,213 @@ class _MapsPageState extends State<MapsPage> {
         backgroundColor: Color(0x44FFFFFF),
         elevation: 0,
       ),
-      body: GoogleMap(
-        myLocationButtonEnabled: false,
-        zoomControlsEnabled: false,
-        initialCameraPosition: _initialCameraPosition,
-        onMapCreated: (controller) => _googleMapController = controller,
-        markers: {
-          if (_origin != null) _origin,
-          Marker(
-            markerId: MarkerId('destination'),
-            infoWindow: const InfoWindow(title: 'Destination'),
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-            position: LatLng(widget.pass_coordinate_lat, widget.pass_coordinate_lng),
-          )
-        },
-        onLongPress: _addMarker,
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          children: [
+            Flexible(      
+              child: GoogleMap(
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: false,
+                initialCameraPosition: _initialCameraPosition,
+                onMapCreated: (controller) => _googleMapController = controller,
+                markers: {
+                  if (_origin != null) _origin,
+                  Marker(
+                    markerId: MarkerId('destination'),
+                    infoWindow: const InfoWindow(title: 'Destination'),
+                    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+                    position: LatLng(widget.pass_coordinate_lat, widget.pass_coordinate_lng),
+                  )
+                },
+                onLongPress: _addMarker,
+              ),
+            ), 
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: Image.asset(
+                          'assets/images/${widget.pass_namafaskes}.jpeg', width: 120, height: 80),
+                        ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            child: Text(                     
+                              widget.pass_namafaskes,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),   
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width*0.6,
+                            child: Text(                     
+                              widget.pass_alamat,
+                              style: const TextStyle(
+                                color: Color(0xFF212121),
+                                fontSize: 13,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),   
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            child: Text(                     
+                              widget.pass_kontak,
+                              style: const TextStyle(
+                                color: Color(0xFF212121),
+                                fontSize: 13,
+                              )
+                            ),   
+                          ),
+                        )                          
+                      ]
+                    ),
+                  ]
+                )
+              ]
+            ),
+            Column(
+              children: <Widget>[
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  leading: IconButton(
+                    iconSize: 25,
+                    icon: Icon(Icons.info,
+                    color: Color(0xFF414141)),
+                    onPressed: () {},
+                  ),
+                  title: const Text(
+                    "Detail",
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w800
+                    ),
+                  ),
+                  children: <Widget>[
+                    Container(
+                      height: MediaQuery.of(context).size.height*0.3,
+                      child: ListView(
+                        children:[ 
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Text(                     
+                                'Fasilitas',
+                                style: const TextStyle(
+                                  color: Color(0xFF212121),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                )
+                              ),   
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Text(                     
+                                widget.pass_fasilitas,
+                                style: const TextStyle(
+                                  color: Color(0xFF6B6B6B),
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 13,
+                                ),
+                              ),   
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Text(                     
+                                'Poliklinik',
+                                style: const TextStyle(
+                                  color: Color(0xFF212121),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                )
+                              ),   
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Text(                     
+                                widget.pass_poliklinik,
+                                style: const TextStyle(
+                                  color: Color(0xFF6B6B6B),
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 13,
+                                ),
+                              ),   
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Text(                     
+                                'Praktik Dokter',
+                                style: const TextStyle(
+                                  color: Color(0xFF212121),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                )
+                              ),   
+                            ),
+                          ),
+                          SizedBox(height: 10)
+                        ]
+                      )
+                    )
+                  ]
+                )
+              ]
+            ),
+          ],
+        )
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFF1F9F2F),
-        foregroundColor: Colors.white,
-        onPressed: () => _googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(_initialCameraPosition),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(top: 80.0),
+        child: FloatingActionButton(
+          backgroundColor: Color(0xFF1F9F2F),
+          foregroundColor: Colors.white,
+          onPressed: () => _googleMapController.animateCamera(
+            CameraUpdate.newCameraPosition(_initialCameraPosition),
+          ),
+          child: Icon(Icons.center_focus_strong),
         ),
-        child: Icon(Icons.center_focus_strong),
-      )
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop
     );
   }
   void _addMarker(LatLng pos) async {
