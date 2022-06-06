@@ -91,6 +91,11 @@ flutter:
 
     - assets/images/EmptyError.png
 
+    - assets/images/dokter/Dr. Usman Yousaf, Sp.M.jpg
+    - assets/images/dokter/Drg. Beatrix Beargen.jpg
+    - assets/images/dokter/dr. Adams.jpg
+    - assets/images/dokter/drg. Robert SP.A.jpg
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

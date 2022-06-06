@@ -484,7 +484,7 @@ class _GetMyDiskusiState extends State<GetMyDiskusi> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Loading");
+          return const CircularProgressIndicator();
         }
 
         return ListView(
@@ -663,7 +663,7 @@ class GetDiskusi extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Loading");
+          return const CircularProgressIndicator();
         }
 
         return ListView(
@@ -1189,33 +1189,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
         }
 
         //Loading
-        return Scaffold(
-          body: Align(
-            alignment: Alignment.center,
-            child: Container(
-              transform: Matrix4.translationValues(0.0, 400.0, 0.0),
-              child: Column(
-                children:const [
-                  //Error
-                  // SpinKitFoldingCube(
-                  //   color: Color(0xFF4183D7),
-                  //   controller: AnimationController(vsync: this, duration: const Duration(milliseconds: 3000)),
-                  // ),
-                  Text(                     
-                    "Loading...",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    )
-                  ),
-                ]
-              )   
-            ),
-          ),
-          
-        );
+        return const CircularProgressIndicator();
 
       },
     );
@@ -1234,6 +1208,7 @@ class _GetBalasanById extends State<GetBalasanById> {
   // GetBalasanById(this.documentId);
   final Stream<QuerySnapshot> _balasan = FirebaseFirestore.instance.collection('balasan').snapshots();
   int count = 0;
+  int i = 0;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -1244,7 +1219,7 @@ class _GetBalasanById extends State<GetBalasanById> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Loading");
+          return const CircularProgressIndicator();
         }
 
         return ListView(
@@ -1369,45 +1344,8 @@ class _GetBalasanById extends State<GetBalasanById> {
               );
             } //Empty message still duplicate. even if count = 0 method still error 
             if(widget.pass_documentId != data['id_diskusi']) {
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width*0.6,
-                      child: Image.asset('assets/images/EmptyError.png'),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
-                        child: const Text(
-                          "Maaf, pertanyaan ini belum dijawab...", 
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Color(0xFF212121)
-                          ),
-                        ),
-                      ),
-                    ),
-                  ]
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10), 
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      blurRadius: 10.0, // soften the shadow
-                      spreadRadius: 0.0, //extend the shadow
-                      offset: const Offset(
-                        5.0, // Move to right 10  horizontally
-                        5.0, // Move to bottom 10 Vertically
-                      ),
-                    )
-                  ],
-                ),
-              );
+              i++;
+              return SizedBox();
             }
 
           }).toList(),
@@ -2071,7 +2009,7 @@ class _GetGejalaState extends State<GetGejala> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading");
+          return const CircularProgressIndicator();
         }
 
         // return ListView(
@@ -2590,7 +2528,7 @@ class GetFaskes extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Loading");
+          return const CircularProgressIndicator();
         }
 
         return ListView(
@@ -2639,27 +2577,47 @@ class GetFaskes extends StatelessWidget {
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Container(
-                                      child: Text(                     
-                                        data['alamat'],
-                                        style: const TextStyle(
-                                          color: Color(0xFF212121),
-                                          fontSize: 13,
+                                      child: RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            WidgetSpan(
+                                              child: Icon(Icons.location_on, size: 14),
+                                            ),
+                                            TextSpan(                   
+                                              text:data['alamat'],
+                                              style: const TextStyle(
+                                                color: Color(0xFF212121),
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ]
                                         ),
-                                        overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
-                                      ),   
+                                        overflow: TextOverflow.ellipsis,   
+                                      )
                                     ),
                                   ),
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Container(
-                                      child: Text(                     
-                                        data['kontak'],
-                                        style: const TextStyle(
-                                          color: Color(0xFF212121),
-                                          fontSize: 13,
-                                        )
-                                      ),   
+                                      child: RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            WidgetSpan(
+                                              child: Icon(Icons.call_sharp, size: 14),
+                                            ),
+                                            TextSpan(                   
+                                              text:data['kontak'],
+                                              style: const TextStyle(
+                                                color: Color(0xFF212121),
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ]
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,   
+                                      )
                                     ),
                                   )                          
                                 ]
@@ -2743,7 +2701,7 @@ class GetFaskes extends StatelessWidget {
                                 context,
                                 PageRouteBuilder(
                                   pageBuilder: (c, a1, a2) => MapsPage(pass_namafaskes: data['namaFaskes'], pass_coordinate_lat: double.tryParse(data['lat']), pass_coordinate_lng: double.tryParse(data['lng']), 
-                                    pass_alamat: data['alamat'], pass_kontak: data['kontak'], pass_fasilitas: data['fasilitas'], pass_poliklinik: data['poliklinik']),
+                                    pass_alamat: data['alamat'], pass_kontak: data['kontak'], pass_fasilitas: data['fasilitas'], pass_poliklinik: data['poliklinik'], pass_idFaskes: document.id),
                                   transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                     final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
                                     final curvedAnimation = CurvedAnimation(
@@ -2831,9 +2789,10 @@ class GetFaskes extends StatelessWidget {
 }
 
 class MapsPage extends StatefulWidget {
-  MapsPage({Key key, this.pass_namafaskes, this.pass_coordinate_lat, this.pass_coordinate_lng, this.pass_alamat, this.pass_fasilitas, this.pass_kontak, this.pass_poliklinik}) : super(key: key);
+  MapsPage({Key key, this.pass_namafaskes, this.pass_idFaskes ,this.pass_coordinate_lat, this.pass_coordinate_lng, this.pass_alamat, this.pass_fasilitas, this.pass_kontak, this.pass_poliklinik}) : super(key: key);
 
   final String pass_namafaskes;
+  final String pass_idFaskes;
   final String pass_alamat;
   final String pass_kontak;
   final String pass_fasilitas;
@@ -2842,9 +2801,10 @@ class MapsPage extends StatefulWidget {
   final double pass_coordinate_lng;
 
   @override
-  _MapsPageState createState() => _MapsPageState();
+  _MapsPageState createState() => _MapsPageState(pass_idFaskes);
 }
-class _MapsPageState extends State<MapsPage> {
+class _MapsPageState extends State<MapsPage> with SingleTickerProviderStateMixin {
+  _MapsPageState(pass_idFakses);
   GoogleMapController _googleMapController;
   Marker _origin;
   Marker _destination;
@@ -2893,8 +2853,8 @@ class _MapsPageState extends State<MapsPage> {
                 markers: {
                   if (_origin != null) _origin,
                   Marker(
-                    markerId: MarkerId('destination'),
-                    infoWindow: const InfoWindow(title: 'Destination'),
+                    markerId: MarkerId(widget.pass_namafaskes),
+                    infoWindow: InfoWindow(title: widget.pass_namafaskes),
                     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
                     position: LatLng(widget.pass_coordinate_lat, widget.pass_coordinate_lng),
                   )
@@ -2936,27 +2896,47 @@ class _MapsPageState extends State<MapsPage> {
                           alignment: Alignment.centerLeft,
                           child: Container(
                             width: MediaQuery.of(context).size.width*0.6,
-                            child: Text(                     
-                              widget.pass_alamat,
-                              style: const TextStyle(
-                                color: Color(0xFF212121),
-                                fontSize: 13,
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  WidgetSpan(
+                                    child: Icon(Icons.location_on, size: 14),
+                                  ),
+                                  TextSpan(                   
+                                    text:widget.pass_alamat,
+                                    style: const TextStyle(
+                                      color: Color(0xFF212121),
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ]
                               ),
-                              overflow: TextOverflow.ellipsis,
                               maxLines: 2,
-                            ),   
+                              overflow: TextOverflow.ellipsis,   
+                            )
                           ),
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
-                            child: Text(                     
-                              widget.pass_kontak,
-                              style: const TextStyle(
-                                color: Color(0xFF212121),
-                                fontSize: 13,
-                              )
-                            ),   
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  WidgetSpan(
+                                    child: Icon(Icons.call_sharp, size: 14),
+                                  ),
+                                  TextSpan(                   
+                                    text:widget.pass_kontak,
+                                    style: const TextStyle(
+                                      color: Color(0xFF212121),
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ]
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,   
+                            )
                           ),
                         )                          
                       ]
@@ -3063,6 +3043,12 @@ class _MapsPageState extends State<MapsPage> {
                               ),   
                             ),
                           ),
+                          Flexible(
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height*0.3,
+                              child: GetDokter(idFaskes: widget.pass_idFaskes),
+                            )
+                          ),
                           SizedBox(height: 10)
                         ]
                       )
@@ -3102,5 +3088,187 @@ class _MapsPageState extends State<MapsPage> {
         _destination = null;
       });
     } 
+  }
+}
+
+class GetDokter extends StatefulWidget {
+  const GetDokter({Key key, this.idFaskes}) : super(key: key);
+  final String idFaskes;
+
+  @override
+    _GetDokterState createState() => _GetDokterState();
+}
+
+class _GetDokterState extends State<GetDokter> {
+  final Stream<QuerySnapshot> _diskusi = FirebaseFirestore.instance.collection('dokterpraktik').snapshots();
+  int i = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _diskusi,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+
+        return ListView(
+          scrollDirection: Axis.horizontal,
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            Widget emtpyMessage(){
+              if(i == 0){
+                print("tes");
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width*0.6,
+                        child: Image.asset('assets/images/EmptyError.png'),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
+                          child: const Text(
+                            "Maaf, pertanyaan ini belum dijawab...", 
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Color(0xFF212121)
+                            ),
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10), 
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        blurRadius: 10.0, // soften the shadow
+                        spreadRadius: 0.0, //extend the shadow
+                        offset: const Offset(
+                          5.0, // Move to right 10  horizontally
+                          5.0, // Move to bottom 10 Vertically
+                        ),
+                      )
+                    ],
+                  ),
+                );
+                
+              }
+            }
+            if(data['id_faskes'] == widget.idFaskes){
+              i++;
+              return Card(
+                child:Container(
+                  padding: EdgeInsets.all(10),
+                  height: 70,
+                  width: 160,
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          child: Text(                     
+                            data['spesialis'],
+                            style: const TextStyle(
+                              color: Color(0xFF4183D7),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),   
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.asset(
+                            'assets/images/dokter/${data['namaDokter']}.jpg', width: 105),
+                          ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          child: Text(                     
+                            data['namaDokter'],
+                            style: const TextStyle(
+                              color: Color(0xFF212121),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),   
+                        ),
+                      ),
+                      SizedBox(height: 5,),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          child: Text(                     
+                            data['hariPraktik'],
+                            style: const TextStyle(
+                              color: Color(0xFF808080),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),   
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          child: Text(                     
+                            "${data['jamMulai']}-${data['jamSelesai']}",
+                            style: const TextStyle(
+                              color: Color(0xFF808080),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),   
+                        ),
+                      ),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white, 
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        blurRadius: 10.0, // soften the shadow
+                        spreadRadius: 0.0, //extend the shadow
+                        offset: const Offset(
+                          5.0, // Move to right 10  horizontally
+                          5.0, // Move to bottom 10 Vertically
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              );
+            } else {
+              return SizedBox();
+            }
+          }).toList(), 
+        );
+
+      },
+    );
   }
 }
