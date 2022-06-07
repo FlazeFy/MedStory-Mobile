@@ -47,10 +47,10 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
-      ForumPage(pass_username: widget.pass_usernameNav),
-      SmartDocPage(pass_username: widget.pass_usernameNav),
-      DataKuPage(pass_username: widget.pass_usernameNav),
-      DaruratPage(pass_username: widget.pass_usernameNav),
+      ForumPage(pass_username: 'flazefy'),
+      SmartDocPage(pass_username: 'flazefy'),
+      DataKuPage(pass_username: 'flazefy'),
+      DaruratPage(pass_username: 'flazefy'),
     ];
   
     return Scaffold(
@@ -1614,7 +1614,7 @@ class _SmartDocPage extends State<SmartDocPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username)),
+              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username, pass_documentId: 'RPxpwFtMphTZCEZnxUIB',)),
             );
           },
         )
@@ -2153,7 +2153,7 @@ class _DataKuPage extends State<DataKuPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username)),
+              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username, pass_documentId: 'RPxpwFtMphTZCEZnxUIB',)),
             );
           },
         )
@@ -2398,7 +2398,7 @@ class _DaruratPage extends State<DaruratPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username)),
+              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username, pass_documentId: 'RPxpwFtMphTZCEZnxUIB',)),
             );
           },
         )
@@ -3283,9 +3283,31 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 class _ProfilePageState extends State<ProfilePage> {
+  var _namaLengkapCtrl = TextEditingController();
+  var _emailCtrl = TextEditingController();
+  var _ponselCtrl = TextEditingController();
+  var _pekerjaanCtrl = TextEditingController();
+  var _alamatCtrl = TextEditingController();
+  var _passwordCtrl = TextEditingController();
+
+  var namaLengkap; 
+  var email;
+  var ponsel;
+  var pekerjaan;
+  var alamat;
+  var password;
+
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('pengguna');
+
+    Future<void> updatePengguna() {
+      return users
+        .doc(widget.pass_documentId)
+        .update({'namaLengkap': namaLengkap, 'email': email, 'ponsel': ponsel, 'pekerjaan': pekerjaan, 'alamat': alamat, 'password': password})
+        .then((value) => print("Profil berhasil diupdate"))
+        .catchError((error) => print("Failed to update user: $error"));
+    }
 
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(widget.pass_documentId).get(),
@@ -3590,7 +3612,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           children: <Widget>[
                             Container(
-                              height: MediaQuery.of(context).size.height*0.3,
+                              height: MediaQuery.of(context).size.height*0.35,
                               child: ListView(
                                 children:[ 
                                   Align(
@@ -3607,6 +3629,52 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),   
                                     ),
                                   ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                                    child: TextField(
+                                      controller: _namaLengkapCtrl,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: data['namaLengkap'],
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                        width: MediaQuery.of(context).size.width*0.5,
+                                        child: TextField(
+                                          controller: _emailCtrl,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: data['email'],
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: MediaQuery.of(context).size.width*0.4,
+                                        child: TextField(
+                                          controller: _ponselCtrl,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: data['ponsel'],
+                                          ),
+                                        ),
+                                      ),
+                                    
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                                    child: TextField(
+                                      controller: _passwordCtrl,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: data['password'],
+                                      ),
+                                    ),
+                                  ),
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Container(
@@ -3621,6 +3689,120 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),   
                                     ),
                                   ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                    child: TextField(
+                                      controller: _alamatCtrl,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: data['alamat'],
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                    child: TextField(
+                                      controller: _pekerjaanCtrl,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: data['pekerjaan'],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 10,),
+                                  Row(
+                                    children: [
+                                      SizedBox(width:10),
+                                      Container(
+                                        width:140,
+                                        height: 50,
+                                        child: SpinBox(
+                                          min: 1, max: 220,
+                                          value: data['tinggiBadan'].toDouble(),
+                                          spacing: 1,
+                                          textStyle: TextStyle(
+                                            fontSize: 16.0,
+                                          ),
+                                          decoration: InputDecoration(labelText: 'Tinggi Badan (Cm)'),
+                                        ),
+                                      ),
+                                      SizedBox(width:10),
+                                      Container(
+                                        width:140,
+                                        height: 50,
+                                        child: SpinBox(
+                                          min: 1, max: 220,
+                                          value: data['beratBadan'].toDouble(),
+                                          spacing: 1,
+                                          textStyle: TextStyle(
+                                            fontSize: 16.0,
+                                          ),
+                                          decoration: InputDecoration(labelText: 'Berat Badan (Kg)'),
+                                        ),
+                                      ),
+                                      SizedBox(width:10),
+                                      Container(
+                                        child: IconButton(
+                                          icon: const Icon(Icons.info),
+                                          color: Colors.white,
+                                          onPressed: () {},
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(6),
+                                          color: Colors.blue,
+                                        ) 
+                                      )
+
+                                    ],
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                    child: ElevatedButton.icon(
+                                      onPressed: () async {
+                                        if(_namaLengkapCtrl.text.isEmpty){
+                                          namaLengkap = data['namaLengkap'];
+                                        } else {
+                                          namaLengkap = _namaLengkapCtrl.text;
+                                        }
+                                        if(_emailCtrl.text.isEmpty){
+                                          email = data['email'];
+                                        } else {
+                                          email = _emailCtrl.text;
+                                        }
+                                        if(_ponselCtrl.text.isEmpty){
+                                          ponsel = data['ponsel'];
+                                        } else {
+                                          ponsel = _ponselCtrl.text;
+                                        }
+                                        if(_pekerjaanCtrl.text.isEmpty){
+                                          pekerjaan = data['pekerjaan'];
+                                        } else {
+                                          pekerjaan = _pekerjaanCtrl.text;
+                                        }
+                                        if(_alamatCtrl.text.isEmpty){
+                                          alamat = data['alamat'];
+                                        } else {
+                                          alamat = _alamatCtrl.text;
+                                        }
+                                        if(_passwordCtrl.text.isEmpty){
+                                          password = data['password'];
+                                        } else {
+                                          password = _passwordCtrl.text;
+                                        }
+                                        updatePengguna();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => NavBar(pass_usernameNav: data['namaPengguna'])),
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.green, // Background color
+                                      ),
+                                      icon: Icon(Icons.save, size: 18),
+                                      label: Text("Simpan Perubahan"),
+                                    )
+                                  )
+
                                 ]
                               )
                             )
@@ -3641,7 +3823,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Text(                     
                             'Selesaikan pendaftaran dengan mengunggah foto/dokumen KTP dan foto diri (selfie)',
                             style: const TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 14,
                             )
                           ),   
@@ -3651,7 +3833,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Text(                     
                               '0 dari 2 berkas terkumpul',
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontStyle: FontStyle.italic,
                                 fontSize: 13,
                               )
@@ -3672,7 +3854,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6), 
-                      color: Color(0xFF5cb85c),
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.green,
+                        width: 1.5,
+                      ),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.3),
