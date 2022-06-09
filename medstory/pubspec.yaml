@@ -96,6 +96,8 @@ flutter:
     - assets/images/dokter/dr. Adams.jpg
     - assets/images/dokter/drg. Robert SP.A.jpg
 
+    - assets/asupan/capcay.jpg
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

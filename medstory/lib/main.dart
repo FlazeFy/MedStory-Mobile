@@ -29,13 +29,14 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFF6F7F9)),
       title: "Leonardho R Sitanggang-1302194041",
-      home: const NavBar(), //Navbar
+      home: const NavBar(pass_usernameNav: 'flazefy', pass_id_userNav: 'RPxpwFtMphTZCEZnxUIB'), //Navbar
     );
   }
 }
 class NavBar extends StatefulWidget {
-  const NavBar({Key key, this.pass_usernameNav}) : super(key: key);
+  const NavBar({Key key, this.pass_usernameNav, this.pass_id_userNav}) : super(key: key);
   final String pass_usernameNav;
+  final String pass_id_userNav;
   
   @override
   _NavBarState createState() => _NavBarState();
@@ -47,10 +48,10 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
-      ForumPage(pass_username: 'flazefy'),
-      SmartDocPage(pass_username: 'flazefy'),
-      DataKuPage(pass_username: 'flazefy'),
-      DaruratPage(pass_username: 'flazefy'),
+      ForumPage(pass_username: widget.pass_usernameNav, pass_idUser: widget.pass_id_userNav),
+      SmartDocPage(pass_username: widget.pass_usernameNav, pass_idUser: widget.pass_id_userNav),
+      DataKuPage(pass_username: widget.pass_usernameNav, pass_idUser: widget.pass_id_userNav),
+      DaruratPage(pass_username: widget.pass_usernameNav, pass_idUser: widget.pass_id_userNav),
     ];
   
     return Scaffold(
@@ -91,9 +92,10 @@ class _NavBarState extends State<NavBar> {
 }
 
 class ForumPage extends StatefulWidget {
-  const ForumPage({Key key, this.pass_username}) : super(key: key);
+  const ForumPage({Key key, this.pass_username, this.pass_idUser}) : super(key: key);
 
   final String pass_username;
+  final String pass_idUser;
 
   @override
 
@@ -123,7 +125,7 @@ class _ForumPage extends State<ForumPage> {
     CollectionReference users = FirebaseFirestore.instance.collection('diskusi');
 
     return Scaffold(
-      drawer: const NavDrawer(),
+      drawer: NavDrawer(pass_username: widget.pass_username),
       appBar: AppBar(
         iconTheme: 
           const IconThemeData(
@@ -145,7 +147,7 @@ class _ForumPage extends State<ForumPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username, pass_documentId: 'RPxpwFtMphTZCEZnxUIB',)),
+              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username, pass_documentId: widget.pass_idUser)),
             );
           },
         )
@@ -1573,9 +1575,10 @@ class Item4 extends StatelessWidget {
 }
 
 class SmartDocPage extends StatefulWidget {
-  const SmartDocPage({Key key, this.pass_username}) : super(key: key);
+  const SmartDocPage({Key key, this.pass_username, this.pass_idUser}) : super(key: key);
 
   final String pass_username;
+  final String pass_idUser;
 
   @override
 
@@ -1592,7 +1595,7 @@ class _SmartDocPage extends State<SmartDocPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const NavDrawer(),
+      drawer: NavDrawer(),
       appBar: AppBar(
         iconTheme: 
           const IconThemeData(
@@ -1614,7 +1617,7 @@ class _SmartDocPage extends State<SmartDocPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username, pass_documentId: 'RPxpwFtMphTZCEZnxUIB',)),
+              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username, pass_documentId: widget.pass_idUser)),
             );
           },
         )
@@ -2109,9 +2112,10 @@ class _DropDownAktvState extends State<DropDownAktv> {
 }
 
 class DataKuPage extends StatefulWidget {
-  const DataKuPage({Key key, this.pass_username}) : super(key: key);
+  const DataKuPage({Key key, this.pass_username, this.pass_idUser}) : super(key: key);
 
   final String pass_username;
+  final String pass_idUser;
 
   @override
 
@@ -2131,7 +2135,7 @@ class _DataKuPage extends State<DataKuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const NavDrawer(),
+      drawer: NavDrawer(),
       appBar: AppBar(
         iconTheme: 
           const IconThemeData(
@@ -2153,7 +2157,7 @@ class _DataKuPage extends State<DataKuPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username, pass_documentId: 'RPxpwFtMphTZCEZnxUIB',)),
+              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username, pass_documentId: widget.pass_idUser)),
             );
           },
         )
@@ -2357,9 +2361,10 @@ class _DataKuPage extends State<DataKuPage> {
 }
 
 class DaruratPage extends StatefulWidget {
-  const DaruratPage({Key key, this.pass_username}) : super(key: key);
+  const DaruratPage({Key key, this.pass_username, this.pass_idUser}) : super(key: key);
 
   final String pass_username;
+  final String pass_idUser;
 
   @override
 
@@ -2376,7 +2381,7 @@ class _DaruratPage extends State<DaruratPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const NavDrawer(),
+      drawer: NavDrawer(),
       appBar: AppBar(
         iconTheme: 
           const IconThemeData(
@@ -2398,7 +2403,7 @@ class _DaruratPage extends State<DaruratPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username, pass_documentId: 'RPxpwFtMphTZCEZnxUIB',)),
+              MaterialPageRoute(builder: (context) => ProfilePage(pass_username: widget.pass_username, pass_documentId: widget.pass_idUser)),
             );
           },
         )
@@ -3839,7 +3844,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               )
                             ),   
                             SizedBox(
-                              width: MediaQuery.of(context).size.width*0.2,
+                              width: MediaQuery.of(context).size.width*0.17,
                             ),
                             ElevatedButton.icon(
                               onPressed: () {
