@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../main.dart';
 
 class NavDrawer extends StatelessWidget {
   var pass_username;
+  var pass_id_userNav;
 
-  NavDrawer({Key key, this.pass_username}) : super(key: key);
+  NavDrawer({Key key, this.pass_username, this.pass_id_userNav}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -146,86 +149,26 @@ class NavDrawer extends StatelessWidget {
                 ),
                 Expanded(
                   child: new Container(
-                      margin: const EdgeInsets.only(left: 20.0, right: 10.0),
-                      child: Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                        height: 25,
-                      )),
+                    margin: const EdgeInsets.only(left: 20.0, right: 10.0),
+                    child: Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                      height: 25,
+                    )
+                  ),
                 ),
               ]),
             ],
           ),
           Container(
-            height: MediaQuery.of(context).size.height*0.37,
+            height: MediaQuery.of(context).size.width*0.74,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  "Pagi ~ ... cal", 
-                  style: TextStyle(color: Colors.grey, fontSize: 12)
-                ),
-                Container(
-                  height: 70,
-                  margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10), 
-                          child:Image.asset("assets/asupan/capcay.jpg", width: 70, height: 65),
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width*0.3,
-                        margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "CapCay", 
-                              style: TextStyle(color: Colors.blue, fontSize: 14)
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              "Sayuran", 
-                              style: TextStyle(color: Colors.grey, fontSize: 13)
-                            ),
-                            Text(
-                              "250 cal", 
-                              style: TextStyle(color: Color(0xFF808080), fontSize: 13)
-                            ),
-                          ],
-                        )
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                        child:IconButton(
-                          icon: const Icon(Icons.delete),
-                          color: Colors.white,
-                          onPressed: () {},
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          color: Colors.red,
-                        ) 
-                      ),
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      left: BorderSide(width: 4.0, color: Colors.orange),
-                    ),
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  "Siang ~ ... cal", 
-                  style: TextStyle(color: Colors.grey, fontSize: 12)
-                ),
-                Text(
-                  "Malam ~ ... cal", 
-                  style: TextStyle(color: Colors.grey, fontSize: 12)
+                Flexible(
+                  child: GetAsupanDayById(pass_documentId: pass_id_userNav)
                 ),
               ],
             )
@@ -268,6 +211,148 @@ class NavDrawer extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class GetAsupanDayById extends StatefulWidget {
+  const GetAsupanDayById({Key key, this.pass_documentId}) : super(key: key);
+  final String pass_documentId;
+
+  @override
+  _GetAsupanDayById createState() => _GetAsupanDayById();
+}
+
+class _GetAsupanDayById extends State<GetAsupanDayById> {
+  // GetAsupanDayById(this.documentId);
+  final Stream<QuerySnapshot> _jadwalasupan = FirebaseFirestore.instance.collection('jadwalkalori').snapshots();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _jadwalasupan,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+
+        return ListView(
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            return GetAsupanDetailById(pass_id_asupan: data['id_asupan']);
+          }).toList(),
+        );
+      },
+    );
+  }
+}
+
+class GetAsupanDetailById extends StatefulWidget {
+  const GetAsupanDetailById({Key key, this.pass_id_asupan}) : super(key: key);
+  final String pass_id_asupan;
+
+  @override
+  _GetAsupanDetailById createState() => _GetAsupanDetailById();
+}
+
+class _GetAsupanDetailById extends State<GetAsupanDetailById> {
+  // GetAsupanDayById(this.documentId);
+  final Stream<QuerySnapshot> _detailasupan = FirebaseFirestore.instance.collection('asupan').snapshots();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _detailasupan,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+
+        return Column(
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            if(document.id == widget.pass_id_asupan){
+              return Container(
+                height: 70,
+                margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                child: Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10), 
+                        child:Image.asset("assets/asupan/${data['nama']}.jpg", width: 70, height: 65),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width*0.3,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            data['nama'], 
+                            style: TextStyle(color: Colors.blue, fontSize: 14)
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            data['kategori'], 
+                            style: TextStyle(color: Colors.grey, fontSize: 13)
+                          ),
+                          Text(
+                            data['kalori'].toString(), 
+                            style: TextStyle(color: Color(0xFF808080), fontSize: 13)
+                          ),
+                        ],
+                      )
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child:IconButton(
+                        icon: const Icon(Icons.delete),
+                        color: Colors.white,
+                        onPressed: () {},
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.red,
+                      ) 
+                    ),
+                  ],
+                ),
+                decoration: BoxDecoration(
+                  // borderRadius: BorderRadius.circular(8),
+                  border: Border(
+                    left: BorderSide(width: 4.0, color: Colors.orange),
+                  ),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xff414141).withOpacity(0.4),
+                      blurRadius: 10.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: const Offset(
+                        5.0, // Move to right 10  horizontally
+                        5.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ],
+                ),              
+              );
+            } else {
+              return SizedBox(height: 0);
+            }
+          }).toList(),
+        );
+      },
     );
   }
 }

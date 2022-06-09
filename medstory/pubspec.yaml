@@ -77,26 +77,11 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:     
-    - assets/images/User.jpg
-    - assets/images/background1.png
-    - assets/images/verified.png
-    - assets/images/Rating.png
-    - assets/images/News1.jpeg
-    - assets/images/News2.jpeg
-    - assets/images/News3.jpeg
-    - assets/images/News4.jpeg
-    - assets/images/RS. Dian Harapan.jpeg
-    - assets/images/RSUD. Abepura.jpeg
-    - assets/images/RS. Bhayangkara Kotaraja.jpeg
+    - assets/images/
+    - assets/images/dokter/
 
-    - assets/images/EmptyError.png
-
-    - assets/images/dokter/Dr. Usman Yousaf, Sp.M.jpg
-    - assets/images/dokter/Drg. Beatrix Beargen.jpg
-    - assets/images/dokter/dr. Adams.jpg
-    - assets/images/dokter/drg. Robert SP.A.jpg
-
-    - assets/asupan/capcay.jpg
+    #asupan image
+    - assets/asupan/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
