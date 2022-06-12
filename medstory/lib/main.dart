@@ -9,6 +9,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import 'landing.dart';
+
 bool shouldUseFirestoreEmulator = false;
 
 Future<void> main() async {
@@ -29,10 +31,23 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFF6F7F9)),
       title: "Leonardho R Sitanggang-1302194041",
-      home: const NavBar(pass_usernameNav: 'flazefy', pass_id_userNav: 'RPxpwFtMphTZCEZnxUIB'), //Navbar
+      //home: const NavBar(pass_usernameNav: 'flazefy', pass_id_userNav: 'RPxpwFtMphTZCEZnxUIB'), //Navbar
+      home: LoginPage(),
     );
   }
 }
+
+class LoginPage extends StatelessWidget {
+  const LoginPage({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Login()
+    );
+  }
+}
+
 class NavBar extends StatefulWidget {
   const NavBar({Key key, this.pass_usernameNav, this.pass_id_userNav}) : super(key: key);
   final String pass_usernameNav;
@@ -375,64 +390,168 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                     ),
                   ),
                   children: <Widget>[                     
-                    SingleChildScrollView(               
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("  Kategori",
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w500
-                              )         
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: DropDown2()
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("  Pertanyaan",
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w500
-                              )         
-                            ),
-                          ),
-                          Align(
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: TextField(
-                                controller: _pertanyaanCtrl,
-                                decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Color(0xFF4169E1), width: 2.0),
-                                  ),
-                              
-                                  hintText: "Ketikkan pertanyaan Anda disini",
+                    Container(
+                      margin: EdgeInsets.all(10),               
+                      child: Card(
+                        child: Container(
+                          margin: EdgeInsets.all(10),
+                          child: Column(
+                            children: <Widget>[
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text("  Kategori",
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w500
+                                  )         
                                 ),
                               ),
-                            )
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: DropDown2()
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text("  Pertanyaan",
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w500
+                                  )         
+                                ),
+                              ),
+                              Align(
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: TextField(
+                                    controller: _pertanyaanCtrl,
+                                    decoration: InputDecoration(
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Color(0xFF4169E1), width: 2.0),
+                                      ),
+                                  
+                                      hintText: "Ketikkan pertanyaan Anda disini",
+                                    ),
+                                  ),
+                                )
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children:[
+                                  Container(
+                                    child: IconButton(
+                                      icon: const Icon(Icons.info),
+                                      color: Colors.white,
+                                      onPressed: () => showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) => AlertDialog(
+                                          title: const Text('Kebijakan'),
+                                          content: SizedBox(
+                                            height: 240,
+                                            child: Column(
+                                              children: [
+                                                Text(                     
+                                                  "1. Ukuran maksimal gambar yang diunggah sebesar 5 mb",
+                                                  style: const TextStyle(
+                                                    color: Color(0xFF6B6B6B),
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                 Text(                     
+                                                  "2. Unggah gambar yang tidak menggangu perasaan orang lain dan sesuai dengan topik yang dibahas",
+                                                  style: const TextStyle(
+                                                    color: Color(0xFF6B6B6B),
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                 Text(                     
+                                                  "3. Dilarang membahas topik mengenai SARA dan politik",
+                                                  style: const TextStyle(
+                                                    color: Color(0xFF6B6B6B),
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                 Text(                     
+                                                  "4. Pengguna yang terindikasi menyebarkan informasi palsu akan mendapatkan peringatan untuk diblokir",
+                                                  style: const TextStyle(
+                                                    color: Color(0xFF6B6B6B),
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                 Text(                     
+                                                  "5. Gunakan bahasa yang sopan dan mudah dimengerti",
+                                                  style: const TextStyle(
+                                                    color: Color(0xFF6B6B6B),
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                                 Text(                     
+                                                  "6. Jumlah karakter yang terdapat dalam pertanyaan maupun balasan sebesar 500 karakter",
+                                                  style: const TextStyle(
+                                                    color: Color(0xFF6B6B6B),
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 14,
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(context, 'OK'),
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: Colors.blue,
+                                    ) 
+                                  ),
+                                  SizedBox(width: 10),
+                                  Container(
+                                    height: 45,
+                                    child: RaisedButton.icon(
+                                      onPressed: () {
+                                        addDiskusi();
+                                      },
+                                      color: Colors.green,
+                                      label: Text("Unggah Pertanyaan", style: TextStyle(color: Colors.white),),
+                                      icon: Icon(Icons.send, color: Colors.white),
+                                    ),
+                                  )
+                                ]
+                              )
+                            ]
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          RaisedButton.icon(
-                            onPressed: () {
-                              addDiskusi();
-                            },
-                            color: Colors.green,
-                            label: Text("Unggah Pertanyaan", style: TextStyle(color: Colors.white),),
-                            icon: Icon(Icons.send, color: Colors.white),
+                        )
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10), 
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            blurRadius: 10.0, // soften the shadow
+                            spreadRadius: 0.0, //extend the shadow
+                            offset: const Offset(
+                              5.0, // Move to right 10  horizontally
+                              5.0, // Move to bottom 10 Vertically
+                            ),
                           )
-                        ]
-                      )
+                        ],
+                      ),
                     )
                   ]
                 ),
@@ -440,6 +559,7 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children:[
+                      SizedBox(height: 10),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text("  Pertanyaan",
@@ -486,7 +606,9 @@ class _GetMyDiskusiState extends State<GetMyDiskusi> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return Center( 
+            child: CircularProgressIndicator()
+          );
         }
 
         return ListView(
@@ -665,7 +787,9 @@ class GetDiskusi extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return Center( 
+            child: CircularProgressIndicator()
+          );
         }
 
         return ListView(
@@ -1191,7 +1315,9 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
         }
 
         //Loading
-        return const CircularProgressIndicator();
+        return Center( 
+          child: CircularProgressIndicator()
+        );
 
       },
     );
@@ -1209,8 +1335,6 @@ class GetBalasanById extends StatefulWidget {
 class _GetBalasanById extends State<GetBalasanById> {
   // GetBalasanById(this.documentId);
   final Stream<QuerySnapshot> _balasan = FirebaseFirestore.instance.collection('balasan').snapshots();
-  int count = 0;
-  int i = 0;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -1221,7 +1345,9 @@ class _GetBalasanById extends State<GetBalasanById> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return Center( 
+            child: CircularProgressIndicator()
+          );
         }
 
         return ListView(
@@ -1242,7 +1368,6 @@ class _GetBalasanById extends State<GetBalasanById> {
               }
             }
             if(widget.pass_documentId == data['id_diskusi']){
-              count++;
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 5.0),
                 child: Card(
@@ -1346,7 +1471,6 @@ class _GetBalasanById extends State<GetBalasanById> {
               );
             } //Empty message still duplicate. even if count = 0 method still error 
             if(widget.pass_documentId != data['id_diskusi']) {
-              i++;
               return SizedBox();
             }
 
@@ -2012,7 +2136,9 @@ class _GetGejalaState extends State<GetGejala> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return Center( 
+            child: CircularProgressIndicator()
+          );
         }
 
         // return ListView(
@@ -2533,7 +2659,9 @@ class GetFaskes extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return Center( 
+            child: CircularProgressIndicator()
+          );
         }
 
         return ListView(
@@ -3118,7 +3246,9 @@ class _GetDokterState extends State<GetDokter> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return Center( 
+            child: CircularProgressIndicator()
+          );
         }
 
         return ListView(
@@ -3897,7 +4027,9 @@ class _ProfilePageState extends State<ProfilePage> {
           );  
         }
 
-        return const CircularProgressIndicator();
+        return Center( 
+          child: CircularProgressIndicator()
+        );
       },
     );
   }
