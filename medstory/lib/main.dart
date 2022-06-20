@@ -1710,7 +1710,15 @@ class SmartDocPage extends StatefulWidget {
 }
 
 class _SmartDocPage extends State<SmartDocPage> {
-  
+  int pass_berat_BMI;
+  int pass_tinggi_BMI;
+
+  int pass_tinggi_Cal;
+  int pass_berat_Cal;
+  int pass_usia_Cal;
+  int pass_gender_Cal;
+  int pass_aktv_Cal;
+
   @override
   void initState(){
     super.initState();
@@ -1798,11 +1806,13 @@ class _SmartDocPage extends State<SmartDocPage> {
                           height: 50,
                           child: SpinBox(
                             min: 1, max: 220,
-                            value: 170,
+                            value: 1,
                             spacing: 1,
                             textStyle: TextStyle(
                               fontSize: 16.0,
                             ),
+
+                            onChanged: (value) => pass_tinggi_BMI = value.toInt(),
                             decoration: InputDecoration(labelText: 'Tinggi Badan (Cm)'),
                           ),
                         ),
@@ -1812,19 +1822,114 @@ class _SmartDocPage extends State<SmartDocPage> {
                           height: 50,
                           child: SpinBox(
                             min: 1, max: 160,
-                            value: 65,
+                            value: 1,
                             spacing: 1,
                             textStyle: TextStyle(
                               fontSize: 16.0,
                             ),
+                            onChanged: (value) => pass_berat_BMI = value.toInt(),
                             decoration: InputDecoration(labelText: 'Berat Badan (Kg)'),
                           ),
                         ),
                         Container(
                           height: 45,
                           child: ElevatedButton(
-                            onPressed: () {
-                              
+                            onPressed: () async {
+                              double tinggi = pass_tinggi_BMI/100;
+                              int berat = pass_berat_BMI;
+                              double bmi = berat / (tinggi * tinggi);
+		
+                              if (bmi < 18.6) {
+                                //Thin Body
+                                return showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Kurus :(', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            ClipRRect(
+                                              child: Image.asset(
+                                                'assets/icon/Thin.png', width: 100),
+                                            ),
+                                            Text('Tambah asupan makanan, kurangi stres, dan istirahat yang cukup'),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('Oke, siap'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else if (bmi >= 18.6 && bmi < 29.9) {
+                                //Normal Body
+                                return showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Normal :)', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            ClipRRect(
+                                              child: Image.asset(
+                                                'assets/icon/Normal.png', width: 100),
+                                            ),
+                                            Text('Tetap jaga pola makan Anda. Dan jangan lengah sampai terlena ya'),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('Oke, siap'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else { 
+                                //Obesity Body
+                                return showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Obesitas :(', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            ClipRRect(
+                                              child: Image.asset(
+                                                'assets/icon/Big.png', width: 100),
+                                            ),
+                                            Text('Ayo kurangi makan dan perbanyak olahraga'),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('Oke, siap'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
                             },
                             child: Text("Hitung"),
                           )
@@ -1901,7 +2006,7 @@ class _SmartDocPage extends State<SmartDocPage> {
                           height: 45,
                           child: ElevatedButton(
                             onPressed: () {
-                                // Respond to button press
+                              //
                             },
                             child: Text("Hitung"),
                           )
@@ -1972,11 +2077,12 @@ class _SmartDocPage extends State<SmartDocPage> {
                           height: 50,
                           child: SpinBox(
                             min: 1, max: 220,
-                            value: 170,
+                            value: 1,
                             spacing: 1,
                             textStyle: TextStyle(
                               fontSize: 16.0,
                             ),
+                            onChanged: (value) => pass_tinggi_Cal = value.toInt(),
                             decoration: InputDecoration(labelText: 'Tinggi Badan (Cm)'),
                           ),
                         ),
@@ -1986,11 +2092,12 @@ class _SmartDocPage extends State<SmartDocPage> {
                           height: 50,
                           child: SpinBox(
                             min: 1, max: 160,
-                            value: 65,
+                            value: 1,
                             spacing: 1,
                             textStyle: TextStyle(
                               fontSize: 16.0,
                             ),
+                            onChanged: (value) => pass_berat_Cal = value.toInt(),
                             decoration: InputDecoration(labelText: 'Berat Badan (Kg)'),
                           ),
                         ),
@@ -2000,11 +2107,12 @@ class _SmartDocPage extends State<SmartDocPage> {
                           height: 50,
                           child: SpinBox(
                             min: 10, max: 110,
-                            value: 25,
+                            value:10,
                             spacing: 1,
                             textStyle: TextStyle(
                               fontSize: 16.0,
                             ),
+                            onChanged: (value) => pass_usia_Cal = value.toInt(),
                             decoration: InputDecoration(labelText: 'Umur'),
                           ),
                         ),
@@ -2060,6 +2168,70 @@ class _SmartDocPage extends State<SmartDocPage> {
                           ),
                         ),
                       ],
+                    )
+                  ),
+                  Container(
+                    height: 45,
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        //Not
+                        int tinggi = pass_tinggi_Cal;
+                        int berat = pass_berat_Cal;
+                        int usia = 21;
+                        double aktivitas = 1; //for testing
+                        int jKelamin = 1; //for testing
+                        double total;
+
+                        if(aktivitas==1){
+                          aktivitas = 1.2;
+                        } else if(aktivitas==2){
+                          aktivitas = 1.4;
+                        } else if(aktivitas==3){
+                          aktivitas = 1.6;
+                        } else if(aktivitas==4){
+                          aktivitas = 1.8;
+                        } else {
+                          aktivitas = 2;
+                        }
+                        
+                        if(jKelamin == 1){
+                          total = (((88.4 + 13.4 * berat) + (4.8 * tinggi) - (5.68 * usia)) * aktivitas);
+                        } else if(jKelamin == 2){
+                          total = (((447.6 + 9.25 * berat) + (3.10 * tinggi) - (4.33 * usia)) * aktivitas);
+                        }
+
+                        return showDialog<void>(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Normal', style: TextStyle(fontWeight: FontWeight.bold)),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: <Widget>[
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(6),
+                                      child: Image.asset(
+                                        'assets/icon/Calorie.png', width: 100),
+                                    ),
+                                    Text('Kebutuhan harian Anda sebesar:'+ total.toStringAsFixed(2) +" cal"),
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('Oke, siap'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Text("Hitung"),
                     )
                   )
                 ],
@@ -2684,7 +2856,7 @@ class GetFaskes extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(6),
                                 child: Image.asset(
                                   'assets/images/${data['namaFaskes']}.jpeg', width: 120, height: 80),
-                                ),
+                              ),
                             ),
                                     
                             SizedBox(
