@@ -12,6 +12,9 @@ import 'package:table_calendar/table_calendar.dart';
 import 'landing.dart';
 
 bool shouldUseFirestoreEmulator = false;
+String pass_id_asupan;
+String pass_waktu;
+String pass_id_user = 'RPxpwFtMphTZCEZnxUIB'; //testing for now
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -310,7 +313,7 @@ class MyDiscussionPage extends StatefulWidget {
 
 class _MyDiscussionPage extends State<MyDiscussionPage> {
   var _pertanyaanCtrl = TextEditingController();
-  String kategori = 'Mata';
+  String kategori = 'Mata'; //testing for now
 
   @override
   Widget build(BuildContext context) {

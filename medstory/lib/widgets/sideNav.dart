@@ -100,17 +100,21 @@ class NavDrawer extends StatelessWidget {
                               DropDown()
                             ],
                           ),
-                          content: Column(
-                            children: [
-                              AutocompleteBasicExample(),
-                              SizedBox(
-                                height: MediaQuery.of(context).size.height*0.55,
-                                width: MediaQuery.of(context).size.width*0.9,
-                                child: Flexible(
-                                  child: GetAllAsupan()
-                                ),
-                              )
-                            ]               
+                          content: Container(
+                            transform: Matrix4.translationValues(0.0, -25.0, 0.0),
+                            height: MediaQuery.of(context).size.height*0.55,
+                            child: Column(
+                              children: [
+                                AutocompleteBasicExample(),
+                                Container(   
+                                  height: MediaQuery.of(context).size.height*0.48,
+                                  width: MediaQuery.of(context).size.width*0.9,
+                                  child: Flexible(
+                                    child: GetAllAsupan()
+                                  ),
+                                )
+                              ]               
+                            )
                           ),
                           actions: <Widget>[
                             TextButton(
@@ -408,6 +412,8 @@ class _GetAllAsupan extends State<GetAllAsupan> {
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference calday = FirebaseFirestore.instance.collection('jadwalkalori');
+
     return StreamBuilder<QuerySnapshot>(
       stream: _detailasupan,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -423,63 +429,87 @@ class _GetAllAsupan extends State<GetAllAsupan> {
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             
-            return Container(
-              height: 70,
-              width: MediaQuery.of(context).size.width*0.6,
-              margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10), 
-                      child:Image.asset("assets/asupan/${data['nama']}.jpg", width: 60, height: 55),
+            return GestureDetector(
+              onTap: (){
+                // print(document.id);
+              },
+              child: Container(
+                height: 70,
+                width: MediaQuery.of(context).size.width*0.6,
+                margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                child: Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10), 
+                        child:Image.asset("assets/asupan/${data['nama']}.jpg", width: 60, height: 55),
+                      ),
                     ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width*0.26,
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          data['nama'], 
-                          style: TextStyle(color: Colors.blue, fontSize: 14)
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          data['kategori'], 
-                          style: TextStyle(color: Colors.grey, fontSize: 13)
-                        ),
-                        Text(
-                          data['kalori'].toString(), 
-                          style: TextStyle(color: Color(0xFF808080), fontSize: 13)
-                        ),
-                      ],
-                    )
-                  ),
-                  Container(
-                    child: Chechbox(),
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(
-                // borderRadius: BorderRadius.circular(8),
-                border: Border(
-                  left: BorderSide(width: 4.0, color: Colors.orange),
+                    Container(
+                      width: MediaQuery.of(context).size.width*0.26,
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            data['nama'], 
+                            style: TextStyle(color: Colors.blue, fontSize: 14)
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            data['kategori'], 
+                            style: TextStyle(color: Colors.grey, fontSize: 13)
+                          ),
+                          Text(
+                            data['kalori'].toString(), 
+                            style: TextStyle(color: Color(0xFF808080), fontSize: 13)
+                          ),
+                        ],
+                      )
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child:IconButton(
+                        icon: const Icon(Icons.add),
+                        color: Colors.white,
+                        onPressed: () {
+                          return calday
+                          .add({
+                            'id_asupan': document.id,
+                            'id_user': pass_id_user, 
+                            'waktu': pass_waktu,
+                            'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
+                          })
+                          .then((value) => print("Diskusi berhasil ditambah"))
+                          .catchError((error) => print("Failed to add user: $error"));
+                        },
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.green,
+                      ) 
+                    ),
+                  ],
                 ),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0xff414141).withOpacity(0.4),
-                    blurRadius: 10.0, // soften the shadow
-                    spreadRadius: 0.0, //extend the shadow
-                    offset: const Offset(
-                      5.0, // Move to right 10  horizontally
-                      5.0, // Move to bottom 10 Vertically
-                    ),
-                  )
-                ],
+                decoration: BoxDecoration(
+                  // borderRadius: BorderRadius.circular(8),
+                  border: Border(
+                    left: BorderSide(width: 4.0, color: Colors.orange),
+                  ),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xff414141).withOpacity(0.4),
+                      blurRadius: 10.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: const Offset(
+                        5.0, // Move to right 10  horizontally
+                        5.0, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ],
+                )
               )
             );   
        
@@ -516,6 +546,7 @@ class _DropDownState extends State<DropDown> {
       onChanged: (String newValue) {
         setState(() {
           dropdownValue = newValue;
+          pass_waktu = dropdownValue;
         });
       },
       items: <String>['Pagi', 'Siang', 'Malam']
@@ -525,43 +556,6 @@ class _DropDownState extends State<DropDown> {
           child: Text(value),
         );
       }).toList(),
-    );
-  }
-}
-
-class Chechbox extends StatefulWidget {
-  const Chechbox({Key key}) : super(key: key);
-
-  @override
-  State<Chechbox> createState() => _ChechboxState();
-}
-
-class _ChechboxState extends State<Chechbox> {
-  bool isChecked = false;
-
-  @override
-  Widget build(BuildContext context) {
-    Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      if (states.any(interactiveStates.contains)) {
-        return Colors.blue;
-      }
-      return Color(0xFF808080);
-    }
-
-    return Checkbox(
-      checkColor: Colors.white,
-      fillColor: MaterialStateProperty.resolveWith(getColor),
-      value: isChecked,
-      onChanged: (bool value) {
-        setState(() {
-          isChecked = value;
-        });
-      },
     );
   }
 }
