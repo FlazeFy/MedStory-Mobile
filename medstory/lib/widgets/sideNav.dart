@@ -17,16 +17,16 @@ class NavDrawer extends StatelessWidget {
           DrawerHeader(
             child: Column(
               children: [
-                Text(
+                const Text(
                   'Kebutuhan Kalori',
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
-                SizedBox(height:10),
+                const SizedBox(height:10),
                 Row(
                   children: [
                     Container(
                       child: Column(
-                        children: [
+                        children: const [
                           Text(
                             'Detail',
                             style: TextStyle(color: Colors.white, fontSize: 14),
@@ -54,7 +54,7 @@ class NavDrawer extends StatelessWidget {
                     SizedBox(width: MediaQuery.of(context).size.width*0.08),
                     Container(
                       child: Column(
-                        children: [
+                        children: const [
                           Text(
                             'Hari Ini',
                             style: TextStyle(color: Colors.white, fontSize: 14),
@@ -68,7 +68,7 @@ class NavDrawer extends StatelessWidget {
                 )
               ],
             ), 
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color(0xFF4183D7),
             ),
           ),
@@ -82,16 +82,16 @@ class NavDrawer extends StatelessWidget {
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         primary: Colors.white,
-                        side: BorderSide(width: 2.0, color: Color(0xFF22A7F0))
+                        side: const BorderSide(width: 2.0, color: Color(0xFF22A7F0))
                       ),
                       onPressed: () => showDialog<String>(
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
                           title: Row(
-                            children: [
+                            children: const [
                               Text(                     
                                 'Asupan Hari Ini',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,
                                 )
@@ -106,10 +106,10 @@ class NavDrawer extends StatelessWidget {
                             child: Column(
                               children: [
                                 AutocompleteBasicExample(),
-                                Container(   
+                                SizedBox(   
                                   height: MediaQuery.of(context).size.height*0.48,
                                   width: MediaQuery.of(context).size.width*0.9,
-                                  child: Flexible(
+                                  child: const Flexible(
                                     child: GetAllAsupan()
                                   ),
                                 )
@@ -125,13 +125,13 @@ class NavDrawer extends StatelessWidget {
                               onPressed: () {
                             
                               },
-                              child: Text('Simpan'),
+                              child: const Text('Simpan'),
                             ),
                           ],
                         ),
                       ),
-                      icon: Icon(Icons.add, size: 18, color: Color(0xFF22A7F0)),
-                      label: Text("Tambah Asupan", style: TextStyle(color: Color(0xFF22A7F0), fontSize: 15)),
+                      icon: const Icon(Icons.add, size: 18, color: Color(0xFF22A7F0)),
+                      label: const Text("Tambah Asupan", style: TextStyle(color: Color(0xFF22A7F0), fontSize: 15)),
                     ),
                   ),
                   Container(
@@ -160,16 +160,16 @@ class NavDrawer extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Row(
                 children: [
-                  SizedBox(width: 5),
-                  Text(
+                  const SizedBox(width: 5),
+                  const Text(
                     'Total: ',
                     style: TextStyle(fontSize: 14),
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width*0.25),
-                  Text(
+                  const Text(
                     'Sisa: ',
                     style: TextStyle(fontSize: 14),
                   )
@@ -177,22 +177,22 @@ class NavDrawer extends StatelessWidget {
               ),
               Row(children: <Widget>[
                 Expanded(
-                  child: new Container(
+                  child: Container(
                       margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-                      child: Divider(
+                      child: const Divider(
                         color: Colors.grey,
                         thickness: 1,
                         height: 25,
                       )),
                 ),
-                Text(
+                const Text(
                   "Hari ini", 
                   style: TextStyle(color: Colors.grey, fontSize: 14)
                 ),
                 Expanded(
-                  child: new Container(
+                  child: Container(
                     margin: const EdgeInsets.only(left: 20.0, right: 10.0),
-                    child: Divider(
+                    child: const Divider(
                       color: Colors.grey,
                       thickness: 1,
                       height: 25,
@@ -202,7 +202,7 @@ class NavDrawer extends StatelessWidget {
               ]),
             ],
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.width*0.74,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,7 +279,9 @@ class _GetAsupanDayById extends State<GetAsupanDayById> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator()
+          );
         }
 
         return ListView(
@@ -315,7 +317,9 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator()
+          );
         }
 
         return Column(
@@ -342,16 +346,16 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
                         children: [
                           Text(
                             data['nama'], 
-                            style: TextStyle(color: Colors.blue, fontSize: 14)
+                            style: const TextStyle(color: Colors.blue, fontSize: 14)
                           ),
-                          SizedBox(height: 2),
+                          const SizedBox(height: 2),
                           Text(
                             data['kategori'], 
-                            style: TextStyle(color: Colors.grey, fontSize: 13)
+                            style: const TextStyle(color: Colors.grey, fontSize: 13)
                           ),
                           Text(
                             data['kalori'].toString(), 
-                            style: TextStyle(color: Color(0xFF808080), fontSize: 13)
+                            style: const TextStyle(color: Color(0xFF808080), fontSize: 13)
                           ),
                         ],
                       )
@@ -372,13 +376,13 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
                 ),
                 decoration: BoxDecoration(
                   // borderRadius: BorderRadius.circular(8),
-                  border: Border(
+                  border: const Border(
                     left: BorderSide(width: 4.0, color: Colors.orange),
                   ),
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Color(0xff414141).withOpacity(0.4),
+                      color: const Color(0xff414141).withOpacity(0.4),
                       blurRadius: 10.0, // soften the shadow
                       spreadRadius: 0.0, //extend the shadow
                       offset: const Offset(
@@ -390,7 +394,7 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
                 ),              
               );
             } else {
-              return SizedBox(height: 0);
+              return const SizedBox(height: 0);
             }
           }).toList(),
         );
@@ -422,7 +426,9 @@ class _GetAllAsupan extends State<GetAllAsupan> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const Center(
+            child: CircularProgressIndicator()
+          );
         }
 
         return ListView(
@@ -454,16 +460,16 @@ class _GetAllAsupan extends State<GetAllAsupan> {
                         children: [
                           Text(
                             data['nama'], 
-                            style: TextStyle(color: Colors.blue, fontSize: 14)
+                            style: const TextStyle(color: Colors.blue, fontSize: 14)
                           ),
-                          SizedBox(height: 2),
+                          const SizedBox(height: 2),
                           Text(
                             data['kategori'], 
-                            style: TextStyle(color: Colors.grey, fontSize: 13)
+                            style: const TextStyle(color: Colors.grey, fontSize: 13)
                           ),
                           Text(
                             data['kalori'].toString(), 
-                            style: TextStyle(color: Color(0xFF808080), fontSize: 13)
+                            style: const TextStyle(color: Color(0xFF808080), fontSize: 13)
                           ),
                         ],
                       )
@@ -481,7 +487,7 @@ class _GetAllAsupan extends State<GetAllAsupan> {
                             'waktu': pass_waktu,
                             'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
                           })
-                          .then((value) => print("Diskusi berhasil ditambah"))
+                          .then((value) => print("Asupan berhasil ditambah"))
                           .catchError((error) => print("Failed to add user: $error"));
                         },
                       ),
@@ -494,13 +500,13 @@ class _GetAllAsupan extends State<GetAllAsupan> {
                 ),
                 decoration: BoxDecoration(
                   // borderRadius: BorderRadius.circular(8),
-                  border: Border(
+                  border: const Border(
                     left: BorderSide(width: 4.0, color: Colors.orange),
                   ),
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Color(0xff414141).withOpacity(0.4),
+                      color: const Color(0xff414141).withOpacity(0.4),
                       blurRadius: 10.0, // soften the shadow
                       spreadRadius: 0.0, //extend the shadow
                       offset: const Offset(

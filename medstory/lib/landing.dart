@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'main.dart';
@@ -10,7 +11,7 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height,
       child:Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -21,7 +22,7 @@ class Login extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text('Selamat datang di',
+              child: const Text('Selamat datang di',
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 15,
@@ -34,7 +35,7 @@ class Login extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text('MedStory',
+              child: const Text('MedStory',
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 30,
@@ -50,6 +51,7 @@ class Login extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
               child: TextFormField(
+                controller: usernameCtrl,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Nama Pengguna',
@@ -65,6 +67,7 @@ class Login extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
               child: TextFormField(
                 obscureText: true,
+                controller: passwordCtrl,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Password',
@@ -97,13 +100,57 @@ class Login extends StatelessWidget {
                 height: 40,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
-                  
                   child: const Text('Submit'),
                   onPressed: () async{
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => NavBar(pass_usernameNav: 'flazefy', pass_id_userNav: 'RPxpwFtMphTZCEZnxUIB')),
-                    );
+                    int i = 0;
+                    FirebaseFirestore.instance
+                    .collection('pengguna')
+                    .get()
+                    .then((QuerySnapshot querySnapshot) {
+                        querySnapshot.docs.forEach((doc) {
+                          if((doc["namaPengguna"] == usernameCtrl.text)&&(doc["password"] == passwordCtrl.text)){
+                            i++;
+                            pass_id_user = doc.id;
+                            pass_username = doc['namaPengguna'];
+                          }
+                        });
+                        if(i > 0){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const NavBar()),
+                          );
+                        } else {
+                          return showDialog<void>(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Perhatian', style: TextStyle(fontWeight: FontWeight.bold)),
+                                content: SingleChildScrollView(
+                                  child: ListBody(
+                                    children: <Widget>[
+                                      ClipRRect(
+                                        child: Image.asset(
+                                          'assets/icon/Failed.png', width: 20),
+                                      ),
+                                      const Text('Username atau password Anda salah'),
+                                    ],
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Oke'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            }
+                          );
+                        }
+                    });
+                   
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF4169E1)),

@@ -14,7 +14,9 @@ import 'landing.dart';
 bool shouldUseFirestoreEmulator = false;
 String pass_id_asupan;
 String pass_waktu;
-String pass_id_user = 'RPxpwFtMphTZCEZnxUIB'; //testing for now
+String pass_id_user;
+String pass_username;
+String pass_kategori;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFF6F7F9)),
       title: "Leonardho R Sitanggang-1302194041",
       //home: const NavBar(pass_usernameNav: 'flazefy', pass_id_userNav: 'RPxpwFtMphTZCEZnxUIB'), //Navbar
-      home: LoginPage(),
+      home: const LoginPage(),
     );
   }
 }
@@ -52,9 +54,7 @@ class LoginPage extends StatelessWidget {
 }
 
 class NavBar extends StatefulWidget {
-  const NavBar({Key key, this.pass_usernameNav, this.pass_id_userNav}) : super(key: key);
-  final String pass_usernameNav;
-  final String pass_id_userNav;
+  const NavBar({Key key}) : super(key: key);
   
   @override
   _NavBarState createState() => _NavBarState();
@@ -66,10 +66,10 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
-      ForumPage(pass_username: widget.pass_usernameNav, pass_idUser: widget.pass_id_userNav),
-      SmartDocPage(pass_username: widget.pass_usernameNav, pass_idUser: widget.pass_id_userNav),
-      DataKuPage(pass_username: widget.pass_usernameNav, pass_idUser: widget.pass_id_userNav),
-      DaruratPage(pass_username: widget.pass_usernameNav, pass_idUser: widget.pass_id_userNav),
+      ForumPage(pass_username: pass_username, pass_idUser: pass_id_user),
+      SmartDocPage(pass_username: pass_username, pass_idUser: pass_id_user),
+      DataKuPage(pass_username: pass_username, pass_idUser: pass_id_user),
+      DaruratPage(pass_username: pass_username, pass_idUser: pass_id_user),
     ];
   
     return Scaffold(
@@ -264,16 +264,16 @@ class _ForumPage extends State<ForumPage> {
                 Container(
                   transform: Matrix4.translationValues(15.0, 0.0, 0.0),
                   child: PopupMenuButton(
-                    icon: Icon(Icons.more_vert),
+                    icon: const Icon(Icons.more_vert),
                     itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                       PopupMenuItem(
                         child: ListTile(
-                          leading: Icon(Icons.add),
-                          title: Text('Pertanyaan Ku'),
+                          leading: const Icon(Icons.add),
+                          title: const Text('Pertanyaan Ku'),
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => MyDiscussionPage(pass_username: 'flazefy')),
+                              MaterialPageRoute(builder: (context) => MyDiscussionPage(pass_username: pass_username)),
                             );
                           },
                         ),
@@ -312,8 +312,7 @@ class MyDiscussionPage extends StatefulWidget {
 }
 
 class _MyDiscussionPage extends State<MyDiscussionPage> {
-  var _pertanyaanCtrl = TextEditingController();
-  String kategori = 'Mata'; //testing for now
+  final _pertanyaanCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -323,7 +322,7 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
       // Call the user's CollectionReference to add a new user
       return disc
         .add({
-          'kategori': kategori,
+          'kategori': pass_kategori,
           'namaPengguna': widget.pass_username, 
           'pertanyaan': _pertanyaanCtrl.text,
           'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
@@ -331,7 +330,36 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
           'view': 0,
           'up': 0, //initial user for now
         })
-        .then((value) => print("Diskusi berhasil ditambah"))
+        .then((value) => 
+          showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Informasi', style: TextStyle(fontWeight: FontWeight.bold)),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      ClipRRect(
+                        child: Image.asset(
+                          'assets/icon/Success.png', width: 35),
+                      ),
+                      const Text('Pertanyaan berhasil diunggah'),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Oke'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            }
+          )
+        )
         .catchError((error) => print("Failed to add user: $error"));
     }
     return Scaffold(
@@ -341,8 +369,8 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
             color: Color(0xFF4183D7),
             size: 35.0,
           ),
-        title: Text("Pertanyaan Ku", 
-        style: const TextStyle(
+        title: const Text("Pertanyaan Ku", 
+        style: TextStyle(
           color: Color(0xFF4183D7),
           fontWeight: FontWeight.bold,
           fontSize: 18,
@@ -351,12 +379,12 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
       automaticallyImplyLeading: false,
       actions: [
         IconButton(
-          icon: Icon(Icons.home, color: Color(0xFF4183D7)),
+          icon: const Icon(Icons.home, color: Color(0xFF4183D7)),
           iconSize: 40,
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => NavBar(pass_usernameNav: widget.pass_username)),
+              MaterialPageRoute(builder: (context) => const NavBar()),
             );
           },
         )
@@ -394,13 +422,13 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                   ),
                   children: <Widget>[                     
                     Container(
-                      margin: EdgeInsets.all(10),               
+                      margin: const EdgeInsets.all(10),               
                       child: Card(
                         child: Container(
-                          margin: EdgeInsets.all(10),
+                          margin: const EdgeInsets.all(10),
                           child: Column(
                             children: <Widget>[
-                              Align(
+                              const Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text("  Kategori",
                                   style: TextStyle(
@@ -413,11 +441,11 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                 alignment: Alignment.centerLeft,
                                 child: Container(
                                   margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                  child: DropDown2()
+                                  child: const DropDown2()
                                 ),
                               ),
-                              SizedBox(height: 10),
-                              Align(
+                              const SizedBox(height: 10),
+                              const Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text("  Pertanyaan",
                                   style: TextStyle(
@@ -431,7 +459,7 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                   margin: const EdgeInsets.symmetric(horizontal: 10.0),
                                   child: TextField(
                                     controller: _pertanyaanCtrl,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       enabledBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(color: Color(0xFF4169E1), width: 2.0),
                                       ),
@@ -441,7 +469,7 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                   ),
                                 )
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               Row(
@@ -457,10 +485,10 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                           content: SizedBox(
                                             height: 240,
                                             child: Column(
-                                              children: [
+                                              children: const [
                                                 Text(                     
                                                   "1. Ukuran maksimal gambar yang diunggah sebesar 5 mb",
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     color: Color(0xFF6B6B6B),
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 14,
@@ -468,7 +496,7 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                                 ),
                                                  Text(                     
                                                   "2. Unggah gambar yang tidak menggangu perasaan orang lain dan sesuai dengan topik yang dibahas",
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     color: Color(0xFF6B6B6B),
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 14,
@@ -476,7 +504,7 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                                 ),
                                                  Text(                     
                                                   "3. Dilarang membahas topik mengenai SARA dan politik",
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     color: Color(0xFF6B6B6B),
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 14,
@@ -484,7 +512,7 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                                 ),
                                                  Text(                     
                                                   "4. Pengguna yang terindikasi menyebarkan informasi palsu akan mendapatkan peringatan untuk diblokir",
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     color: Color(0xFF6B6B6B),
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 14,
@@ -492,7 +520,7 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                                 ),
                                                  Text(                     
                                                   "5. Gunakan bahasa yang sopan dan mudah dimengerti",
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     color: Color(0xFF6B6B6B),
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 14,
@@ -500,7 +528,7 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                                 ),
                                                  Text(                     
                                                   "6. Jumlah karakter yang terdapat dalam pertanyaan maupun balasan sebesar 500 karakter",
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     color: Color(0xFF6B6B6B),
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 14,
@@ -523,16 +551,16 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                       color: Colors.blue,
                                     ) 
                                   ),
-                                  SizedBox(width: 10),
-                                  Container(
+                                  const SizedBox(width: 10),
+                                  SizedBox(
                                     height: 45,
                                     child: RaisedButton.icon(
                                       onPressed: () {
                                         addDiskusi();
                                       },
                                       color: Colors.green,
-                                      label: Text("Unggah Pertanyaan", style: TextStyle(color: Colors.white),),
-                                      icon: Icon(Icons.send, color: Colors.white),
+                                      label: const Text("Unggah Pertanyaan", style: TextStyle(color: Colors.white),),
+                                      icon: const Icon(Icons.send, color: Colors.white),
                                     ),
                                   )
                                 ]
@@ -562,8 +590,8 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children:[
-                      SizedBox(height: 10),
-                      Align(
+                      const SizedBox(height: 10),
+                      const Align(
                         alignment: Alignment.centerLeft,
                         child: Text("  Pertanyaan",
                           style: TextStyle(
@@ -572,7 +600,7 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                           )         
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Flexible(
                         child: GetMyDiskusi(pass_username: widget.pass_username)
                       )
@@ -597,7 +625,7 @@ class GetMyDiskusi extends StatefulWidget {
 }
 
 class _GetMyDiskusiState extends State<GetMyDiskusi> {
-  final Stream<QuerySnapshot> _diskusi = FirebaseFirestore.instance.collection('diskusi').where('namaPengguna', isEqualTo: 'flazefy').snapshots();
+  final Stream<QuerySnapshot> _diskusi = FirebaseFirestore.instance.collection('diskusi').where('namaPengguna', isEqualTo: pass_username).snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -609,7 +637,7 @@ class _GetMyDiskusiState extends State<GetMyDiskusi> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center( 
+          return const Center( 
             child: CircularProgressIndicator()
           );
         }
@@ -644,39 +672,33 @@ class _GetMyDiskusiState extends State<GetMyDiskusi> {
                                 children: [
                                   Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Container(
-                                      child: Text(                     
-                                        data['namaPengguna'],
-                                        textAlign: TextAlign.left,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                        )
-                                      ),   
+                                    child: Text(                     
+                                      data['namaPengguna'],
+                                      textAlign: TextAlign.left,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                      )
                                     ),
                                   ),
                                   Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Container(
-                                      child: Text(                     
-                                        "${data['kategori']} ~ ${DateFormat('dd MMM | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 13,
-                                        )
-                                      ),   
+                                    child: Text(                     
+                                      "${data['kategori']} ~ ${DateFormat('dd MMM | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 13,
+                                      )
                                     ),
                                   )                          
                                 ]
                               ),
                             ),
-                            Container(
-                              child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(
-                                'assets/images/verified.png', width: 30),
-                              ),
+                            ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/images/verified.png', width: 30),
                             ),
                           ]
                         )    
@@ -698,52 +720,50 @@ class _GetMyDiskusiState extends State<GetMyDiskusi> {
                         ),   
                       ),
                     ),
-                    Container(
-                      child: Row(
-                        children: [            
-                          TextButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (c, a1, a2) => DiscussionPage(documentId: document.id),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
-                                    final curvedAnimation = CurvedAnimation(
-                                      parent: animation,
-                                      curve: Curves.ease,
-                                    );
+                    Row(
+                      children: [            
+                        TextButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (c, a1, a2) => DiscussionPage(documentId: document.id),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
+                                  final curvedAnimation = CurvedAnimation(
+                                    parent: animation,
+                                    curve: Curves.ease,
+                                  );
 
-                                    return SlideTransition(
-                                      position: tween.animate(curvedAnimation),
-                                      child: child,
-                                    );
-                                  }
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.arrow_drop_down, size: 14),
-                            label: const Text("Lihat komentar (3)"),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width*0.2,
-                          ),
-                          TextButton.icon(
-                            onPressed: () {
-                              //
-                            },
-                            icon: const Icon(Icons.arrow_upward, size: 14),
-                            label: Text(data['up'].toString()),
-                          ),
-                          TextButton.icon(
-                            onPressed: () {
-                                // Respond to button press
-                            },
-                            icon: const Icon(Icons.remove_red_eye, size: 14),
-                            label: Text(data['view'].toString()),
-                          ),
-                        ]
-                      ) 
+                                  return SlideTransition(
+                                    position: tween.animate(curvedAnimation),
+                                    child: child,
+                                  );
+                                }
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.arrow_drop_down, size: 14),
+                          label: const Text("Lihat komentar (3)"),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width*0.2,
+                        ),
+                        TextButton.icon(
+                          onPressed: () {
+                            //
+                          },
+                          icon: const Icon(Icons.arrow_upward, size: 14),
+                          label: Text(data['up'].toString()),
+                        ),
+                        TextButton.icon(
+                          onPressed: () {
+                              // Respond to button press
+                          },
+                          icon: const Icon(Icons.remove_red_eye, size: 14),
+                          label: Text(data['view'].toString()),
+                        ),
+                      ]
                     ),       
                   ]
 
@@ -780,6 +800,8 @@ class GetDiskusi extends StatelessWidget {
 
   final Stream<QuerySnapshot> _diskusi = FirebaseFirestore.instance.collection('diskusi').snapshots();
 
+  GetDiskusi({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -790,7 +812,7 @@ class GetDiskusi extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center( 
+          return const Center( 
             child: CircularProgressIndicator()
           );
         }
@@ -825,16 +847,14 @@ class GetDiskusi extends StatelessWidget {
                                 children: [
                                   Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Container(
-                                      child: Text(                     
-                                        data['namaPengguna'],
-                                        textAlign: TextAlign.left,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                        )
-                                      ),   
+                                    child: Text(                     
+                                      data['namaPengguna'],
+                                      textAlign: TextAlign.left,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                      )
                                     ),
                                   ),
                                   Align(
@@ -852,12 +872,10 @@ class GetDiskusi extends StatelessWidget {
                                 ]
                               ),
                             ),
-                            Container(
-                              child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(
-                                'assets/images/verified.png', width: 30),
-                              ),
+                            ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              'assets/images/verified.png', width: 30),
                             ),
                           ]
                         )    
@@ -879,52 +897,50 @@ class GetDiskusi extends StatelessWidget {
                         ),   
                       ),
                     ),
-                    Container(
-                      child: Row(
-                        children: [            
-                          TextButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (c, a1, a2) => DiscussionPage(documentId: document.id),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
-                                    final curvedAnimation = CurvedAnimation(
-                                      parent: animation,
-                                      curve: Curves.ease,
-                                    );
+                    Row(
+                      children: [            
+                        TextButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (c, a1, a2) => DiscussionPage(documentId: document.id),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
+                                  final curvedAnimation = CurvedAnimation(
+                                    parent: animation,
+                                    curve: Curves.ease,
+                                  );
 
-                                    return SlideTransition(
-                                      position: tween.animate(curvedAnimation),
-                                      child: child,
-                                    );
-                                  }
-                                ),
-                              );
-                            },
-                            icon: const Icon(Icons.arrow_drop_down, size: 14),
-                            label: const Text("Lihat komentar (3)"),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width*0.2,
-                          ),
-                          TextButton.icon(
-                            onPressed: () {
-                              //
-                            },
-                            icon: const Icon(Icons.arrow_upward, size: 14),
-                            label: Text(data['up'].toString()),
-                          ),
-                          TextButton.icon(
-                            onPressed: () {
-                                // Respond to button press
-                            },
-                            icon: const Icon(Icons.remove_red_eye, size: 14),
-                            label: Text(data['view'].toString()),
-                          ),
-                        ]
-                      ) 
+                                  return SlideTransition(
+                                    position: tween.animate(curvedAnimation),
+                                    child: child,
+                                  );
+                                }
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.arrow_drop_down, size: 14),
+                          label: const Text("Lihat komentar (3)"),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width*0.2,
+                        ),
+                        TextButton.icon(
+                          onPressed: () {
+                            //
+                          },
+                          icon: const Icon(Icons.arrow_upward, size: 14),
+                          label: Text(data['up'].toString()),
+                        ),
+                        TextButton.icon(
+                          onPressed: () {
+                              // Respond to button press
+                          },
+                          icon: const Icon(Icons.remove_red_eye, size: 14),
+                          label: Text(data['view'].toString()),
+                        ),
+                      ]
                     ),       
                   ]
 
@@ -1019,6 +1035,7 @@ class _DropDown2State extends State<DropDown2> {
       onChanged: (String newValue) {
         setState(() {
           dropdownValue = newValue;
+          pass_kategori = dropdownValue;
         });
       },
       items: <String>['Penyakit Dalam', 'Penyakit Menular', 'Vaksin & Imunisasi', 'Kulit & Kelamin', 'Otot & Saraf', 'THT & Mata', 'Penyakit Lansia', 'Obat-Obatan', 'Gaya Hidup Sehat', 'Kandungan & Bedah', 'Gigi', 'Anak']
@@ -1043,7 +1060,7 @@ class DiscussionPage extends StatefulWidget {
 
 class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderStateMixin{
   _DiscussionPage(documentId);
-  var _isiCtrl = TextEditingController();
+  final _isiCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -1057,7 +1074,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
           'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
           'imageURL': 'null', //initial user for now
           'isi': _isiCtrl.text,
-          'pengirim': 'flazefy', //initial user for now
+          'pengirim': pass_username,
           'status': 'null',
         })
         .then((value) => print("Balasan terkirim"))
@@ -1271,7 +1288,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                             Expanded(
                               child: TextField(
                                 controller: _isiCtrl,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   hintText: "Ketik balasan Anda...",
                                   hintStyle: TextStyle(color: Color(0xFF6B6B6B)),
                                   border: InputBorder.none
@@ -1318,7 +1335,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
         }
 
         //Loading
-        return Center( 
+        return const Center( 
           child: CircularProgressIndicator()
         );
 
@@ -1348,7 +1365,7 @@ class _GetBalasanById extends State<GetBalasanById> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center( 
+          return const Center( 
             child: CircularProgressIndicator()
           );
         }
@@ -1356,7 +1373,7 @@ class _GetBalasanById extends State<GetBalasanById> {
         return ListView(
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-            if(data['pengirim'] == 'flazefy'){
+            if(data['pengirim'] == pass_username){
               data['pengirim'] = 'Anda';
             }
             Widget getVerifiedAnswer() {
@@ -1367,7 +1384,7 @@ class _GetBalasanById extends State<GetBalasanById> {
                     'assets/images/verified.png', width: 30),
                 );
               } else {
-                return SizedBox();
+                return const SizedBox();
               }
             }
             if(widget.pass_documentId == data['id_diskusi']){
@@ -1400,7 +1417,7 @@ class _GetBalasanById extends State<GetBalasanById> {
                                     child: Text(                     
                                       data['pengirim'],
                                       textAlign: TextAlign.left,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16,
@@ -1411,7 +1428,7 @@ class _GetBalasanById extends State<GetBalasanById> {
                                     alignment: Alignment.centerLeft,
                                     child: Text(                     
                                       "${DateFormat('dd MMM | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.grey,
                                         fontSize: 13,
                                       )
@@ -1431,7 +1448,7 @@ class _GetBalasanById extends State<GetBalasanById> {
                         margin: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: Text(                     
                           data['isi'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xFF6B6B6B),
                             fontWeight: FontWeight.w400,
                             fontSize: 13,
@@ -1474,7 +1491,7 @@ class _GetBalasanById extends State<GetBalasanById> {
               );
             } //Empty message still duplicate. even if count = 0 method still error 
             if(widget.pass_documentId != data['id_diskusi']) {
-              return SizedBox();
+              return const SizedBox();
             }
 
           }).toList(),
@@ -1804,19 +1821,19 @@ class _SmartDocPage extends State<SmartDocPage> {
                     margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                     child: Row(
                       children: [
-                        Container(
+                        SizedBox(
                           width:120,
                           height: 50,
                           child: SpinBox(
                             min: 1, max: 220,
                             value: 1,
                             spacing: 1,
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               fontSize: 16.0,
                             ),
 
                             onChanged: (value) => pass_tinggi_BMI = value.toInt(),
-                            decoration: InputDecoration(labelText: 'Tinggi Badan (Cm)'),
+                            decoration: const InputDecoration(labelText: 'Tinggi Badan (Cm)'),
                           ),
                         ),
                         Container(
@@ -1827,14 +1844,14 @@ class _SmartDocPage extends State<SmartDocPage> {
                             min: 1, max: 160,
                             value: 1,
                             spacing: 1,
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               fontSize: 16.0,
                             ),
                             onChanged: (value) => pass_berat_BMI = value.toInt(),
-                            decoration: InputDecoration(labelText: 'Berat Badan (Kg)'),
+                            decoration: const InputDecoration(labelText: 'Berat Badan (Kg)'),
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           height: 45,
                           child: ElevatedButton(
                             onPressed: () async {
@@ -1857,7 +1874,7 @@ class _SmartDocPage extends State<SmartDocPage> {
                                               child: Image.asset(
                                                 'assets/icon/Thin.png', width: 100),
                                             ),
-                                            Text('Tambah asupan makanan, kurangi stres, dan istirahat yang cukup'),
+                                            const Text('Tambah asupan makanan, kurangi stres, dan istirahat yang cukup'),
                                           ],
                                         ),
                                       ),
@@ -1887,7 +1904,7 @@ class _SmartDocPage extends State<SmartDocPage> {
                                               child: Image.asset(
                                                 'assets/icon/Normal.png', width: 100),
                                             ),
-                                            Text('Tetap jaga pola makan Anda. Dan jangan lengah sampai terlena ya'),
+                                            const Text('Tetap jaga pola makan Anda. Dan jangan lengah sampai terlena ya'),
                                           ],
                                         ),
                                       ),
@@ -1917,7 +1934,7 @@ class _SmartDocPage extends State<SmartDocPage> {
                                               child: Image.asset(
                                                 'assets/icon/Big.png', width: 100),
                                             ),
-                                            Text('Ayo kurangi makan dan perbanyak olahraga'),
+                                            const Text('Ayo kurangi makan dan perbanyak olahraga'),
                                           ],
                                         ),
                                       ),
@@ -1934,7 +1951,7 @@ class _SmartDocPage extends State<SmartDocPage> {
                                 );
                               }
                             },
-                            child: Text("Hitung"),
+                            child: const Text("Hitung"),
                           )
                         )
                       ],
@@ -2005,19 +2022,19 @@ class _SmartDocPage extends State<SmartDocPage> {
                           // ),
                           child: AutocompleteBasicExample(),
                         ),
-                        Container(
+                        SizedBox(
                           height: 45,
                           child: ElevatedButton(
                             onPressed: () {
                               //
                             },
-                            child: Text("Hitung"),
+                            child: const Text("Hitung"),
                           )
                         )
                       ],
                     )
                   ), 
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   )
                 ],
@@ -2075,18 +2092,18 @@ class _SmartDocPage extends State<SmartDocPage> {
                     margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
                     child: Row(
                       children: [
-                        Container(
+                        SizedBox(
                           width:110,
                           height: 50,
                           child: SpinBox(
                             min: 1, max: 220,
                             value: 1,
                             spacing: 1,
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               fontSize: 16.0,
                             ),
                             onChanged: (value) => pass_tinggi_Cal = value.toInt(),
-                            decoration: InputDecoration(labelText: 'Tinggi Badan (Cm)'),
+                            decoration: const InputDecoration(labelText: 'Tinggi Badan (Cm)'),
                           ),
                         ),
                         Container(
@@ -2097,11 +2114,11 @@ class _SmartDocPage extends State<SmartDocPage> {
                             min: 1, max: 160,
                             value: 1,
                             spacing: 1,
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               fontSize: 16.0,
                             ),
                             onChanged: (value) => pass_berat_Cal = value.toInt(),
-                            decoration: InputDecoration(labelText: 'Berat Badan (Kg)'),
+                            decoration: const InputDecoration(labelText: 'Berat Badan (Kg)'),
                           ),
                         ),
                         Container(
@@ -2112,11 +2129,11 @@ class _SmartDocPage extends State<SmartDocPage> {
                             min: 10, max: 110,
                             value:10,
                             spacing: 1,
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               fontSize: 16.0,
                             ),
                             onChanged: (value) => pass_usia_Cal = value.toInt(),
-                            decoration: InputDecoration(labelText: 'Umur'),
+                            decoration: const InputDecoration(labelText: 'Umur'),
                           ),
                         ),
                       ],
@@ -2143,7 +2160,7 @@ class _SmartDocPage extends State<SmartDocPage> {
                               ),
                               Container(
                                 transform: Matrix4.translationValues(-5.0, 0.0, 0.0),
-                                child: DropDownJK()
+                                child: const DropDownJK()
                               )
                             ]
                           ),
@@ -2165,7 +2182,7 @@ class _SmartDocPage extends State<SmartDocPage> {
                               ),
                               Container(
                                 transform: Matrix4.translationValues(25.0, 0.0, 0.0),
-                                child: DropDownAktv()
+                                child: const DropDownAktv()
                               )
                             ]
                           ),
@@ -2209,7 +2226,7 @@ class _SmartDocPage extends State<SmartDocPage> {
                           barrierDismissible: false,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text('Normal', style: TextStyle(fontWeight: FontWeight.bold)),
+                              title: const Text('Informasi', style: TextStyle(fontWeight: FontWeight.bold)),
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: <Widget>[
@@ -2234,7 +2251,7 @@ class _SmartDocPage extends State<SmartDocPage> {
                           },
                         );
                       },
-                      child: Text("Hitung"),
+                      child: const Text("Hitung"),
                     )
                   )
                 ],
@@ -2270,7 +2287,7 @@ class _SmartDocPage extends State<SmartDocPage> {
 class AutocompleteBasicExample extends StatelessWidget {
   AutocompleteBasicExample({Key key}) : super(key: key);
 
-  static List<String> _kOptions = <String>[
+  static final List<String> _kOptions = <String>[
     GetDiskusi().toString()
   ];
 
@@ -2307,11 +2324,11 @@ class _GetGejalaState extends State<GetGejala> {
       stream: _usersStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return const Text('Something went wrong');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center( 
+          return const Center( 
             child: CircularProgressIndicator()
           );
         }
@@ -2519,12 +2536,12 @@ class _DataKuPage extends State<DataKuPage> {
                         calendarStyle: CalendarStyle(
                           isTodayHighlighted: true,
                           selectedDecoration: BoxDecoration(
-                            color: Color(0xFF4183D7),
+                            color: const Color(0xFF4183D7),
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.circular(6), 
                           ),
                           todayDecoration: BoxDecoration(
-                            color: Color(0xFF62C2F5),
+                            color: const Color(0xFF62C2F5),
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.circular(6), 
                           ),
@@ -2536,7 +2553,7 @@ class _DataKuPage extends State<DataKuPage> {
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.circular(5.0),
                           ),
-                          selectedTextStyle: TextStyle(color: Colors.white),
+                          selectedTextStyle: const TextStyle(color: Colors.white),
                         )
                       )
                     ),
@@ -2729,20 +2746,20 @@ class _DaruratPage extends State<DaruratPage> {
                     width: 130,
                     margin: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: RaisedButton(
-                      color: Color(0xFF4183D7),
-                      padding: EdgeInsets.all(8.0),
+                      color: const Color(0xFF4183D7),
+                      padding: const EdgeInsets.all(8.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
+                        children: const <Widget>[
                           Padding(
-                            padding: const EdgeInsets.all(4.0),
+                            padding: EdgeInsets.all(4.0),
                             child: Icon(
                               Icons.local_hospital,
                               color: Colors.white,
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(2.0),
+                            padding: EdgeInsets.all(2.0),
                             child: Text(
                               "FasKes",
                               style: TextStyle(
@@ -2758,24 +2775,24 @@ class _DaruratPage extends State<DaruratPage> {
                       },
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     width: 130,
                     // margin: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: RaisedButton(
-                      color: Color(0xFF4183D7),
-                      padding: EdgeInsets.all(8.0),
+                      color: const Color(0xFF4183D7),
+                      padding: const EdgeInsets.all(8.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
+                        children: const <Widget>[
                           Padding(
-                            padding: const EdgeInsets.all(4.0),
+                            padding: EdgeInsets.all(4.0),
                             child: Icon(
                               Icons.medical_services,
                               color: Colors.white,
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(2.0),
+                            padding: EdgeInsets.all(2.0),
                             child: Text(
                               "Praktek Dokter",
                               style: TextStyle(
@@ -2834,7 +2851,7 @@ class GetFaskes extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center( 
+          return const Center( 
             child: CircularProgressIndicator()
           );
         }
@@ -2888,7 +2905,7 @@ class GetFaskes extends StatelessWidget {
                                       child: RichText(
                                         text: TextSpan(
                                           children: [
-                                            WidgetSpan(
+                                            const WidgetSpan(
                                               child: Icon(Icons.location_on, size: 14),
                                             ),
                                             TextSpan(                   
@@ -2911,7 +2928,7 @@ class GetFaskes extends StatelessWidget {
                                       child: RichText(
                                         text: TextSpan(
                                           children: [
-                                            WidgetSpan(
+                                            const WidgetSpan(
                                               child: Icon(Icons.call_sharp, size: 14),
                                             ),
                                             TextSpan(                   
@@ -2940,9 +2957,9 @@ class GetFaskes extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(                     
+                        child: const Text(                     
                           'Fasilitas',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Color(0xFF212121),
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -2966,16 +2983,16 @@ class GetFaskes extends StatelessWidget {
                         ),   
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(                     
+                        child: const Text(                     
                           'Poliklinik',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Color(0xFF212121),
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -3028,10 +3045,10 @@ class GetFaskes extends StatelessWidget {
                             icon: const Icon(Icons.info, size: 14),
                             label: const Text("Detail"),
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF1F9F2F)),
+                              backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF1F9F2F)),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                           TextButton.icon(
@@ -3132,19 +3149,19 @@ class _MapsPageState extends State<MapsPage> with SingleTickerProviderStateMixin
     return Scaffold(     
       appBar: AppBar(
         iconTheme: 
-          IconThemeData(
+          const IconThemeData(
             color: Color(0xFF4169E1),
             size: 35.0,
           ),
           title: Text("${widget.pass_namafaskes}", 
-          style: TextStyle(
+          style: const TextStyle(
             color: Color(0xFF4169E1),
             fontWeight: FontWeight.w800,
             fontSize: 16,
           ),
         ),
         //Transparent setting.
-        backgroundColor: Color(0x44FFFFFF),
+        backgroundColor: const Color(0x44FFFFFF),
         elevation: 0,
       ),
       body: SizedBox(
@@ -3187,27 +3204,25 @@ class _MapsPageState extends State<MapsPage> with SingleTickerProviderStateMixin
                       children: [
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Container(
-                            child: Text(                     
-                              widget.pass_namafaskes,
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),   
+                          child: Text(                     
+                            widget.pass_namafaskes,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Container(
+                          child: SizedBox(
                             width: MediaQuery.of(context).size.width*0.6,
                             child: RichText(
                               text: TextSpan(
                                 children: [
-                                  WidgetSpan(
+                                  const WidgetSpan(
                                     child: Icon(Icons.location_on, size: 14),
                                   ),
                                   TextSpan(                   
@@ -3226,25 +3241,23 @@ class _MapsPageState extends State<MapsPage> with SingleTickerProviderStateMixin
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Container(
-                            child: RichText(
-                              text: TextSpan(
-                                children: [
-                                  WidgetSpan(
-                                    child: Icon(Icons.call_sharp, size: 14),
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                const WidgetSpan(
+                                  child: Icon(Icons.call_sharp, size: 14),
+                                ),
+                                TextSpan(                   
+                                  text:widget.pass_kontak,
+                                  style: const TextStyle(
+                                    color: Color(0xFF212121),
+                                    fontSize: 13,
                                   ),
-                                  TextSpan(                   
-                                    text:widget.pass_kontak,
-                                    style: const TextStyle(
-                                      color: Color(0xFF212121),
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ]
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,   
-                            )
+                                ),
+                              ]
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,   
                           ),
                         )                          
                       ]
@@ -3259,7 +3272,7 @@ class _MapsPageState extends State<MapsPage> with SingleTickerProviderStateMixin
                   initiallyExpanded: true,
                   leading: IconButton(
                     iconSize: 25,
-                    icon: Icon(Icons.info,
+                    icon: const Icon(Icons.info,
                     color: Color(0xFF414141)),
                     onPressed: () {},
                   ),
@@ -3271,7 +3284,7 @@ class _MapsPageState extends State<MapsPage> with SingleTickerProviderStateMixin
                     ),
                   ),
                   children: <Widget>[
-                    Container(
+                    SizedBox(
                       height: MediaQuery.of(context).size.height*0.3,
                       child: ListView(
                         children:[ 
@@ -3279,9 +3292,9 @@ class _MapsPageState extends State<MapsPage> with SingleTickerProviderStateMixin
                             alignment: Alignment.centerLeft,
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Text(                     
+                              child: const Text(                     
                                 'Fasilitas',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Color(0xFF212121),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
@@ -3303,16 +3316,16 @@ class _MapsPageState extends State<MapsPage> with SingleTickerProviderStateMixin
                               ),   
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Text(                     
+                              child: const Text(                     
                                 'Poliklinik',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Color(0xFF212121),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
@@ -3334,16 +3347,16 @@ class _MapsPageState extends State<MapsPage> with SingleTickerProviderStateMixin
                               ),   
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Text(                     
+                              child: const Text(                     
                                 'Praktik Dokter',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Color(0xFF212121),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
@@ -3357,7 +3370,7 @@ class _MapsPageState extends State<MapsPage> with SingleTickerProviderStateMixin
                               child: GetDokter(idFaskes: widget.pass_idFaskes),
                             )
                           ),
-                          SizedBox(height: 10)
+                          const SizedBox(height: 10)
                         ]
                       )
                     )
@@ -3371,12 +3384,12 @@ class _MapsPageState extends State<MapsPage> with SingleTickerProviderStateMixin
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(top: 80.0),
         child: FloatingActionButton(
-          backgroundColor: Color(0xFF1F9F2F),
+          backgroundColor: const Color(0xFF1F9F2F),
           foregroundColor: Colors.white,
           onPressed: () => _googleMapController.animateCamera(
             CameraUpdate.newCameraPosition(_initialCameraPosition),
           ),
-          child: Icon(Icons.center_focus_strong),
+          child: const Icon(Icons.center_focus_strong),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop
@@ -3421,7 +3434,7 @@ class _GetDokterState extends State<GetDokter> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center( 
+          return const Center( 
             child: CircularProgressIndicator()
           );
         }
@@ -3479,24 +3492,22 @@ class _GetDokterState extends State<GetDokter> {
               i++;
               return Card(
                 child:Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   height: 70,
                   width: 160,
                   child: Column(
                     children: [
                       Align(
                         alignment: Alignment.center,
-                        child: Container(
-                          child: Text(                     
-                            data['spesialis'],
-                            style: const TextStyle(
-                              color: Color(0xFF4183D7),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),   
+                        child: Text(                     
+                          data['spesialis'],
+                          style: const TextStyle(
+                            color: Color(0xFF4183D7),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
                       Container(
@@ -3509,48 +3520,42 @@ class _GetDokterState extends State<GetDokter> {
                       ),
                       Align(
                         alignment: Alignment.center,
-                        child: Container(
-                          child: Text(                     
-                            data['namaDokter'],
-                            style: const TextStyle(
-                              color: Color(0xFF212121),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),   
+                        child: Text(                     
+                          data['namaDokter'],
+                          style: const TextStyle(
+                            color: Color(0xFF212121),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
-                      SizedBox(height: 5,),
+                      const SizedBox(height: 5,),
                       Align(
                         alignment: Alignment.center,
-                        child: Container(
-                          child: Text(                     
-                            data['hariPraktik'],
-                            style: const TextStyle(
-                              color: Color(0xFF808080),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),   
+                        child: Text(                     
+                          data['hariPraktik'],
+                          style: const TextStyle(
+                            color: Color(0xFF808080),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
                       Align(
                         alignment: Alignment.center,
-                        child: Container(
-                          child: Text(                     
-                            "${data['jamMulai']}-${data['jamSelesai']}",
-                            style: const TextStyle(
-                              color: Color(0xFF808080),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),   
+                        child: Text(                     
+                          "${data['jamMulai']}-${data['jamSelesai']}",
+                          style: const TextStyle(
+                            color: Color(0xFF808080),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
                     ],
@@ -3573,7 +3578,7 @@ class _GetDokterState extends State<GetDokter> {
                 )
               );
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           }).toList(), 
         );
@@ -3593,12 +3598,12 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 class _ProfilePageState extends State<ProfilePage> {
-  var _namaLengkapCtrl = TextEditingController();
-  var _emailCtrl = TextEditingController();
-  var _ponselCtrl = TextEditingController();
-  var _pekerjaanCtrl = TextEditingController();
-  var _alamatCtrl = TextEditingController();
-  var _passwordCtrl = TextEditingController();
+  final _namaLengkapCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
+  final _ponselCtrl = TextEditingController();
+  final _pekerjaanCtrl = TextEditingController();
+  final _alamatCtrl = TextEditingController();
+  final _passwordCtrl = TextEditingController();
 
   var namaLengkap; 
   var email;
@@ -3625,11 +3630,11 @@ class _ProfilePageState extends State<ProfilePage> {
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 
         if (snapshot.hasError) {
-          return Text("Something went wrong");
+          return const Text("Something went wrong");
         }
 
         if (snapshot.hasData && !snapshot.data.exists) {
-          return Text("Document does not exist");
+          return const Text("Document does not exist");
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
@@ -3637,11 +3642,11 @@ class _ProfilePageState extends State<ProfilePage> {
           return Scaffold(     
             appBar: AppBar(
               iconTheme: 
-                IconThemeData(
+                const IconThemeData(
                   color: Color(0xFF4169E1),
                   size: 35.0,
                 ),
-                title: Text("Akun", 
+                title: const Text("Akun", 
                 style: TextStyle(
                   color: Color(0xFF4169E1),
                   fontWeight: FontWeight.w800,
@@ -3649,7 +3654,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               //Transparent setting.
-              backgroundColor: Color(0x44FFFFFF),
+              backgroundColor: const Color(0x44FFFFFF),
               elevation: 0,
             ),
             body: SizedBox(
@@ -3703,7 +3708,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),   
                                       ),
                                     ),
-                                    SizedBox(height:10),
+                                    const SizedBox(height:10),
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: Container(
@@ -3747,10 +3752,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                                     child: Column(
-                                      children: [
+                                      children: const [
                                         Text(                     
                                           'Diskusi',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             color: Color(0xFF212121),
                                             fontWeight: FontWeight.w500,
                                             fontSize: 15,
@@ -3758,7 +3763,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         Text(                     
                                           '2',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             color: Color(0xFF212121),
                                             fontWeight: FontWeight.w500,
                                             fontSize: 18,
@@ -3775,10 +3780,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                                     child: Column(
-                                      children: [
+                                      children: const [
                                         Text(                     
                                           'Balasan',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             color: Color(0xFF212121),
                                             fontWeight: FontWeight.w500,
                                             fontSize: 15,
@@ -3786,7 +3791,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         Text(                     
                                           '2',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             color: Color(0xFF212121),
                                             fontWeight: FontWeight.w500,
                                             fontSize: 18,
@@ -3803,10 +3808,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                                     child: Column(
-                                      children: [
+                                      children: const [
                                         Text(                     
                                           'Terjawab',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             color: Color(0xFF212121),
                                             fontWeight: FontWeight.w500,
                                             fontSize: 15,
@@ -3814,7 +3819,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         Text(                     
                                           '2',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             color: Color(0xFF212121),
                                             fontWeight: FontWeight.w500,
                                             fontSize: 18,
@@ -3853,9 +3858,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                   alignment: Alignment.centerLeft,
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                    child: Text(                     
+                                    child: const Text(                     
                                       'Menampilkan ... hasil',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Color(0xFF212121),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,
@@ -3883,7 +3888,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           )
                         ],
                       ),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topRight,
                           end: Alignment.bottomLeft,
@@ -3909,7 +3914,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           // initiallyExpanded: true,
                           leading: IconButton(
                             iconSize: 25,
-                            icon: Icon(Icons.person,
+                            icon: const Icon(Icons.person,
                             color: Color(0xFF414141)),
                             onPressed: () {},
                           ),
@@ -3921,7 +3926,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                           children: <Widget>[
-                            Container(
+                            SizedBox(
                               height: MediaQuery.of(context).size.height*0.35,
                               child: ListView(
                                 children:[ 
@@ -3929,9 +3934,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                     alignment: Alignment.centerLeft,
                                     child: Container(
                                       margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                      child: Text(                     
+                                      child: const Text(                     
                                         'Data Akun',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Color(0xFF212121),
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14,
@@ -3940,11 +3945,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                                     child: TextField(
                                       controller: _namaLengkapCtrl,
                                       decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
+                                        border: const OutlineInputBorder(),
                                         labelText: data['namaLengkap'],
                                       ),
                                     ),
@@ -3957,17 +3962,17 @@ class _ProfilePageState extends State<ProfilePage> {
                                         child: TextField(
                                           controller: _emailCtrl,
                                           decoration: InputDecoration(
-                                            border: OutlineInputBorder(),
+                                            border: const OutlineInputBorder(),
                                             labelText: data['email'],
                                           ),
                                         ),
                                       ),
-                                      Container(
+                                      SizedBox(
                                         width: MediaQuery.of(context).size.width*0.4,
                                         child: TextField(
                                           controller: _ponselCtrl,
                                           decoration: InputDecoration(
-                                            border: OutlineInputBorder(),
+                                            border: const OutlineInputBorder(),
                                             labelText: data['ponsel'],
                                           ),
                                         ),
@@ -3976,11 +3981,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ],
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                                     child: TextField(
                                       controller: _passwordCtrl,
                                       decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
+                                        border: const OutlineInputBorder(),
                                         labelText: data['password'],
                                       ),
                                     ),
@@ -3989,9 +3994,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                     alignment: Alignment.centerLeft,
                                     child: Container(
                                       margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                      child: Text(                     
+                                      child: const Text(                     
                                         'Data Diri',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Color(0xFF212121),
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14,
@@ -4000,57 +4005,57 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                                     child: TextField(
                                       controller: _alamatCtrl,
                                       decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
+                                        border: const OutlineInputBorder(),
                                         labelText: data['alamat'],
                                       ),
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                                     child: TextField(
                                       controller: _pekerjaanCtrl,
                                       decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
+                                        border: const OutlineInputBorder(),
                                         labelText: data['pekerjaan'],
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 10,),
+                                  const SizedBox(height: 10,),
                                   Row(
                                     children: [
-                                      SizedBox(width:10),
-                                      Container(
+                                      const SizedBox(width:10),
+                                      SizedBox(
                                         width:140,
                                         height: 50,
                                         child: SpinBox(
                                           min: 1, max: 220,
                                           value: data['tinggiBadan'].toDouble(),
                                           spacing: 1,
-                                          textStyle: TextStyle(
+                                          textStyle: const TextStyle(
                                             fontSize: 16.0,
                                           ),
-                                          decoration: InputDecoration(labelText: 'Tinggi Badan (Cm)'),
+                                          decoration: const InputDecoration(labelText: 'Tinggi Badan (Cm)'),
                                         ),
                                       ),
-                                      SizedBox(width:10),
-                                      Container(
+                                      const SizedBox(width:10),
+                                      SizedBox(
                                         width:140,
                                         height: 50,
                                         child: SpinBox(
                                           min: 1, max: 220,
                                           value: data['beratBadan'].toDouble(),
                                           spacing: 1,
-                                          textStyle: TextStyle(
+                                          textStyle: const TextStyle(
                                             fontSize: 16.0,
                                           ),
-                                          decoration: InputDecoration(labelText: 'Berat Badan (Kg)'),
+                                          decoration: const InputDecoration(labelText: 'Berat Badan (Kg)'),
                                         ),
                                       ),
-                                      SizedBox(width:10),
+                                      const SizedBox(width:10),
                                       Container(
                                         child: IconButton(
                                           icon: const Icon(Icons.info),
@@ -4102,14 +4107,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                         updatePengguna();
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => NavBar(pass_usernameNav: data['namaPengguna'])),
+                                          MaterialPageRoute(builder: (context) => const NavBar()),
                                         );
                                       },
                                       style: ElevatedButton.styleFrom(
                                         primary: Colors.green, // Background color
                                       ),
-                                      icon: Icon(Icons.save, size: 18),
-                                      label: Text("Simpan Perubahan"),
+                                      icon: const Icon(Icons.save, size: 18),
+                                      label: const Text("Simpan Perubahan"),
                                     )
                                   )
 
@@ -4119,20 +4124,20 @@ class _ProfilePageState extends State<ProfilePage> {
                           ]
                         )
                       ),
-                      color: Color(0xFFF6F7F9),
+                      color: const Color(0xFFF6F7F9),
                     ),
                   ),
                   Container(
                     transform: Matrix4.translationValues(0.0, -10.0, 0.0),
                     margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                    padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                    padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
                     child: Column(
                       children: [
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text(                     
+                          child: const Text(                     
                             'Selesaikan pendaftaran dengan mengunggah foto/dokumen KTP dan foto diri (selfie)',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.black,
                               fontSize: 14,
                             )
@@ -4140,9 +4145,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         Row(
                           children: [
-                            Text(                     
+                            const Text(                     
                               '0 dari 2 berkas terkumpul',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.black,
                                 fontStyle: FontStyle.italic,
                                 fontSize: 13,
@@ -4155,8 +4160,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPressed: () {
                                   // Respond to button press
                               },
-                              icon: Icon(Icons.cloud_upload, size: 18),
-                              label: Text("Unggah Bukti"),
+                              icon: const Icon(Icons.cloud_upload, size: 18),
+                              label: const Text("Unggah Bukti"),
                             ),
                           ],
                         )  
@@ -4186,9 +4191,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     alignment: Alignment.centerRight,
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical:3),
-                      child: Text(                     
+                      child: const Text(                     
                         'Versi 1.0.0',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Color(0xFF212121),
                           fontWeight: FontWeight.w500,
                           fontSize: 12,
@@ -4202,7 +4207,7 @@ class _ProfilePageState extends State<ProfilePage> {
           );  
         }
 
-        return Center( 
+        return const Center( 
           child: CircularProgressIndicator()
         );
       },
