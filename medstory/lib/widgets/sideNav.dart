@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../main.dart';
 
 class NavDrawer extends StatelessWidget {
-  var pass_username;
-  var pass_id_userNav;
-  NavDrawer({Key key, this.pass_username, this.pass_id_userNav}) : super(key: key);
+  var passUsername = "";
+  var passIdUserNav = "";
+  NavDrawer({Key key, this.passUsername, this.passIdUserNav}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,45 +23,41 @@ class NavDrawer extends StatelessWidget {
                 const SizedBox(height:10),
                 Row(
                   children: [
-                    Container(
-                      child: Column(
-                        children: const [
-                          Text(
-                            'Detail',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            'Tinggi Badan: ',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          ),
-                          Text(
-                            '180',
-                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'Berat Badan: ',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          ),
-                          Text(
-                            '65',
-                            style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      )
+                    Column(
+                      children: const [
+                        Text(
+                          'Detail',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          'Tinggi Badan: ',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                        Text(
+                          '180',
+                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Berat Badan: ',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                        Text(
+                          '65',
+                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                     SizedBox(width: MediaQuery.of(context).size.width*0.08),
-                    Container(
-                      child: Column(
-                        children: const [
-                          Text(
-                            'Hari Ini',
-                            style: TextStyle(color: Colors.white, fontSize: 14),
-                          ),
-                          SizedBox(height: 5),
-                          //Kalori grafik
-                        ],
-                      )
+                    Column(
+                      children: const [
+                        Text(
+                          'Hari Ini',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                        SizedBox(height: 5),
+                        //Kalori grafik
+                      ],
                     ),
                   ],
                 )
@@ -207,10 +202,9 @@ class NavDrawer extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
               children: [
                 Flexible(
-                  child: GetAsupanDayById(pass_documentId: pass_id_userNav)
+                  child: GetAsupanDayById(passDocumentId: passIdUserNav)
                 ),
               ],
             )
@@ -258,8 +252,8 @@ class NavDrawer extends StatelessWidget {
 }
 
 class GetAsupanDayById extends StatefulWidget {
-  const GetAsupanDayById({Key key, this.pass_documentId}) : super(key: key);
-  final String pass_documentId;
+  const GetAsupanDayById({Key key, this.passDocumentId}) : super(key: key);
+  final String passDocumentId;
 
   @override
   _GetAsupanDayById createState() => _GetAsupanDayById();
@@ -287,7 +281,7 @@ class _GetAsupanDayById extends State<GetAsupanDayById> {
         return ListView(
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-            return GetAsupanDetailById(pass_id_asupan: data['id_asupan']);
+            return GetAsupanDetailById(passIdAsupan: data['id_asupan']);
           }).toList(),
         );
       },
@@ -296,8 +290,8 @@ class _GetAsupanDayById extends State<GetAsupanDayById> {
 }
 
 class GetAsupanDetailById extends StatefulWidget {
-  const GetAsupanDetailById({Key key, this.pass_id_asupan}) : super(key: key);
-  final String pass_id_asupan;
+  const GetAsupanDetailById({Key key, this.passIdAsupan}) : super(key: key);
+  final String passIdAsupan;
 
   @override
   _GetAsupanDetailById createState() => _GetAsupanDetailById();
@@ -325,7 +319,7 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
         return Column(
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-            if(document.id == widget.pass_id_asupan){
+            if(document.id == widget.passIdAsupan){
               return Container(
                 height: 70,
                 margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
@@ -383,12 +377,9 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
                   boxShadow: [
                     BoxShadow(
                       color: const Color(0xff414141).withOpacity(0.4),
-                      blurRadius: 10.0, // soften the shadow
-                      spreadRadius: 0.0, //extend the shadow
-                      offset: const Offset(
-                        5.0, // Move to right 10  horizontally
-                        5.0, // Move to bottom 10 Vertically
-                      ),
+                      blurRadius: 10.0, 
+                      spreadRadius: 0.0,
+                      offset: const Offset(5.0, 5.0),
                     )
                   ],
                 ),              
@@ -483,8 +474,8 @@ class _GetAllAsupan extends State<GetAllAsupan> {
                           return calday
                           .add({
                             'id_asupan': document.id,
-                            'id_user': pass_id_user, 
-                            'waktu': pass_waktu,
+                            'id_user': passIdUser, 
+                            'waktu': passWaktu,
                             'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
                           })
                           .then((value) => print("Asupan berhasil ditambah"))
@@ -552,7 +543,7 @@ class _DropDownState extends State<DropDown> {
       onChanged: (String newValue) {
         setState(() {
           dropdownValue = newValue;
-          pass_waktu = dropdownValue;
+          passWaktu = dropdownValue;
         });
       },
       items: <String>['Pagi', 'Siang', 'Malam']
@@ -570,7 +561,7 @@ class AutocompleteBasicExample extends StatelessWidget {
   AutocompleteBasicExample({Key key}) : super(key: key);
   final Stream<QuerySnapshot> _detailasupan = FirebaseFirestore.instance.collection('asupan').snapshots();
 
-  static List<String> _kOptions = <String>[
+  static final List<String> _kOptions = <String>[
     'Nasi', 'Capcay', 'Rendang sapi'
   ];
   //Cant convert querysnapshot to string list

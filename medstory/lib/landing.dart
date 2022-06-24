@@ -110,8 +110,8 @@ class Login extends StatelessWidget {
                         querySnapshot.docs.forEach((doc) {
                           if((doc["namaPengguna"] == usernameCtrl.text)&&(doc["password"] == passwordCtrl.text)){
                             i++;
-                            pass_id_user = doc.id;
-                            pass_username = doc['namaPengguna'];
+                            passIdUser = doc.id;
+                            passUsername = doc['namaPengguna'];
                           }
                         });
                         if(i > 0){
