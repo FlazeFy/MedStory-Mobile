@@ -15,7 +15,7 @@ import 'landing.dart';
 
 bool shouldUseFirestoreEmulator = false;
 String passIdAsupan;
-String passWaktu;
+String passWaktu = "Pagi";
 String passIdUser;
 String passUsername;
 String passKategori;
@@ -2123,32 +2123,16 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           Container(
                             margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                            height: MediaQuery.of(context).size.height*0.07,
                             child: Row(
                               children: [
-                                SizedBox(width: MediaQuery.of(context).size.width*0.1),
+                                SizedBox(width: MediaQuery.of(context).size.width*0.05),
                                 InkWell(
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                                    child: Column(
-                                      children: const [
-                                        Text(                     
-                                          'Diskusi',
-                                          style: TextStyle(
-                                            color: Color(0xFF212121),
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15,
-                                          )
-                                        ),
-                                        Text(                     
-                                          '2',
-                                          style: TextStyle(
-                                            color: Color(0xFF212121),
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18,
-                                          )
-                                        ),    
-                                      ],  
-                                    )
+                                    height: MediaQuery.of(context).size.height*0.07,
+                                    width: 65,
+                                    child: const GetCountDiskusi()
                                   ),
                                   onTap: () { 
                                     //Method get diskusi
@@ -2157,26 +2141,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                 InkWell(
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                                    child: Column(
-                                      children: const [
-                                        Text(                     
-                                          'Balasan',
-                                          style: TextStyle(
-                                            color: Color(0xFF212121),
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15,
-                                          )
-                                        ),
-                                        Text(                     
-                                          '2',
-                                          style: TextStyle(
-                                            color: Color(0xFF212121),
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18,
-                                          )
-                                        ),    
-                                      ],  
-                                    )
+                                    height: MediaQuery.of(context).size.height*0.07,
+                                    width: 65,
+                                    child: const GetCountBalasan()
                                   ),
                                   onTap: () { 
                                     //Method get diskusi
@@ -2185,26 +2152,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                 InkWell(
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                                    child: Column(
-                                      children: const [
-                                        Text(                     
-                                          'Terjawab',
-                                          style: TextStyle(
-                                            color: Color(0xFF212121),
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15,
-                                          )
-                                        ),
-                                        Text(                     
-                                          '2',
-                                          style: TextStyle(
-                                            color: Color(0xFF212121),
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18,
-                                          )
-                                        ),    
-                                      ],  
-                                    )
+                                    height: MediaQuery.of(context).size.height*0.07,
+                                    width: 65,
+                                    child: const GetCountVerified()
                                   ),
                                   onTap: () { 
                                     //Method get diskusi
@@ -2592,4 +2542,157 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
   
+}
+
+class GetCountDiskusi extends StatefulWidget {
+  const GetCountDiskusi({Key key}) : super(key: key);
+
+  @override
+    _GetCountDiskusiState createState() => _GetCountDiskusiState();
+}
+
+class _GetCountDiskusiState extends State<GetCountDiskusi> {
+  final Stream<QuerySnapshot> _myDiskusiCount = FirebaseFirestore.instance.collection('diskusi').where('namaPengguna', isEqualTo: passUsername).snapshots();
+ 
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _myDiskusiCount,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center( 
+            child: CircularProgressIndicator()
+          );
+        }
+        
+        return Column(
+          children:  [
+            const Text(                     
+              'Diskusi',
+              style: TextStyle(
+                color: Color(0xFF212121),
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+              )
+            ),
+            Text(                     
+              snapshot.data.size.toString(),
+              style: const TextStyle(
+                color: Color(0xFF212121),
+                fontWeight: FontWeight.w500,
+                fontSize: 18,
+              )
+            ),    
+          ],  
+        );
+
+      },
+    );
+  }
+}
+
+class GetCountBalasan extends StatefulWidget {
+  const GetCountBalasan({Key key}) : super(key: key);
+
+  @override
+    _GetCountBalasanState createState() => _GetCountBalasanState();
+}
+
+class _GetCountBalasanState extends State<GetCountBalasan> {
+  final Stream<QuerySnapshot> _myBalasanCount = FirebaseFirestore.instance.collection('balasan').where('pengirim', isEqualTo: passUsername).snapshots();
+ 
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _myBalasanCount,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center( 
+            child: CircularProgressIndicator()
+          );
+        }
+        
+        return Column(
+          children:  [
+            const Text(                     
+              'Balasan',
+              style: TextStyle(
+                color: Color(0xFF212121),
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+              )
+            ),
+            Text(                     
+              snapshot.data.size.toString(),
+              style: const TextStyle(
+                color: Color(0xFF212121),
+                fontWeight: FontWeight.w500,
+                fontSize: 18,
+              )
+            ),    
+          ],  
+        );
+
+      },
+    );
+  }
+}
+
+class GetCountVerified extends StatefulWidget {
+  const GetCountVerified({Key key}) : super(key: key);
+
+  @override
+    _GetCountVerifiedState createState() => _GetCountVerifiedState();
+}
+
+class _GetCountVerifiedState extends State<GetCountVerified> {
+  final Stream<QuerySnapshot> _myBalasanCount = FirebaseFirestore.instance.collection('balasan').where('pengirim', isEqualTo: passUsername).where('status', isEqualTo: "verified").snapshots();
+ 
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _myBalasanCount,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center( 
+            child: CircularProgressIndicator()
+          );
+        }
+        
+        return Column(
+          children:  [
+            const Text(                     
+              'Terjawab',
+              style: TextStyle(
+                color: Color(0xFF212121),
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+              )
+            ),
+            Text(                     
+              snapshot.data.size.toString(),
+              style: const TextStyle(
+                color: Color(0xFF212121),
+                fontWeight: FontWeight.w500,
+                fontSize: 18,
+              )
+            ),    
+          ],  
+        );
+
+      },
+    );
+  }
 }
