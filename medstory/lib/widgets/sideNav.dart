@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
 
+int kebutuhan = 0;
+
 class NavDrawer extends StatelessWidget {
   var passUsername = "";
   var passIdUserNav = "";
@@ -23,40 +25,21 @@ class NavDrawer extends StatelessWidget {
                 const SizedBox(height:10),
                 Row(
                   children: [
-                    Column(
-                      children: const [
-                        Text(
-                          'Detail',
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          'Tinggi Badan: ',
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                        Text(
-                          '180',
-                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Berat Badan: ',
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                        Text(
-                          '65',
-                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
+                    GetBeratTinggi(),
                     SizedBox(width: MediaQuery.of(context).size.width*0.08),
                     Column(
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           'Hari Ini',
                           style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 10),
                         //Kalori grafik
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height*0.08,
+                          width: MediaQuery.of(context).size.width*0.37,
+                          child: const GetKebutuhanKalori()
+                        )
                       ],
                     ),
                   ],
@@ -146,7 +129,9 @@ class NavDrawer extends StatelessWidget {
                     child:IconButton(
                       icon: const Icon(Icons.refresh),
                       color: Colors.white,
-                      onPressed: () {},
+                      onPressed: () {
+                       //
+                      },
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),
@@ -198,55 +183,118 @@ class NavDrawer extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.width*0.74,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Flexible(
-                  child: GetAsupanDayById(passDocumentId: passIdUserNav)
-                ),
-              ],
-            )
-          ),
-          Expanded(
-            child: Align(
-            alignment: Alignment.bottomLeft,
-              child: ListTile(
-                tileColor: const Color(0xFF4183D7),
-                leading: const Icon(Icons.settings, color: Colors.white),
-                title: const Text('Pengaturan'),  
-                textColor: Colors.white,
-                onTap: () {
-                  // Navigator.push(
-                  //   context, MaterialPageRoute(
-                  //     builder: (context) => const LoginPage(),
-                  //   ),
-                  // );
-                },
-              ),
-            ),
-          ),
-          Expanded(
-            child: Align(
-            alignment: Alignment.bottomLeft,
-              child: ListTile(
-                tileColor: const Color(0xFFe14141),
-                leading: const Icon(Icons.exit_to_app, color: Colors.white),
-                title: const Text('Ganti Akun'),  
-                textColor: Colors.white,
-                onTap: () {
-                  Navigator.push(
-                    context, MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
+            height: MediaQuery.of(context).size.height,
+            child:GetAsupanDayById(passDocumentId: passIdUserNav)
+          )    
         ],
       ),
+    );
+  }
+}
+
+class GetKebutuhanKalori extends StatefulWidget {
+  const GetKebutuhanKalori({Key key}) : super(key: key);
+
+  @override
+    _GetKebutuhanKaloriState createState() => _GetKebutuhanKaloriState();
+}
+
+class _GetKebutuhanKaloriState extends State<GetKebutuhanKalori> {
+  final Stream<QuerySnapshot> _kebutuhan = FirebaseFirestore.instance.collection('kebutuhankalori').snapshots();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _kebutuhan,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
+
+        return Flexible(
+          child: Column(
+            children: snapshot.data.docs.map((DocumentSnapshot document) {
+            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+              //Get jadwal kalori by date.
+              var dt = DateTime.fromMicrosecondsSinceEpoch(data['date'].microsecondsSinceEpoch).toString();
+              var date = DateTime.parse(dt);
+              var formattedDate = "${date.day}-${date.month}-${date.year}";
+
+              //Get today date.
+              var now = DateTime.now().toString();
+              var now2 = DateTime.parse(now);
+              var formattedNow = "${now2.day}-${now2.month}-${now2.year}";
+              
+              if((formattedDate == formattedNow)&&(data['id_user'] == passIdUser)){
+                return Text(data['kalori'].toString(), style: const TextStyle(color: Colors.white)); 
+              } 
+              return const SizedBox(height: 0);
+            }).toList(),
+          ), 
+
+        );
+      },
+    );
+  }
+}
+
+class GetBeratTinggi extends StatelessWidget {
+  const GetBeratTinggi({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('pengguna');
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: users.doc(passIdUser).get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+
+        if (snapshot.hasError) {
+          return const Text("Something went wrong");
+        }
+
+        if (snapshot.hasData && !snapshot.data.exists) {
+          return const Text("Document does not exist");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data = snapshot.data.data() as Map<String, dynamic>;
+          return Column(
+            children: [
+              const Text(
+                'Detail',
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Tinggi Badan: ',
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+              Text(
+                data['tinggiBadan'].toString(),
+                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                'Berat Badan: ',
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+              Text(
+                data['beratBadan'].toString(),
+                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ],
+          );
+        }
+
+        return const Center( 
+          child: CircularProgressIndicator()
+        );
+      },
     );
   }
 }
@@ -278,11 +326,27 @@ class _GetAsupanDayById extends State<GetAsupanDayById> {
           );
         }
 
-        return ListView(
-          children: snapshot.data.docs.map((DocumentSnapshot document) {
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-            return GetAsupanDetailById(passIdAsupan: data['id_asupan']);
-          }).toList(),
+        return Flexible(
+          child: ListView(
+            children: snapshot.data.docs.map((DocumentSnapshot document) {
+            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+              //Get jadwal kalori by date.
+              var dt = DateTime.fromMicrosecondsSinceEpoch(data['date'].microsecondsSinceEpoch).toString();
+              var date = DateTime.parse(dt);
+              var formattedDate = "${date.day}-${date.month}-${date.year}";
+
+              //Get today date.
+              var now = DateTime.now().toString();
+              var now2 = DateTime.parse(now);
+              var formattedNow = "${now2.day}-${now2.month}-${now2.year}";
+              
+              if((formattedDate == formattedNow)&&(data['id_user'] == passIdUser)){
+                return GetAsupanDetailById(passIdAsupan: data['id_asupan']);
+              } else {
+                return const SizedBox();
+              }
+            }).toList(),
+          )
         );
       },
     );
@@ -321,7 +385,7 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             if(document.id == widget.passIdAsupan){
               return Container(
-                height: 70,
+                height: 80,
                 margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                 child: Row(
                   children: [
@@ -355,7 +419,6 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
                       )
                     ),
                     Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
                       child:IconButton(
                         icon: const Icon(Icons.delete),
                         color: Colors.white,
@@ -476,7 +539,7 @@ class _GetAllAsupan extends State<GetAllAsupan> {
                             'id_asupan': document.id,
                             'id_user': passIdUser, 
                             'waktu': passWaktu,
-                            'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
+                            'date': DateTime.tryParse(DateTime.now().toIso8601String()),
                           })
                           .then((value) => print("Asupan berhasil ditambah"))
                           .catchError((error) => print("Failed to add user: $error"));
