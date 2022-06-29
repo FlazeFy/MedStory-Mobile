@@ -250,6 +250,8 @@ class CreateAccountPage extends StatefulWidget{
 }
 
 class _CreateAccountPage extends State<CreateAccountPage>{
+  CollectionReference users = FirebaseFirestore.instance.collection('pengguna');
+
   var usernameCtrl = TextEditingController();
   var emailCtrl = TextEditingController();
   var ponselCtrl = TextEditingController();
@@ -266,6 +268,26 @@ class _CreateAccountPage extends State<CreateAccountPage>{
   int beratBadanCtrl;
 
   int _index = 0;
+
+  Future<void> insertAccount() {
+      return users
+        .add({
+          'namaPengguna': usernameCtrl.text, 
+          'email': emailCtrl.text, 
+          'ponsel': ponselCtrl.text, 
+          'password': passwordCtrl.text, 
+          'namaLengkap': namaLengkapCtrl.text,
+          'nik': nikCtrl.text,
+          'tempatLahir': tempatLahirCtrl.text,
+          'tanggalLahir': '17-08-1945',
+          'alamat': alamatCtrl.text,
+          'pekerjaan': pekerjaanCtrl.text,
+          'tinggiBadan': tinggiBadanCtrl,
+          'beratBadan': beratBadanCtrl,
+        })
+        .then((value) => print("Akun berhasil didaftar"))
+        .catchError((error) => print("Failed to add user: $error"));
+    }
 
   Widget buildPinPut() {
     return Pinput(
@@ -526,7 +548,7 @@ class _CreateAccountPage extends State<CreateAccountPage>{
                                 margin: const EdgeInsets.only(bottom: 7.0),
                                 child: TextFormField(
                                   obscureText: true,
-                                  controller: confirmpasswordCtrl,
+                                  // controller: confirmpasswordCtrl,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Konfirmasi Password',
@@ -632,7 +654,7 @@ class _CreateAccountPage extends State<CreateAccountPage>{
                               ),
                             ),
 
-                            //Tempat section.
+                            //Tempat lahir section.
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Container(
@@ -647,16 +669,17 @@ class _CreateAccountPage extends State<CreateAccountPage>{
                               ),
                             ),
 
-                            //Tempat lahir section.
+                            //Tanggal lahir section.
+                            //Not finished
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 7.0),
                                 child: TextFormField(
-                                  controller: tempatLahirCtrl,
+                                  controller: tanggalLahirCtrl,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
-                                    labelText: 'Tempat Lahir',
+                                    labelText: 'Tanggal Lahir',
                                   ),
                                 ),
                               ),
@@ -683,7 +706,7 @@ class _CreateAccountPage extends State<CreateAccountPage>{
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 12.0),
                                 child: TextFormField(
-                                  controller: tempatLahirCtrl,
+                                  controller: pekerjaanCtrl,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Pekerjaan',
@@ -703,6 +726,7 @@ class _CreateAccountPage extends State<CreateAccountPage>{
                                     textStyle: const TextStyle(
                                       fontSize: 16.0,
                                     ),
+                                    onChanged: (value) => tinggiBadanCtrl = value.toInt(),
                                     decoration: const InputDecoration(labelText: 'Tinggi Badan (Cm)'),
                                   ),
                                 ),
@@ -716,6 +740,7 @@ class _CreateAccountPage extends State<CreateAccountPage>{
                                     textStyle: const TextStyle(
                                       fontSize: 16.0,
                                     ),
+                                    onChanged: (value) => beratBadanCtrl = value.toInt(),
                                     decoration: const InputDecoration(labelText: 'Berat Badan (Kg)'),
                                   ),
                                 ),
@@ -795,6 +820,59 @@ class _CreateAccountPage extends State<CreateAccountPage>{
                                     )
                                   )
                                 ]
+                              ),
+                              ElevatedButton(
+                                onPressed: () async{
+                                  int i = 0;
+                                  FirebaseFirestore.instance
+                                  .collection('pengguna')
+                                  .get()
+                                  .then((QuerySnapshot querySnapshot) {
+                                      querySnapshot.docs.forEach((doc) {
+                                        if(doc["namaPengguna"] == usernameCtrl.text){
+                                          i++;
+                                        }
+                                      });
+                                      if(i == 0){
+                                        passUsername = usernameCtrl.text;
+                                        insertAccount();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const NavBar()),
+                                        );
+                                      } else {
+                                        return showDialog<void>(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text('Perhatian', style: TextStyle(fontWeight: FontWeight.bold)),
+                                              content: SingleChildScrollView(
+                                                child: ListBody(
+                                                  children: <Widget>[
+                                                    ClipRRect(
+                                                      child: Image.asset(
+                                                        'assets/icon/Failed.png', width: 20),
+                                                    ),
+                                                    const Text('Username telah terdaftar'),
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: const Text('Oke'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                        );
+                                      }
+                                  });
+                                },
+                                child: const Text("Daftar"),
                               )
 
                           ],
