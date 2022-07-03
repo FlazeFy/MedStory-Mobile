@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:pinput/pinput.dart';
 import 'main.dart';
 
 bool checkedCreateAcc = false;
+DateTime dateBorn;
 
 class Login extends StatelessWidget {
   var usernameCtrl = TextEditingController();
@@ -224,15 +224,15 @@ class WhitePainter extends CustomPainter {
     ovalPath.lineTo(0, 120);
 
     ovalPath.quadraticBezierTo(
-        width *0.55, height*0.34, width *0.7, height*0.33);
+        width *0.55, height*0.37, width *0.7, height*0.36);
 
-    ovalPath.quadraticBezierTo(width *0.8, height*0.33, width*0.88, height*0.31);
+    ovalPath.quadraticBezierTo(width *0.8, height*0.36, width*0.88, height*0.34);
 
     ovalPath.lineTo(width*2, 0);
 
     ovalPath.close();
 
-    paint.color = Color(0xFF4183D7);
+    paint.color = const Color(0xFF4183D7);
     canvas.drawPath(ovalPath, paint);
   }
 
@@ -252,6 +252,7 @@ class CreateAccountPage extends StatefulWidget{
 class _CreateAccountPage extends State<CreateAccountPage>{
   CollectionReference users = FirebaseFirestore.instance.collection('pengguna');
 
+  //Initial variable.
   var usernameCtrl = TextEditingController();
   var emailCtrl = TextEditingController();
   var ponselCtrl = TextEditingController();
@@ -261,14 +262,15 @@ class _CreateAccountPage extends State<CreateAccountPage>{
   var namaLengkapCtrl = TextEditingController();
   var nikCtrl = TextEditingController();
   var tempatLahirCtrl = TextEditingController();
-  var tanggalLahirCtrl = TextEditingController();
   var alamatCtrl = TextEditingController();
   var pekerjaanCtrl = TextEditingController();
+  DateTime selectedDate = DateTime.now();
   int tinggiBadanCtrl;
   int beratBadanCtrl;
 
   int _index = 0;
 
+  //Create account.
   Future<void> insertAccount() {
       return users
         .add({
@@ -279,7 +281,7 @@ class _CreateAccountPage extends State<CreateAccountPage>{
           'namaLengkap': namaLengkapCtrl.text,
           'nik': nikCtrl.text,
           'tempatLahir': tempatLahirCtrl.text,
-          'tanggalLahir': '17-08-1945',
+          'tanggalLahir': dateBorn,
           'alamat': alamatCtrl.text,
           'pekerjaan': pekerjaanCtrl.text,
           'tinggiBadan': tinggiBadanCtrl,
@@ -289,12 +291,14 @@ class _CreateAccountPage extends State<CreateAccountPage>{
         .catchError((error) => print("Failed to add user: $error"));
     }
 
+  //Pin input.
   Widget buildPinPut() {
     return Pinput(
       onCompleted: (pin) => print(pin),
     );
   }
 
+  //Show profil image and countdown.
   Widget buildProfileImg(){
     if(_index == 2){
       return SizedBox(
@@ -306,7 +310,7 @@ class _CreateAccountPage extends State<CreateAccountPage>{
               child: Container(
                 transform: Matrix4.translationValues(30.0, 0.0, 0.0),
                 width: MediaQuery.of(context).size.width* 0.4, 
-                child: Text("Selesaikan pendaftaran sebelum waktu berikut", style: TextStyle(color: Colors.white))
+                child: const Text("Selesaikan pendaftaran sebelum waktu berikut", style: TextStyle(color: Colors.white))
               )
             )
           ],
@@ -369,6 +373,18 @@ class _CreateAccountPage extends State<CreateAccountPage>{
     }
   }
 
+  //Get day from date picker.
+  Future<void> _selectdateBorn(BuildContext context) async {
+    final picked = await showDatePicker(context: context, initialDate: selectedDate, firstDate: DateTime(2015, 8), lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        dateBorn = selectedDate;
+      });
+    }
+  }
+
+  //Pin input theme.
   final defaultPinTheme = PinTheme(
     width: 60,
     height: 60,
@@ -548,7 +564,7 @@ class _CreateAccountPage extends State<CreateAccountPage>{
                                 margin: const EdgeInsets.only(bottom: 7.0),
                                 child: TextFormField(
                                   obscureText: true,
-                                  // controller: confirmpasswordCtrl,
+                                  controller: confirmpasswordCtrl,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Konfirmasi Password',
@@ -653,35 +669,48 @@ class _CreateAccountPage extends State<CreateAccountPage>{
                                 ),
                               ),
                             ),
-
-                            //Tempat lahir section.
-                            Align(
+                            const Align(
                               alignment: Alignment.centerLeft,
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 7.0),
-                                child: TextFormField(
-                                  controller: tempatLahirCtrl,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Tempat Lahir',
-                                  ),
-                                ),
-                              ),
+                              child: Text("Tempat, Tanggal Lahir"),
                             ),
-
-                            //Tanggal lahir section.
-                            //Not finished
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 7.0),
-                                child: TextFormField(
-                                  controller: tanggalLahirCtrl,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Tanggal Lahir',
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 7.0, top:10),
+                              child: Row(
+                                //Tempat lahir section.
+                                children:[
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width* 0.45,
+                                      child: TextFormField(
+                                        controller: tempatLahirCtrl,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: 'Tempat Lahir',
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
+
+                                  //Tanggal lahir section.
+                                  //Not finished
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width* 0.4,
+                                      margin: const EdgeInsets.only(left: 10),
+                                      child: TextField(
+                                        onTap: () {
+                                          _selectdateBorn(context);
+                                        },
+                                        decoration: InputDecoration(
+                                          border: const OutlineInputBorder(),
+                                          hintText: dateBorn.toString(),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ]
                               ),
                             ),
 
@@ -795,7 +824,7 @@ class _CreateAccountPage extends State<CreateAccountPage>{
                                     width: MediaQuery.of(context).size.width*0.3,
                                     child: OutlinedButton(
                                       onPressed: () {
-                                          // Respond to button press
+                                        print(dateBorn);
                                       },
                                       child: const Text("Via SMS"),
                                     )
@@ -823,54 +852,120 @@ class _CreateAccountPage extends State<CreateAccountPage>{
                               ),
                               ElevatedButton(
                                 onPressed: () async{
-                                  int i = 0;
-                                  FirebaseFirestore.instance
-                                  .collection('pengguna')
-                                  .get()
-                                  .then((QuerySnapshot querySnapshot) {
-                                      querySnapshot.docs.forEach((doc) {
-                                        if(doc["namaPengguna"] == usernameCtrl.text){
-                                          i++;
-                                        }
-                                      });
-                                      if(i == 0){
-                                        passUsername = usernameCtrl.text;
-                                        insertAccount();
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const NavBar()),
-                                        );
-                                      } else {
-                                        return showDialog<void>(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title: const Text('Perhatian', style: TextStyle(fontWeight: FontWeight.bold)),
-                                              content: SingleChildScrollView(
-                                                child: ListBody(
-                                                  children: <Widget>[
-                                                    ClipRRect(
-                                                      child: Image.asset(
-                                                        'assets/icon/Failed.png', width: 20),
+                                  if(emailCtrl.text.length > 10){ //Check email format.
+                                    var emailFormat = emailCtrl.text.substring(emailCtrl.text.length - 10);
+                                    //Data validation.
+                                    if((usernameCtrl.text.length > 5)&&(emailFormat == "@gmail.com")&&(ponselCtrl.text.length >= 10)&&(ponselCtrl.text.length <= 14)&&
+                                      (passwordCtrl.text.length > 5)&&(passwordCtrl.text == confirmpasswordCtrl.text)&&(namaLengkapCtrl.text.isNotEmpty)&&(nikCtrl.text.length == 16)&&(tempatLahirCtrl.text.isNotEmpty)&&
+                                      (alamatCtrl.text.isNotEmpty)&&(pekerjaanCtrl.text.isNotEmpty)&&(checkedCreateAcc != false)){
+                                      int i = 0;
+                                      FirebaseFirestore.instance
+                                      .collection('pengguna')
+                                      .get()
+                                      .then((QuerySnapshot querySnapshot) {
+                                          querySnapshot.docs.forEach((doc) {
+                                            if(doc["namaPengguna"] == usernameCtrl.text){
+                                              i++;
+                                            }
+                                          });
+                                          if(i == 0){
+                                            passUsername = usernameCtrl.text;
+                                            insertAccount();
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const NavBar()),
+                                            );
+                                          } else {
+                                            return showDialog<void>(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: const Text('Perhatian', style: TextStyle(fontWeight: FontWeight.bold)),
+                                                  content: SingleChildScrollView(
+                                                    child: ListBody(
+                                                      children: <Widget>[
+                                                        ClipRRect(
+                                                          child: Image.asset(
+                                                            'assets/icon/Failed.png', width: 20),
+                                                        ),
+                                                        const Text('Username telah terdaftar'),
+                                                      ],
                                                     ),
-                                                    const Text('Username telah terdaftar'),
+                                                  ),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: const Text('Oke'),
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                    ),
                                                   ],
-                                                ),
-                                              ),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  child: const Text('Oke'),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
+                                                );
+                                              }
                                             );
                                           }
+                                      });
+                                    } else {
+                                      return showDialog<void>(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text('Perhatian', style: TextStyle(fontWeight: FontWeight.bold)),
+                                            content: SingleChildScrollView(
+                                              child: ListBody(
+                                                children: <Widget>[
+                                                  ClipRRect(
+                                                    child: Image.asset(
+                                                      'assets/icon/Failed.png', width: 20),
+                                                  ),
+                                                  const Text('Format data Anda tidak valid. Mohon periksa kembali'),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('Oke'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                      );
+                                    }
+                                  } else {
+                                    return showDialog<void>(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Perhatian', style: TextStyle(fontWeight: FontWeight.bold)),
+                                          content: SingleChildScrollView(
+                                            child: ListBody(
+                                              children: <Widget>[
+                                                ClipRRect(
+                                                  child: Image.asset(
+                                                    'assets/icon/Failed.png', width: 20),
+                                                ),
+                                                const Text('Email Anda tidak valid. Mohon periksa kembali'),
+                                              ],
+                                            ),
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('Oke'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
                                         );
                                       }
-                                  });
+                                    );
+                                  }
                                 },
                                 child: const Text("Daftar"),
                               )
