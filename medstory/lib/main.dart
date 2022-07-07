@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medstory/newsItem.dart';
+import 'package:medstory/secondarymenu/editAccPage.dart';
 import 'package:medstory/secondarymenu/faskes&praktek.dart';
 import 'package:medstory/secondarymenu/myDiskusiPage.dart';
 import 'package:medstory/widgets/sideNav.dart';
@@ -1965,31 +1966,10 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 class _ProfilePageState extends State<ProfilePage> {
-  final _namaLengkapCtrl = TextEditingController();
-  final _emailCtrl = TextEditingController();
-  final _ponselCtrl = TextEditingController();
-  final _pekerjaanCtrl = TextEditingController();
-  final _alamatCtrl = TextEditingController();
-  final _passwordCtrl = TextEditingController();
-
-  var namaLengkap = ""; 
-  var email = "";
-  var ponsel = "";
-  var pekerjaan = "";
-  var alamat = "";
-  var password = "";
 
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('pengguna');
-
-    Future<void> updatePengguna() {
-      return users
-        .doc(widget.passDocumentId)
-        .update({'namaLengkap': namaLengkap, 'email': email, 'ponsel': ponsel, 'pekerjaan': pekerjaan, 'alamat': alamat, 'password': password})
-        .then((value) => print("Profil berhasil diupdate"))
-        .catchError((error) => print("Failed to update user: $error"));
-    }
 
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(widget.passDocumentId).get(),
@@ -2007,123 +1987,124 @@ class _ProfilePageState extends State<ProfilePage> {
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, dynamic> data = snapshot.data.data() as Map<String, dynamic>;
           return Scaffold(     
-            drawer: NavDrawer(),
-            appBar: AppBar(
-              iconTheme: 
-                const IconThemeData(
-                  color: Color(0xFF4183D7),
-                  size: 35.0,
-                ),
-              title: Text("Welcome, ${widget.passUsername}", 
-              style: const TextStyle(
-                color: Color(0xFF4183D7),
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-              actions: [
-                IconButton(
-                    icon: const Icon(Icons.lightbulb),
-                    onPressed: () {
-                      //Change dark/light mode.
-                      Get.isDarkMode
-                      ? Get.changeTheme(ThemeData.light())
-                      : Get.changeTheme(ThemeData.dark());
-                    }
-                  )
-              ],
-              //Transparent setting.
-              backgroundColor: const Color(0x44FFFFFF),
-              elevation: 0,
-            ),
-
-            body: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  Flexible(      
-                    child: Container(
+            body: CustomPaint(
+              painter: WhitePainter(),
+              child : SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  children: [
+                    Row(  
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(left: 20.0),
+                          transform: Matrix4.translationValues(0.0, 100.0, 0.0),
+                          alignment: Alignment.topLeft,
+                          height: 60,
+                          width: 60,
+                          padding: const EdgeInsets.all(2),
+                          child: Ink(
+                            decoration: const ShapeDecoration(
+                              color: Colors.white,
+                              shape: CircleBorder(),
+                            ),
+                            child: IconButton(
+                              icon: const Icon(Icons.logout_rounded, size: 40),
+                              color: Colors.white,
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: const Color(0xFFd9534f),
+                             boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 190, 190, 190),            
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                offset: Offset(0, 3)
+                              )
+                            ],
+                          )
+                        ),
+                        SizedBox(width: MediaQuery.of(context).size.width*0.26),
+                        Stack(
+                          children: <Widget>[
+                            Container(
+                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.09),
+                              alignment: Alignment.topRight,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Image.asset(
+                                  'assets/images/User.jpg', width: 180),
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(100), 
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    blurRadius: 10.0, // soften the shadow
+                                    spreadRadius: 0.0, //extend the shadow
+                                    offset: const Offset(
+                                      5.0, // Move to right 10  horizontally
+                                      5.0, // Move to bottom 10 Vertically
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              transform: Matrix4.translationValues(120.0, MediaQuery.of(context).size.height*0.23, 0.0),                    
+                              alignment: Alignment.bottomRight,
+                              height: 60,
+                              width: 60,
+                              padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
+                              child: ClipRRect(
+                                child: IconButton(
+                                  icon: const Icon(Icons.edit, size: 30),
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => EditAccPage(passUsername: widget.passUsername, passDocumentId: widget.passDocumentId)),
+                                    );
+                                  },
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF4183D7),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 3,
+                                ),
+                                borderRadius: BorderRadius.circular(100), 
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    blurRadius: 10.0, // soften the shadow
+                                    spreadRadius: 0.0, //extend the shadow
+                                    offset: const Offset(
+                                      5.0, // Move to right 10  horizontally
+                                      5.0, // Move to bottom 10 Vertically
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ]
+                        )
+                      ]
+                    ),
+                      
+                    SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: Column(
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
-                                child : ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Image.asset(
-                                    'assets/images/User.jpg', width: 105),
-                                ),        
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children:[
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                      child: Text(                     
-                                        data['namaPengguna'],
-                                        style: const TextStyle(
-                                          color: Color(0xFFF4f4f4),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                        )
-                                      ),   
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                      child: Text(                     
-                                        data['email'],
-                                        style: const TextStyle(
-                                          color: Color(0xFFF4f4f4),
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15,
-                                        )
-                                      ),   
-                                    ),
-                                  ),
-                                  const SizedBox(height:10),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                      child: Text(                     
-                                        data['alamat'],
-                                        style: const TextStyle(
-                                          color: Color(0xFFF4f4f4),
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15,
-                                        )
-                                      ),   
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                      child: Text(                     
-                                        data['pekerjaan'],
-                                        style: const TextStyle(
-                                          color: Color(0xFFF4f4f4),
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15,
-                                        )
-                                      ),   
-                                    ),
-                                  ),
-                                ]
-                              )    
-
-                            ],
-                          ),
                           Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                            height: MediaQuery.of(context).size.height*0.07,
+                            margin: EdgeInsets.only(left: 20.0, right: 20.0, top: MediaQuery.of(context).size.height*0.01),
+                            height: MediaQuery.of(context).size.height*0.08,
                             child: Row(
                               children: [
                                 SizedBox(width: MediaQuery.of(context).size.width*0.05),
@@ -2153,7 +2134,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                                     height: MediaQuery.of(context).size.height*0.07,
-                                    width: 65,
+                                    width: 80,
                                     child: const GetCountVerified()
                                   ),
                                   onTap: () { 
@@ -2162,375 +2143,142 @@ class _ProfilePageState extends State<ProfilePage> {
                                 )
                               ],
                             ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6), 
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  blurRadius: 10.0, // soften the shadow
-                                  spreadRadius: 0.0, //extend the shadow
-                                  offset: const Offset(
-                                    5.0, // Move to right 10  horizontally
-                                    5.0, // Move to bottom 10 Vertically
-                                  ),
-                                )
-                              ],
+                          ),
+                          const Text(
+                            "Pengaturan Umum", style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height*0.44,
+                      child: ListView(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                            child: Card(
+                              child: ExpansionTile(
+                                initiallyExpanded: false,
+                                leading: const Icon(Icons.security, size: 30),
+                                title: const Text('Keamanan'),
+                                subtitle: const Text('Ganti Password, Ingat Saya', style: TextStyle(color: Colors.grey)),
+                                children: [
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height*0.3,
+                                    
+                                  )
+                                ],
+                              ),
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
                             ),
                           ),
                           Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                            child: Column(
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                    child: const Text(                     
-                                      'Menampilkan ... hasil',
-                                      style: TextStyle(
-                                        color: Color(0xFF212121),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                      )
-                                    ),   
-                                  ),
-                                ),
-                              ],
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6), 
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  blurRadius: 10.0, // soften the shadow
-                                  spreadRadius: 0.0, //extend the shadow
-                                  offset: const Offset(
-                                    5.0, // Move to right 10  horizontally
-                                    5.0, // Move to bottom 10 Vertically
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topRight,
-                          end: Alignment.bottomLeft,
-                          stops: [0.1, 0.4, 0.6, 0.9,],
-                          colors: [Color(0xFF407BFF),Color(0xFF4183D7),Color(0xFF22A7F0),Color(0xFF5bc0de)],
-                        )
-                      ),
-                    ),
-                  ), 
-                  
-                  Container(
-                    transform: Matrix4.translationValues(0.0, -20.0, 0.0),
-                    child: Card(
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      margin: EdgeInsets.zero,
-                      child: Theme(
-                        data: ThemeData().copyWith(dividerColor: Colors.transparent, dialogBackgroundColor: Colors.red),
-                        child: ExpansionTile(
-                          // initiallyExpanded: true,
-                          leading: IconButton(
-                            iconSize: 25,
-                            icon: const Icon(Icons.person,
-                            color: Color(0xFF414141)),
-                            onPressed: () {},
-                          ),
-                          title: const Text(
-                            "Informasi Pribadi",
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w800
-                            ),
-                          ),
-                          children: <Widget>[
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height*0.35,
-                              child: ListView(
-                                children:[ 
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                      child: const Text(                     
-                                        'Data Akun',
-                                        style: TextStyle(
-                                          color: Color(0xFF212121),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                        )
-                                      ),   
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                                    child: TextField(
-                                      controller: _namaLengkapCtrl,
-                                      decoration: InputDecoration(
-                                        border: const OutlineInputBorder(),
-                                        labelText: data['namaLengkap'],
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                        width: MediaQuery.of(context).size.width*0.5,
-                                        child: TextField(
-                                          controller: _emailCtrl,
-                                          decoration: InputDecoration(
-                                            border: const OutlineInputBorder(),
-                                            labelText: data['email'],
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width*0.4,
-                                        child: TextField(
-                                          controller: _ponselCtrl,
-                                          decoration: InputDecoration(
-                                            border: const OutlineInputBorder(),
-                                            labelText: data['ponsel'],
-                                          ),
-                                        ),
-                                      ),
+                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                            child: Card(
+                              child: ExpansionTile(
+                                initiallyExpanded: false,
+                                leading: const Icon(Icons.settings, size: 30),
+                                title: const Text('Pengaturan'),
+                                subtitle: const Text('Warna Latar, Bahasa, Perbarui', style: TextStyle(color: Colors.grey)),
+                                children: [
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height*0.3,
                                     
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                                    child: TextField(
-                                      controller: _passwordCtrl,
-                                      decoration: InputDecoration(
-                                        border: const OutlineInputBorder(),
-                                        labelText: data['password'],
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Container(
-                                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                      child: const Text(                     
-                                        'Data Diri',
-                                        style: TextStyle(
-                                          color: Color(0xFF212121),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                        )
-                                      ),   
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                    child: TextField(
-                                      controller: _alamatCtrl,
-                                      decoration: InputDecoration(
-                                        border: const OutlineInputBorder(),
-                                        labelText: data['alamat'],
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                    child: TextField(
-                                      controller: _pekerjaanCtrl,
-                                      decoration: InputDecoration(
-                                        border: const OutlineInputBorder(),
-                                        labelText: data['pekerjaan'],
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10,),
-                                  Row(
-                                    children: [
-                                      const SizedBox(width:10),
-                                      SizedBox(
-                                        width:140,
-                                        height: 50,
-                                        child: SpinBox(
-                                          min: 1, max: 220,
-                                          value: data['tinggiBadan'].toDouble(),
-                                          spacing: 1,
-                                          textStyle: const TextStyle(
-                                            fontSize: 16.0,
-                                          ),
-                                          decoration: const InputDecoration(labelText: 'Tinggi Badan (Cm)'),
-                                        ),
-                                      ),
-                                      const SizedBox(width:10),
-                                      SizedBox(
-                                        width:140,
-                                        height: 50,
-                                        child: SpinBox(
-                                          min: 1, max: 220,
-                                          value: data['beratBadan'].toDouble(),
-                                          spacing: 1,
-                                          textStyle: const TextStyle(
-                                            fontSize: 16.0,
-                                          ),
-                                          decoration: const InputDecoration(labelText: 'Berat Badan (Kg)'),
-                                        ),
-                                      ),
-                                      const SizedBox(width:10),
-                                      Container(
-                                        child: IconButton(
-                                          icon: const Icon(Icons.info),
-                                          color: Colors.white,
-                                          onPressed: () {},
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(6),
-                                          color: Colors.blue,
-                                        ) 
-                                      )
-
-                                    ],
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                    child: ElevatedButton.icon(
-                                      onPressed: () async {
-                                        if(_namaLengkapCtrl.text.isEmpty){
-                                          namaLengkap = data['namaLengkap'];
-                                        } else {
-                                          namaLengkap = _namaLengkapCtrl.text;
-                                        }
-                                        if(_emailCtrl.text.isEmpty){
-                                          email = data['email'];
-                                        } else {
-                                          email = _emailCtrl.text;
-                                        }
-                                        if(_ponselCtrl.text.isEmpty){
-                                          ponsel = data['ponsel'];
-                                        } else {
-                                          ponsel = _ponselCtrl.text;
-                                        }
-                                        if(_pekerjaanCtrl.text.isEmpty){
-                                          pekerjaan = data['pekerjaan'];
-                                        } else {
-                                          pekerjaan = _pekerjaanCtrl.text;
-                                        }
-                                        if(_alamatCtrl.text.isEmpty){
-                                          alamat = data['alamat'];
-                                        } else {
-                                          alamat = _alamatCtrl.text;
-                                        }
-                                        if(_passwordCtrl.text.isEmpty){
-                                          password = data['password'];
-                                        } else {
-                                          password = _passwordCtrl.text;
-                                        }
-                                        updatePengguna();
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const NavBar()),
-                                        );
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.green, // Background color
-                                      ),
-                                      icon: const Icon(Icons.save, size: 18),
-                                      label: const Text("Simpan Perubahan"),
-                                    )
                                   )
-
-                                ]
-                              )
-                            )
-                          ]
-                        )
-                      ),
-                      color: const Color(0xFFF6F7F9),
-                    ),
-                  ),
-                  Container(
-                    transform: Matrix4.translationValues(0.0, -10.0, 0.0),
-                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                    padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-                    child: Column(
-                      children: [
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(                     
-                            'Selesaikan pendaftaran dengan mengunggah foto/dokumen KTP dan foto diri (selfie)',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                            )
-                          ),   
-                        ),
-                        Row(
-                          children: [
-                            const Text(                     
-                              '0 dari 2 berkas terkumpul',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontStyle: FontStyle.italic,
-                                fontSize: 13,
-                              )
-                            ),   
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width*0.17,
+                                ],
+                              ),
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
                             ),
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                  // Respond to button press
-                              },
-                              icon: const Icon(Icons.cloud_upload, size: 18),
-                              label: const Text("Unggah Bukti"),
-                            ),
-                          ],
-                        )  
-                      ],
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6), 
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.green,
-                        width: 1.5,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          blurRadius: 10.0, // soften the shadow
-                          spreadRadius: 0.0, //extend the shadow
-                          offset: const Offset(
-                            5.0, // Move to right 10  horizontally
-                            5.0, // Move to bottom 10 Vertically
                           ),
-                        )
-                      ],
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                            child: Card(
+                              child: ExpansionTile(
+                                initiallyExpanded: false,
+                                leading: const Icon(Icons.notifications, size: 30),
+                                title: const Text('Notifikasi'),
+                                subtitle: const Text('Pembaruan, Aktivitas, Pesan', style: TextStyle(color: Colors.grey)),
+                                children: [
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height*0.3,
+                                    
+                                  )
+                                ],
+                              ),
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                            child: Card(
+                              child: ExpansionTile(
+                                initiallyExpanded: false,
+                                leading: const Icon(Icons.help_center, size: 30),
+                                title: const Text('Pusat Bantuan'),
+                                subtitle: const Text('Cara Penggunaan, Tentang, Kritik & Saran', style: TextStyle(color: Colors.grey)),
+                                children: [
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height*0.3,
+                                    
+                                  )
+                                ],
+                              ),
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                            child: Card(
+                              child: ExpansionTile(
+                                initiallyExpanded: false,
+                                leading: const Icon(Icons.rule, size: 30),
+                                title: const Text('Kebijakan & Privasi'),
+                                subtitle: const Text('Ketentuan, Layanan, Kebijakan', style: TextStyle(color: Colors.grey)),
+                                children: [
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height*0.3,
+                                    
+                                  )
+                                ],
+                              ),
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ),
+                        ]
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      margin: const EdgeInsets.all(10.0),
-                      child: const Text(                     
-                        'Versi 1.0.0',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                        )
-                      ),   
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        margin: const EdgeInsets.all(10.0),
+                        child: const Text(                     
+                          'Versi 1.0.0',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                          )
+                        ),   
+                      ),
                     ),
-                  ),
-                ],
-              )
+                  ],
+                )
+              ),
             ),
           );  
         }
@@ -2675,6 +2423,7 @@ class _GetCountVerifiedState extends State<GetCountVerified> {
           children:  [
             const Text(                     
               'Terjawab',
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: Color(0xFF212121),
                 fontWeight: FontWeight.w500,

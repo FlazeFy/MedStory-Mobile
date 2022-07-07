@@ -680,7 +680,7 @@ class _CreateAccountPage extends State<CreateAccountPage>{
                                 children:[
                                   Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Container(
+                                    child: SizedBox(
                                       width: MediaQuery.of(context).size.width* 0.45,
                                       child: TextFormField(
                                         controller: tempatLahirCtrl,
