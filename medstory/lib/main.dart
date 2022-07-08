@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:intl/intl.dart';
 import 'package:medstory/newsItem.dart';
 import 'package:medstory/secondarymenu/editAccPage.dart';
@@ -21,6 +22,12 @@ String passIdUser;
 String passUsername;
 String passKategori;
 String active = "Faskes";
+
+bool pembaruan = false;
+bool aktivitas = false;
+bool pesan = false;
+bool mode = false;
+bool bahasa = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -2103,7 +2110,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Column(
                         children: [
                           Container(
-                            margin: EdgeInsets.only(left: 20.0, right: 20.0, top: MediaQuery.of(context).size.height*0.01),
+                            margin: EdgeInsets.only(left: 20.0, right: 20.0, top: MediaQuery.of(context).size.height*0.05),
                             height: MediaQuery.of(context).size.height*0.08,
                             child: Row(
                               children: [
@@ -2163,10 +2170,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text('Keamanan'),
                                 subtitle: const Text('Ganti Password, Ingat Saya', style: TextStyle(color: Colors.grey)),
                                 children: [
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height*0.3,
-                                    
-                                  )
+                                  //
                                 ],
                               ),
                               shape: RoundedRectangleBorder(
@@ -2184,9 +2188,62 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text('Pengaturan'),
                                 subtitle: const Text('Warna Latar, Bahasa, Perbarui', style: TextStyle(color: Colors.grey)),
                                 children: [
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height*0.3,
-                                    
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.only(bottom: 5.0),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              const Text(
+                                                "Warna Latar",
+                                              ),
+                                              FlutterSwitch(
+                                                showOnOff: true,
+                                                height: 30,
+                                                activeTextFontWeight: FontWeight.w400,
+                                                inactiveTextFontWeight: FontWeight.w400,
+                                                activeTextColor: Colors.black,
+                                                inactiveTextColor: Colors.blue[50],
+                                                value: mode,
+                                                onToggle: (val) {
+                                                  setState(() {
+                                                    mode = val;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.only(bottom: 5.0),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              const Text(
+                                                "Bahasa",
+                                              ),
+                                              FlutterSwitch(
+                                                showOnOff: true,
+                                                height: 30,
+                                                activeTextFontWeight: FontWeight.w400,
+                                                inactiveTextFontWeight: FontWeight.w400,
+                                                activeTextColor: Colors.black,
+                                                inactiveTextColor: Colors.blue[50],
+                                                value: bahasa,
+                                                onToggle: (val) {
+                                                  setState(() {
+                                                    bahasa = val;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   )
                                 ],
                               ),
@@ -2205,9 +2262,87 @@ class _ProfilePageState extends State<ProfilePage> {
                                 title: const Text('Notifikasi'),
                                 subtitle: const Text('Pembaruan, Aktivitas, Pesan', style: TextStyle(color: Colors.grey)),
                                 children: [
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height*0.3,
-                                    
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              const Text(
+                                                "Pembaruan",
+                                              ),
+                                              FlutterSwitch(
+                                                showOnOff: true,
+                                                height: 30,
+                                                activeTextFontWeight: FontWeight.w400,
+                                                inactiveTextFontWeight: FontWeight.w400,
+                                                activeTextColor: Colors.black,
+                                                inactiveTextColor: Colors.blue[50],
+                                                value: pembaruan,
+                                                onToggle: (val) {
+                                                  setState(() {
+                                                    pembaruan = val;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.only(bottom: 5.0),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              const Text(
+                                                "Aktivitas",
+                                              ),
+                                              FlutterSwitch(
+                                                showOnOff: true,
+                                                height: 30,
+                                                activeTextFontWeight: FontWeight.w400,
+                                                inactiveTextFontWeight: FontWeight.w400,
+                                                activeTextColor: Colors.black,
+                                                inactiveTextColor: Colors.blue[50],
+                                                value: aktivitas,
+                                                onToggle: (val) {
+                                                  setState(() {
+                                                    aktivitas = val;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.only(bottom: 5.0),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              const Text(
+                                                "Pesan",
+                                              ),
+                                              FlutterSwitch(
+                                                showOnOff: true,
+                                                height: 30,
+                                                activeTextFontWeight: FontWeight.w400,
+                                                inactiveTextFontWeight: FontWeight.w400,
+                                                activeTextColor: Colors.black,
+                                                inactiveTextColor: Colors.blue[50],
+                                                value: pesan,
+                                                onToggle: (val) {
+                                                  setState(() {
+                                                    pesan = val;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   )
                                 ],
                               ),

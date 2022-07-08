@@ -338,77 +338,80 @@ class _GetDokterState extends State<GetDokter> {
               i++;
               return Card(
                 child:Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 70,
-                  width: 160,
+                  width: 150,
                   child: Column(
                     children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(                     
-                          data['spesialis'],
-                          style: const TextStyle(
-                            color: Color(0xFF4183D7),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(topLeft: const Radius.circular(10), topRight: const Radius.circular(10)),
+                        child: Image.asset(
+                        'assets/images/dokter/${data['namaDokter']}.jpg', width: MediaQuery.of(context).size.width),
                       ),
                       Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image.asset(
-                            'assets/images/dokter/${data['namaDokter']}.jpg', width: 105),
-                          ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(                     
-                          data['namaDokter'],
-                          style: const TextStyle(
-                            color: Color(0xFF212121),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                      const SizedBox(height: 5,),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(                     
-                          data['hariPraktik'],
-                          style: const TextStyle(
-                            color: Color(0xFF808080),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(                     
-                          "${data['jamMulai']}-${data['jamSelesai']}",
-                          style: const TextStyle(
-                            color: Color(0xFF808080),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
+                        padding: const EdgeInsets.all(6.0),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(                     
+                                data['namaDokter'],
+                                style: const TextStyle(
+                                  color: Color(0xFF4285D2),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(                     
+                                "Dokter ${data['spesialis']}",
+                                style: const TextStyle(
+                                  color: Color(0xFFFC46AA),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                            const SizedBox(height: 5,),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(                     
+                                data['hariPraktik'],
+                                style: const TextStyle(
+                                  color: Color(0xFF808080),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(                     
+                                "Pukul ${data['jamMulai'].substring(0, 5)}-${data['jamSelesai'].substring(0, 5)}",
+                                style: const TextStyle(
+                                  color: Color(0xFF696969),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 11,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                          ],
+                        )
                       ),
                     ],
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.white, 
+                    color: const Color(0xFFbbd4ec), 
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.3),
