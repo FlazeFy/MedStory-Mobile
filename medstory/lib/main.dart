@@ -16,6 +16,8 @@ import 'package:get/get.dart';
 import 'landing.dart';
 
 bool shouldUseFirestoreEmulator = false;
+
+//Initial global variable.
 String passIdAsupan;
 String passWaktu = "Pagi";
 String passIdUser;
@@ -23,11 +25,15 @@ String passUsername;
 String passKategori;
 String active = "Faskes";
 
+//Setting switch.
 bool pembaruan = false;
 bool aktivitas = false;
 bool pesan = false;
 bool mode = false;
 bool bahasa = false;
+
+//Carousel news Index. 
+int indexNews=0;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -133,15 +139,6 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPage extends State<ForumPage> {
-  int _currentIndex=0;
-
-  List cardList=[
-    const Item1(),
-    const Item2(),
-    const Item3(),
-    const Item4()
-  ];
-
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
     for (var i = 0; i < list.length; i++) {
@@ -184,125 +181,114 @@ class _ForumPage extends State<ForumPage> {
       ),
 
       //Body.
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: [
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text("  Informasi Kesehatan",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500
-                )         
-              ),
-            ),
-            CarouselSlider(
-            options: CarouselOptions(
-              height: 200.0,
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 4),
-              autoPlayAnimationDuration: const Duration(milliseconds: 800),
-              autoPlayCurve: Curves.fastOutSlowIn,
-              pauseAutoPlayOnTouch: true,
-              aspectRatio: 2.0,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-            ),
-            items: cardList.map((card){
-              return Builder(
-                builder:(BuildContext context){
-                  return Container(
-                    height: MediaQuery.of(context).size.height*0.30,
-                    width: MediaQuery.of(context).size.width,
-                    child: Card(
-                      color: const Color(0xff22A7F0),
-                      child: card,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius : BorderRadius.circular(10),
-                    )
-                  );
-                }
-              );
-            }).toList(),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: map<Widget>(cardList, (index, url) {
-              return Container(
-                width: 6.0,
-                height: 6.0,
-                margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _currentIndex == index ? const Color(0xFF28CF36) : Colors.grey,
-                ),
-              );
-            }),
-          ),
+      body: ListView(
+        children:[
           SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Row(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
               children: [
                 const Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("  Forum Diskusi",
+                  child: Text("  Informasi Kesehatan",
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w500
                     )         
                   ),
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width*0.1,
+                CarouselSlider(
+                  options: CarouselOptions(
+                  height: 210.0,
+                  enlargeCenterPage: true,
+                  autoPlay: false,
+                  autoPlayInterval: const Duration(seconds: 4),
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  pauseAutoPlayOnTouch: true,
+                  aspectRatio: 2.0,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      indexNews = index;
+                    });
+                  },
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                    transform: Matrix4.translationValues(0.0, -5.0, 0.0),
-                    child: const DropDown(),
-                  )
-                ),
-                Container(
-                  transform: Matrix4.translationValues(15.0, 0.0, 0.0),
-                  child: PopupMenuButton(
-                    icon: const Icon(Icons.more_vert),
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                      PopupMenuItem(
-                        child: ListTile(
-                          leading: const Icon(Icons.add),
-                          title: const Text('Pertanyaan Ku'),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => MyDiscussionPage(passUsername: passUsername)),
-                            );
-                          },
-                        ),
+                items: imageSliders
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: map<Widget>(imgList, (index, url) {
+                  return Container(
+                    width: 6.0,
+                    height: 6.0,
+                    margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: indexNews == index ? const Color(0xFF28CF36) : Colors.grey,
+                    ),
+                  );
+                }),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  children: [
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("  Forum Diskusi",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500
+                        )         
                       ),
-                      const PopupMenuItem(
-                        child: ListTile(
-                          leading: Icon(Icons.auto_graph),
-                          title: Text('Statistik'),
-                        ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width*0.1,
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+                        child: const DropDown(),
+                      )
+                    ),
+                    Container(
+                      transform: Matrix4.translationValues(15.0, 0.0, 0.0),
+                      child: PopupMenuButton(
+                        icon: const Icon(Icons.more_vert),
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                          PopupMenuItem(
+                            child: ListTile(
+                              leading: const Icon(Icons.add),
+                              title: const Text('Pertanyaan Ku'),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => MyDiscussionPage(passUsername: passUsername)),
+                                );
+                              },
+                            ),
+                          ),
+                          const PopupMenuItem(
+                            child: ListTile(
+                              leading: Icon(Icons.auto_graph),
+                              title: Text('Statistik'),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ]
                 ),
-              ]
-            ),
+              ),
+              Flexible(
+                child: GetDiskusi(),
+              )
+              ], 
+              
+            )
           ),
-          Flexible(
-            child: GetDiskusi(),
-          )
-          ], 
-          
-        )
+        ]
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
