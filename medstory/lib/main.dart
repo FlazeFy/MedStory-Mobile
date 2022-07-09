@@ -151,49 +151,22 @@ class _ForumPage extends State<ForumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavDrawer(passUsername: widget.passUsername),
-      appBar: AppBar(
-        iconTheme: 
-          const IconThemeData(
-            color: Color(0xFF4183D7),
-            size: 35.0,
-          ),
-        title: Text("Welcome, ${widget.passUsername}", 
-        style: const TextStyle(
-          color: Color(0xFF4183D7),
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-        ),
-      ),
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.lightbulb),
-              onPressed: () {
-                //Change dark/light mode.
-                Get.isDarkMode
-                ? Get.changeTheme(ThemeData.light())
-                : Get.changeTheme(ThemeData.dark());
-              }
-            )
-        ],
-        //Transparent setting.
-        backgroundColor: const Color(0x44FFFFFF),
-        elevation: 0,
-      ),
-
-      //Body.
       body: ListView(
         children:[
           SizedBox(
             height: MediaQuery.of(context).size.height,
             child: Column(
               children: [
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("  Informasi Kesehatan",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500
-                    )         
+                Container(
+                  margin: const EdgeInsets.only(top: 10.0),
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("  Informasi Kesehatan",
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w600
+                      )         
+                    ),
                   ),
                 ),
                 CarouselSlider(
@@ -236,13 +209,10 @@ class _ForumPage extends State<ForumPage> {
                       alignment: Alignment.centerLeft,
                       child: Text("  Forum Diskusi",
                         style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w600
                         )         
                       ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width*0.1,
                     ),
                     Align(
                       alignment: Alignment.centerRight,
@@ -871,30 +841,22 @@ class _SmartDocPage extends State<SmartDocPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavDrawer(),
-      appBar: AppBar(
-        iconTheme: 
-          const IconThemeData(
-            color: Color(0xFF4183D7),
-            size: 35.0,
-          ),
-        title: Text("Welcome, ${widget.passUsername}", 
-        style: const TextStyle(
-          color: Color(0xFF4183D7),
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-        ),
-      ),
-      
-        //Transparent setting.
-        backgroundColor: const Color(0x44FFFFFF),
-        elevation: 0,
-      ),
-
-      //Body.
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: ListView(
           children: [
+            Container(
+              margin: const EdgeInsets.only(top: 10.0),
+              child: const Align(
+                alignment: Alignment.centerLeft,
+                child: Text("  SmartDoc",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w600
+                  )         
+                ),
+              ),
+            ),
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
@@ -1558,37 +1520,6 @@ class _DataKuPage extends State<DataKuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavDrawer(),
-      appBar: AppBar(
-        iconTheme: 
-          const IconThemeData(
-            color: Color(0xFF4183D7),
-            size: 35.0,
-          ),
-        title: Text("Welcome, ${widget.passUsername}", 
-        style: const TextStyle(
-          color: Color(0xFF4183D7),
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-        ),
-      ),
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.lightbulb),
-              onPressed: () {
-                //Change dark/light mode.
-                Get.isDarkMode
-                ? Get.changeTheme(ThemeData.light())
-                : Get.changeTheme(ThemeData.dark());
-              }
-            )
-        ],
-   
-        //Transparent setting.
-        backgroundColor: const Color(0x44FFFFFF),
-        elevation: 0,
-      ),
-
-      //Body.
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: ListView(
@@ -1598,6 +1529,18 @@ class _DataKuPage extends State<DataKuPage> {
               margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
               child: Column(
                 children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 10.0),
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("  DataKu",
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w600
+                        )         
+                      ),
+                    ),
+                  ),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
@@ -1807,144 +1750,128 @@ class _DaruratPage extends State<DaruratPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavDrawer(),
-      appBar: AppBar(
-        iconTheme: 
-          const IconThemeData(
-            color: Color(0xFF4183D7),
-            size: 35.0,
-          ),
-        title: Text("Welcome, ${widget.passUsername}", 
-        style: const TextStyle(
-          color: Color(0xFF4183D7),
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-        ),
-      ),
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.lightbulb),
-              onPressed: () {
-                //Change dark/light mode.
-                Get.isDarkMode
-                ? Get.changeTheme(ThemeData.light())
-                : Get.changeTheme(ThemeData.dark());
-              }
-            )
-        ],
-        //Transparent setting.
-        backgroundColor: const Color(0x44FFFFFF),
-        elevation: 0,
-      ),
-
-      //Body.
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-              child: Row(
-                children:[
-                  Container(
-                    width: 130,
-                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(const Color(0xFF4183D7)),
-                        padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: const <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(4.0),
-                            child: Icon(
-                              Icons.local_hospital,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(2.0),
-                            child: Text(
-                              "FasKes",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      onPressed: () async {
-                        active = "Faskes";
-                        setState(() {});
-                        getActiveList();
-                      },
+      body: ListView(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 10.0),
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("  Nomor Darurat",
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w600
+                      )         
                     ),
                   ),
-                  SizedBox(
-                    width: 130,
-                    // margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(const Color(0xFF4183D7)),
-                        padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: const <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(4.0),
-                            child: Icon(
-                              Icons.medical_services,
-                              color: Colors.white,
-                            ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+                  child: Row(
+                    children:[
+                      Container(
+                        width: 130,
+                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color(0xFF4183D7)),
+                            padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
                           ),
-                          Padding(
-                            padding: EdgeInsets.all(2.0),
-                            child: Text(
-                              "Praktek Dokter",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const <Widget>[
+                              Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: Icon(
+                                  Icons.local_hospital,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
+                              Padding(
+                                padding: EdgeInsets.all(2.0),
+                                child: Text(
+                                  "FasKes",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                          onPressed: () async {
+                            active = "Faskes";
+                            setState(() {});
+                            getActiveList();
+                          },
+                        ),
                       ),
-                      onPressed: () async{
-                        active = "Praktek";
-                         setState(() {});
-                        getActiveList();
-                      },
-                    ),
+                      SizedBox(
+                        width: 130,
+                        // margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(const Color(0xFF4183D7)),
+                            padding: MaterialStateProperty.all(const EdgeInsets.all(8)),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const <Widget>[
+                              Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: Icon(
+                                  Icons.medical_services,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(2.0),
+                                child: Text(
+                                  "Praktek Dokter",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          onPressed: () async{
+                            active = "Praktek";
+                            setState(() {});
+                            getActiveList();
+                          },
+                        ),
+                      ),
+                    ]
                   ),
-                ]
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10), 
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    blurRadius: 10.0, // soften the shadow
-                    spreadRadius: 0.0, //extend the shadow
-                    offset: const Offset(
-                      5.0, // Move to right 10  horizontally
-                      5.0, // Move to bottom 10 Vertically
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Flexible(
-              child: getActiveList()
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10), 
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        blurRadius: 10.0, // soften the shadow
+                        spreadRadius: 0.0, //extend the shadow
+                        offset: const Offset(
+                          5.0, // Move to right 10  horizontally
+                          5.0, // Move to bottom 10 Vertically
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Flexible(
+                  child: getActiveList()
+                )
+              ], 
             )
-          ], 
-
-        )
+          )
+        ]
       )
-      
     );
   }
 }
@@ -2004,7 +1931,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               icon: const Icon(Icons.logout_rounded, size: 40),
                               color: Colors.white,
                               onPressed: () {
-                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => LoginPage()),
+                                );
                               },
                             ),
                           ),
@@ -2150,11 +2080,11 @@ class _ProfilePageState extends State<ProfilePage> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 5.0),
                             child: Card(
-                              child: ExpansionTile(
+                              child: const ExpansionTile(
                                 initiallyExpanded: false,
-                                leading: const Icon(Icons.security, size: 30),
-                                title: const Text('Keamanan'),
-                                subtitle: const Text('Ganti Password, Ingat Saya', style: TextStyle(color: Colors.grey)),
+                                leading: Icon(Icons.security, size: 30),
+                                title: Text('Keamanan'),
+                                subtitle: Text('Ganti Password, Ingat Saya', style: TextStyle(color: Colors.grey)),
                                 children: [
                                   //
                                 ],
