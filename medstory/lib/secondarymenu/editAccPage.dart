@@ -150,7 +150,7 @@ class _EditAccPageState extends State<EditAccPage> {
                         )
                       ]
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Flexible(
                       child: SizedBox(
                         height: MediaQuery.of(context).size.height,

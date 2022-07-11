@@ -342,7 +342,7 @@ class _GetDokterState extends State<GetDokter> {
                   child: Column(
                     children: [
                       ClipRRect(
-                        borderRadius: const BorderRadius.only(topLeft: const Radius.circular(10), topRight: const Radius.circular(10)),
+                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                         child: Image.asset(
                         'assets/images/dokter/${data['namaDokter']}.jpg', width: MediaQuery.of(context).size.width),
                       ),

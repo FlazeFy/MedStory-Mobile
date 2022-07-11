@@ -15,39 +15,43 @@ class NavDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
-            child: Column(
-              children: [
-                const Text(
-                  'Kebutuhan Kalori',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-                const SizedBox(height:10),
-                Row(
+          Flexible(child: 
+            SizedBox(
+              height: MediaQuery.of(context).size.height*0.25,
+              child: DrawerHeader(
+                child: Column(
                   children: [
-                    GetBeratTinggi(),
-                    SizedBox(width: MediaQuery.of(context).size.width*0.08),
-                    Column(
+                    const Text(
+                      'Kebutuhan Kalori',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    const SizedBox(height:10),
+                    Row(
                       children: [
-                        const Text(
-                          'Hari Ini',
-                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        const GetBeratTinggi(),
+                        Column(
+                          children: [
+                            const Text(
+                              'Hari Ini',
+                              style: TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                            const SizedBox(height: 10),
+                            //Kalori grafik
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height*0.08,
+                              width: MediaQuery.of(context).size.width*0.37,
+                              child: const GetKebutuhanKalori()
+                            )
+                          ],
                         ),
-                        const SizedBox(height: 10),
-                        //Kalori grafik
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height*0.08,
-                          width: MediaQuery.of(context).size.width*0.37,
-                          child: const GetKebutuhanKalori()
-                        )
                       ],
                     ),
                   ],
-                )
-              ],
-            ), 
-            decoration: const BoxDecoration(
-              color: Color(0xFF4183D7),
+                ), 
+                decoration: const BoxDecoration(
+                  color: Color(0xFF4183D7),
+                ),
+              ),
             ),
           ),
           Column(

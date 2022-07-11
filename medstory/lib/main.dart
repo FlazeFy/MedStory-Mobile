@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:intl/intl.dart';
 import 'package:medstory/newsItem.dart';
+import 'package:medstory/secondarymenu/asupanTerfavorit.dart';
 import 'package:medstory/secondarymenu/editAccPage.dart';
 import 'package:medstory/secondarymenu/faskes&praktek.dart';
 import 'package:medstory/secondarymenu/myDiskusiPage.dart';
@@ -1636,12 +1637,13 @@ class _DataKuPage extends State<DataKuPage> {
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+              padding: EdgeInsets.all(10.0),
               child: Column(
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      margin: const EdgeInsets.symmetric(vertical: 10.0),
                       child: const Text(
                         "Statistik Kebutuhan Kalori", 
                         style: TextStyle(
@@ -1655,7 +1657,7 @@ class _DataKuPage extends State<DataKuPage> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      margin: const EdgeInsets.symmetric(vertical: 10.0),
                       child: const Text(
                         "Grafik Harian", 
                         style: TextStyle(
@@ -1669,7 +1671,7 @@ class _DataKuPage extends State<DataKuPage> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      margin: const EdgeInsets.symmetric(vertical: 10.0),
                       child: const Text(
                         "Rata-Rata", 
                         style: TextStyle(
@@ -1680,10 +1682,14 @@ class _DataKuPage extends State<DataKuPage> {
                       ),
                     ),
                   ),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: const CountKebutuhanHarian()
+                  ),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                      margin: const EdgeInsets.symmetric(vertical: 10.0),
                       child: const Text(
                         "Asupan Terfavorit", 
                         style: TextStyle(
@@ -1694,6 +1700,10 @@ class _DataKuPage extends State<DataKuPage> {
                       ),
                     ),
                   ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: const GetTopAsupan()
+                  )
                 ]
               ),
               decoration: BoxDecoration(
@@ -1933,7 +1943,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => LoginPage()),
+                                  MaterialPageRoute(builder: (context) => const LoginPage()),
                                 );
                               },
                             ),
@@ -2127,6 +2137,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 onToggle: (val) {
                                                   setState(() {
                                                     mode = val;
+                                                      //Change dark/light mode.
+                                                      Get.isDarkMode
+                                                      ? Get.changeTheme(ThemeData.light())
+                                                      : Get.changeTheme(ThemeData.dark());
                                                   });
                                                 },
                                               ),
