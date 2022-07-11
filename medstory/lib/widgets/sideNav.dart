@@ -186,9 +186,11 @@ class NavDrawer extends StatelessWidget {
               ]),
             ],
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child:GetAsupanDayById(passDocumentId: passIdUserNav)
+          Flexible(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height*0.6,
+              child:GetAsupanDayById(passDocumentId: passIdUserNav)
+            )
           )    
         ],
       ),
@@ -234,7 +236,7 @@ class _GetKebutuhanKaloriState extends State<GetKebutuhanKalori> {
               var formattedNow = "${now2.day}-${now2.month}-${now2.year}";
               
               if((formattedDate == formattedNow)&&(data['id_user'] == passIdUser)){
-                return Text(data['kalori'].toString(), style: const TextStyle(color: Colors.white)); 
+                return Text("${data['kalori'].toString()} Cal", style: const TextStyle(color: Colors.white)); 
               } 
               return const SizedBox(height: 0);
             }).toList(),

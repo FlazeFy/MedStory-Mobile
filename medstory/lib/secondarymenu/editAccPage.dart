@@ -87,6 +87,14 @@ class _EditAccPageState extends State<EditAccPage> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
                             color: const Color(0xFFd9534f),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 190, 190, 190),            
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                offset: Offset(0, 3)
+                              )
+                            ],
                           )
                         ),
                         SizedBox(width: MediaQuery.of(context).size.width*0.26),

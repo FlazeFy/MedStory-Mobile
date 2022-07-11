@@ -1686,6 +1686,10 @@ class _DataKuPage extends State<DataKuPage> {
                     alignment: Alignment.centerLeft,
                     child: const CountKebutuhanHarian()
                   ),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: const CountTerpenuhiHarian()
+                  ),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
@@ -1951,7 +1955,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
                             color: const Color(0xFFd9534f),
-                             boxShadow: const [
+                            boxShadow: const [
                               BoxShadow(
                                 color: Color.fromARGB(255, 190, 190, 190),            
                                 spreadRadius: 1,

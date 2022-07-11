@@ -2,6 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:medstory/main.dart';
 
+//Initial variable.
+int item = 0;
+
+double asupanFinal = 0; //To store final value of count total of asupan's calorie.
+int asupanNew = 0; //Count total asupan's calorie
+
+int x = 0; //Check if asupan's looping same as jadwal's looping
+int jadwalCount = 0; //Count user's asupan
+
 class GetTopAsupan extends StatefulWidget {
   const GetTopAsupan({Key key, this.passIdAsupan}) : super(key: key);
   final String passIdAsupan;
@@ -49,14 +58,14 @@ class _GetTopAsupan extends State<GetTopAsupan> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "data['nama']", 
-                          style: const TextStyle(color: Colors.blue, fontSize: 14)
+                          style: TextStyle(color: Colors.blue, fontSize: 14)
                         ),
                         const SizedBox(height: 2),
-                        Text(
+                        const Text(
                           "data['kategori']", 
-                          style: const TextStyle(color: Colors.grey, fontSize: 13)
+                          style: TextStyle(color: Colors.grey, fontSize: 13)
                         ),
                         Text(
                           "data['kalori']".toString(), 
@@ -123,7 +132,7 @@ class _CountKebutuhanHarian extends State<CountKebutuhanHarian> {
 
         int hari = 0;
         int i = 0;
-        int item = snapshot.data.size;
+        item = snapshot.data.size;
         return Column(
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
@@ -134,10 +143,108 @@ class _CountKebutuhanHarian extends State<CountKebutuhanHarian> {
             //Count average if come to the last item.
             if(i == item){
               double avg = hari / item;
-              return Text("Kebutuhan Harian : ${avg.toString()}");
+              return Text("Kebutuhan Harian : ${double.parse((avg).toStringAsFixed(2)).toString()} Cal");
             } else {
               return const SizedBox();
             }     
+          }).toList(),
+        );
+      },
+    );
+  }
+}
+
+class CountTerpenuhiHarian extends StatefulWidget {
+  const CountTerpenuhiHarian({Key key, this.passDocumentId}) : super(key: key);
+  final String passDocumentId;
+
+  @override
+  _CountTerpenuhiHarian createState() => _CountTerpenuhiHarian();
+}
+
+class _CountTerpenuhiHarian extends State<CountTerpenuhiHarian> {
+  final Stream<QuerySnapshot> _jadwalasupan = FirebaseFirestore.instance.collection('jadwalkalori').where('id_user', isEqualTo: passIdUser).snapshots();
+  
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _jadwalasupan,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator()
+          );
+        }
+
+        int asupanCal = 0;
+        int i = 0;
+        jadwalCount = snapshot.data.size;
+        return Column(
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            i++;
+
+            //Count average if come to the last item.
+            if(i == jadwalCount){
+              asupanFinal = asupanFinal / item;
+              return Text("Terpenuhi Harian : ${double.parse((asupanFinal).toStringAsFixed(2)).toString()} Cal");
+            } else {
+              return GetMyAsupanDetailById(passIdAsupan: data['id_asupan']);
+            }    
+          }).toList(),
+        );
+      },
+    );
+  }
+}
+
+class GetMyAsupanDetailById extends StatefulWidget {
+  const GetMyAsupanDetailById({Key key, this.passIdAsupan}) : super(key: key);
+  final String passIdAsupan;
+
+  @override
+  _GetMyAsupanDetailById createState() => _GetMyAsupanDetailById();
+}
+
+class _GetMyAsupanDetailById extends State<GetMyAsupanDetailById> {
+  // GetAsupanDayById(this.documentId);
+  final Stream<QuerySnapshot> _detailasupan = FirebaseFirestore.instance.collection('asupan').snapshots();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _detailasupan,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator()
+          );
+        }
+
+        return Column(
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            if(x < jadwalCount){
+              
+              if(document.id == widget.passIdAsupan){
+                //Count caloire of each asupan.
+                x++;
+                asupanNew += data['kalori'];
+                return const SizedBox();
+              } 
+              return const SizedBox();  
+            } else {
+              asupanFinal = asupanNew.toDouble();
+              return const SizedBox(); 
+            }
           }).toList(),
         );
       },
