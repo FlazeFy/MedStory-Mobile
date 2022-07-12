@@ -1,14 +1,135 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinbox/material.dart';
 import '../main.dart';
 
 int kebutuhan = 0;
+int checkCal = 0;
 
-class NavDrawer extends StatelessWidget {
+class NavDrawer extends StatelessWidget{
   var passUsername = "";
   var passIdUserNav = "";
+  int passCalorie = 0;
+
   NavDrawer({Key key, this.passUsername, this.passIdUserNav}) : super(key: key);
 
+  Widget getButtonCalorie(BuildContext context){
+    CollectionReference kebutuhanCal = FirebaseFirestore.instance.collection('kebutuhankalori');
+    if(checkCal != 0){
+      return Container(
+        height: 46,
+        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white,
+            side: const BorderSide(width: 2.0, color: Color(0xFF22A7F0))
+          ),
+          onPressed: () => showDialog<String>(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: Row(
+                children: const [
+                  Text(                     
+                    'Asupan Hari Ini',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                    )
+                  ),
+                  SizedBox(width:5),
+                  DropDown()
+                ],
+              ),
+              content: Container(
+                transform: Matrix4.translationValues(0.0, -25.0, 0.0),
+                height: MediaQuery.of(context).size.height*0.55,
+                child: Column(
+                  children: [
+                    AutocompleteBasicExample(),
+                    SizedBox(   
+                      height: MediaQuery.of(context).size.height*0.48,
+                      width: MediaQuery.of(context).size.width*0.9,
+                      child: const Flexible(
+                        child: GetAllAsupan()
+                      ),
+                    )
+                  ]               
+                )
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                  child: const Text('Batal', style: TextStyle(color: Color(0xFFd9534f))),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                
+                  },
+                  child: const Text('Simpan'),
+                ),
+              ],
+            ),
+          ),
+          icon: const Icon(Icons.add, size: 18, color: Color(0xFF22A7F0)),
+          label: const Text("Tambah Asupan", style: TextStyle(color: Color(0xFF22A7F0), fontSize: 15)),
+        ),
+      );
+    } else {
+      return Container(
+        height: 46,
+        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            primary: const Color(0xFF22A7F0),
+          ),
+          onPressed: () => showDialog<String>(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: const Text('Kebutuhan Kalori'),
+              content: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                height: 50,
+                child: SpinBox(
+                  min: 800, max: 3000,
+                  value: 1800,
+                  spacing: 1,
+                  textStyle: const TextStyle(
+                    fontSize: 16.0,
+                  ),
+                  onChanged: (value) => passCalorie = value.toInt(),
+                  decoration: const InputDecoration(labelText: 'Kalori (Cal)'),
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Batal'),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    
+                    return kebutuhanCal
+                    .add({
+                      'id_user': passIdUser,
+                      'kalori': passCalorie,
+                      'date': DateTime.tryParse(DateTime.now().toIso8601String()),
+                    })
+                    .then((value) => Navigator.pop(context))
+                    .catchError((error) => print("Failed to add kaloris: $error"));
+                  },
+                  icon: const Icon(Icons.add, size: 18),
+                  label: const Text('Tambah'),
+                ),
+              ],
+            ),
+          ),
+          icon: const Icon(Icons.add, size: 18),
+          label: const Text("Tambah Kalori", style: TextStyle(fontSize: 15)),
+        ),
+      );
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -56,64 +177,7 @@ class NavDrawer extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Container(
-                      height: 46,
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          side: const BorderSide(width: 2.0, color: Color(0xFF22A7F0))
-                        ),
-                        onPressed: () => showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: Row(
-                              children: const [
-                                Text(                     
-                                  'Asupan Hari Ini',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                  )
-                                ),
-                                SizedBox(width:5),
-                                DropDown()
-                              ],
-                            ),
-                            content: Container(
-                              transform: Matrix4.translationValues(0.0, -25.0, 0.0),
-                              height: MediaQuery.of(context).size.height*0.55,
-                              child: Column(
-                                children: [
-                                  AutocompleteBasicExample(),
-                                  SizedBox(   
-                                    height: MediaQuery.of(context).size.height*0.48,
-                                    width: MediaQuery.of(context).size.width*0.9,
-                                    child: const Flexible(
-                                      child: GetAllAsupan()
-                                    ),
-                                  )
-                                ]               
-                              )
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'Cancel'),
-                                child: const Text('Batal', style: TextStyle(color: Color(0xFFd9534f))),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                              
-                                },
-                                child: const Text('Simpan'),
-                              ),
-                            ],
-                          ),
-                        ),
-                        icon: const Icon(Icons.add, size: 18, color: Color(0xFF22A7F0)),
-                        label: const Text("Tambah Asupan", style: TextStyle(color: Color(0xFF22A7F0), fontSize: 15)),
-                      ),
-                    ),
+                    getButtonCalorie(context),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5.0),
                       child: IconButton(
@@ -231,6 +295,7 @@ class _GetKebutuhanKaloriState extends State<GetKebutuhanKalori> {
             var formattedNow = "${now2.day}-${now2.month}-${now2.year}";
             
             if((formattedDate == formattedNow)&&(data['id_user'] == passIdUser)){
+              checkCal = data['kalori'];
               return Text("${data['kalori'].toString()} Cal", style: const TextStyle(color: Colors.white)); 
             } 
             return const SizedBox(height: 0);
@@ -340,7 +405,7 @@ class _GetAsupanDayById extends State<GetAsupanDayById> {
             var formattedNow = "${now2.day}-${now2.month}-${now2.year}";
             
             if((formattedDate == formattedNow)&&(data['id_user'] == passIdUser)){
-              return GetAsupanDetailById(passIdAsupan: data['id_asupan']);
+              return GetAsupanDetailById(passIdAsupan: data['id_asupan'], passIdJadwal: document.id);
             } else {
               return const SizedBox();
             }
@@ -352,8 +417,9 @@ class _GetAsupanDayById extends State<GetAsupanDayById> {
 }
 
 class GetAsupanDetailById extends StatefulWidget {
-  const GetAsupanDetailById({Key key, this.passIdAsupan}) : super(key: key);
+  const GetAsupanDetailById({Key key, this.passIdAsupan, this.passIdJadwal}) : super(key: key);
   final String passIdAsupan;
+  final String passIdJadwal;
 
   @override
   _GetAsupanDetailById createState() => _GetAsupanDetailById();
@@ -362,6 +428,8 @@ class GetAsupanDetailById extends StatefulWidget {
 class _GetAsupanDetailById extends State<GetAsupanDetailById> {
   // GetAsupanDayById(this.documentId);
   final Stream<QuerySnapshot> _detailasupan = FirebaseFirestore.instance.collection('asupan').snapshots();
+
+  CollectionReference jadwalAsupan = FirebaseFirestore.instance.collection('jadwalkalori');
 
   @override
   Widget build(BuildContext context) {
@@ -420,7 +488,29 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
                       child:IconButton(
                         icon: const Icon(Icons.delete),
                         color: Colors.white,
-                        onPressed: () {},
+                        onPressed: () => showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text('Apakah Anda yakin?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('Batal'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  Navigator.pop(context);
+                                  return jadwalAsupan
+                                    .doc(widget.passIdJadwal)
+                                    .delete()
+                                    .then((value) => print("Asupan Deleted"))
+                                    .catchError((error) => print("Gagal menghapus asupan: $error"));
+                                },
+                                child: const Text('Ya'),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6),
@@ -531,7 +621,7 @@ class _GetAllAsupan extends State<GetAllAsupan> {
                       child:IconButton(
                         icon: const Icon(Icons.add),
                         color: Colors.white,
-                        onPressed: () {
+                        onPressed: () async {
                           return calday
                           .add({
                             'id_asupan': document.id,
