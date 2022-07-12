@@ -6,6 +6,7 @@ import 'package:medstory/secondarymenu/asupanTerfavorit.dart';
 import 'package:medstory/secondarymenu/editAccPage.dart';
 import 'package:medstory/secondarymenu/faskes&praktek.dart';
 import 'package:medstory/secondarymenu/myDiskusiPage.dart';
+import 'package:medstory/widgets/custombg.dart';
 import 'package:medstory/widgets/sideNav.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -152,115 +153,119 @@ class _ForumPage extends State<ForumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavDrawer(passUsername: widget.passUsername),
-      body: ListView(
-        children:[
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 10.0),
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text("  Informasi Kesehatan",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w600
-                      )         
-                    ),
-                  ),
-                ),
-                CarouselSlider(
-                  options: CarouselOptions(
-                  height: 210.0,
-                  enlargeCenterPage: true,
-                  autoPlay: false,
-                  autoPlayInterval: const Duration(seconds: 4),
-                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  pauseAutoPlayOnTouch: true,
-                  aspectRatio: 2.0,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      indexNews = index;
-                    });
-                  },
-                ),
-                items: imageSliders
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: map<Widget>(imgList, (index, url) {
-                  return Container(
-                    width: 6.0,
-                    height: 6.0,
-                    margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: indexNews == index ? const Color(0xFF28CF36) : Colors.grey,
-                    ),
-                  );
-                }),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  children: [
-                    const Align(
+      body: CustomPaint(
+        painter : CurvedPainter2(),
+        child : ListView(
+          children:[
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 10.0),
+                    child: const Align(
                       alignment: Alignment.centerLeft,
-                      child: Text("  Forum Diskusi",
+                      child: Text("  Informasi Kesehatan",
                         style: TextStyle(
                           fontSize: 20.0,
-                          fontWeight: FontWeight.w600
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
                         )         
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                        transform: Matrix4.translationValues(0.0, -5.0, 0.0),
-                        child: const DropDown(),
-                      )
-                    ),
-                    Container(
-                      transform: Matrix4.translationValues(15.0, 0.0, 0.0),
-                      child: PopupMenuButton(
-                        icon: const Icon(Icons.more_vert),
-                        itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                          PopupMenuItem(
-                            child: ListTile(
-                              leading: const Icon(Icons.add),
-                              title: const Text('Pertanyaan Ku'),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => MyDiscussionPage(passUsername: passUsername)),
-                                );
-                              },
-                            ),
-                          ),
-                          const PopupMenuItem(
-                            child: ListTile(
-                              leading: Icon(Icons.auto_graph),
-                              title: Text('Statistik'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]
+                  ),
+                  CarouselSlider(
+                    options: CarouselOptions(
+                    height: 210.0,
+                    enlargeCenterPage: true,
+                    autoPlay: false,
+                    autoPlayInterval: const Duration(seconds: 4),
+                    autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    pauseAutoPlayOnTouch: true,
+                    aspectRatio: 2.0,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        indexNews = index;
+                      });
+                    },
+                  ),
+                  items: imageSliders
                 ),
-              ),
-              Flexible(
-                child: GetDiskusi(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: map<Widget>(imgList, (index, url) {
+                    return Container(
+                      width: 6.0,
+                      height: 6.0,
+                      margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: indexNews == index ? const Color(0xFF28CF36) : Colors.grey,
+                      ),
+                    );
+                  }),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("  Forum Diskusi",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w600
+                          )         
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                          transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+                          child: const DropDown(),
+                        )
+                      ),
+                      Container(
+                        transform: Matrix4.translationValues(15.0, 0.0, 0.0),
+                        child: PopupMenuButton(
+                          icon: const Icon(Icons.more_vert),
+                          itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                            PopupMenuItem(
+                              child: ListTile(
+                                leading: const Icon(Icons.add),
+                                title: const Text('Pertanyaan Ku'),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => MyDiscussionPage(passUsername: passUsername)),
+                                  );
+                                },
+                              ),
+                            ),
+                            const PopupMenuItem(
+                              child: ListTile(
+                                leading: Icon(Icons.auto_graph),
+                                title: Text('Statistik'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                Flexible(
+                  child: GetDiskusi(),
+                )
+                ], 
+                
               )
-              ], 
-              
-            )
-          ),
-        ]
-      ),
+            ),
+          ]
+        ),
+      )
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
@@ -288,150 +293,151 @@ class GetDiskusi extends StatelessWidget {
         }
 
         return ListView(
+          padding: const EdgeInsets.all(3.0),
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             return Container(
-                transform: Matrix4.translationValues(0.0, -5.0, 0.0),
-                padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                child: Card(
-                  child: Column(
-                  children: [
-                    Align(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          children: [ 
-                            Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/User.jpg', width: 40),
-                                ),
-                            ),
-                                    
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width*0.73,
-                              child: Column (
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(                     
-                                      data['namaPengguna'],
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      )
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(                     
-                                      "${data['kategori']} ~ ${DateFormat('dd MMM | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 13,
-                                      )
-                                    ),
-                                  )                          
-                                ]
+              transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              child: Card(
+                child: Column(
+                children: [
+                  Align(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(
+                        children: [ 
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                'assets/images/User.jpg', width: 40),
                               ),
-                            ),
-                            ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              'assets/images/verified.png', width: 30),
-                            ),
-                          ]
-                        )    
-                      )                   
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(                     
-                          data['pertanyaan'],
-                          style: const TextStyle(
-                            color: Color(0xFF6B6B6B),
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 3,
-                        ),   
-                      ),
+                                  
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width*0.7,
+                            child: Column (
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(                     
+                                    data['namaPengguna'],
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                    )
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(                     
+                                    "${data['kategori']} ~ ${DateFormat('dd MMM | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    )
+                                  ),
+                                )                          
+                              ]
+                            ),
+                          ),
+                          ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(
+                            'assets/images/verified.png', width: 30),
+                          ),
+                        ]
+                      )    
+                    )                   
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Text(                     
+                        data['pertanyaan'],
+                        style: const TextStyle(
+                          color: Color(0xFF6B6B6B),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
+                      ),   
                     ),
-                    Row(
-                      children: [            
-                        TextButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder: (c, a1, a2) => DiscussionPage(documentId: document.id),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
-                                  final curvedAnimation = CurvedAnimation(
-                                    parent: animation,
-                                    curve: Curves.ease,
-                                  );
-
-                                  return SlideTransition(
-                                    position: tween.animate(curvedAnimation),
-                                    child: child,
-                                  );
-                                }
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.arrow_drop_down, size: 14),
-                          label: const Text("Lihat komentar (3)"),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width*0.2,
-                        ),
-                        TextButton.icon(
-                          onPressed: () {
-                            //
-                          },
-                          icon: const Icon(Icons.arrow_upward, size: 14),
-                          label: Text(data['up'].toString()),
-                        ),
-                        TextButton.icon(
-                          onPressed: () {
-                              // Respond to button press
-                          },
-                          icon: const Icon(Icons.remove_red_eye, size: 14),
-                          label: Text(data['view'].toString()),
-                        ),
-                      ]
-                    ),       
-                  ]
-
                   ),
-                  shape: RoundedRectangleBorder(
-                    side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), 
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      blurRadius: 10.0, // soften the shadow
-                      spreadRadius: 0.0, //extend the shadow
-                      offset: const Offset(
-                        5.0, // Move to right 10  horizontally
-                        5.0, // Move to bottom 10 Vertically
+                  Row(
+                    children: [            
+                      TextButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (c, a1, a2) => DiscussionPage(documentId: document.id),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
+                                final curvedAnimation = CurvedAnimation(
+                                  parent: animation,
+                                  curve: Curves.ease,
+                                );
+
+                                return SlideTransition(
+                                  position: tween.animate(curvedAnimation),
+                                  child: child,
+                                );
+                              }
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.arrow_drop_down, size: 14),
+                        label: const Text("Lihat komentar (3)"),
                       ),
-                    )
-                  ],
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width*0.2,
+                      ),
+                      TextButton.icon(
+                        onPressed: () {
+                          //
+                        },
+                        icon: const Icon(Icons.arrow_upward, size: 14),
+                        label: Text(data['up'].toString()),
+                      ),
+                      TextButton.icon(
+                        onPressed: () {
+                            // Respond to button press
+                        },
+                        icon: const Icon(Icons.remove_red_eye, size: 14),
+                        label: Text(data['view'].toString()),
+                      ),
+                    ]
+                  ),       
+                ]
+
                 ),
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), 
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 10.0, // soften the shadow
+                    spreadRadius: 0.0, //extend the shadow
+                    offset: const Offset(
+                      5.0, // Move to right 10  horizontally
+                      5.0, // Move to bottom 10 Vertically
+                    ),
+                  )
+                ],
+              ),
             );
 
           }).toList(),
@@ -565,240 +571,232 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, dynamic> data = snapshot.data.data() as Map<String, dynamic>;
           return Scaffold(
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-                iconTheme: 
-                  const IconThemeData(
-                    color: Color(0xFF4183D7),
-                    size: 35.0,
-                  ),
-                title: const Text("Lihat Balasan", 
-                style: TextStyle(
-                  color: Color(0xFF4183D7),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.home, color: Color(0xFF4183D7)),
-                  iconSize: 40,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                )
-              ],
-
-                //Transparent setting.
-                backgroundColor: const Color(0x44FFFFFF),
-                elevation: 0,
-              ),
-
-              //Body.
-              body: SizedBox(
+            //Body.
+            body: CustomPaint(
+              painter : CurvedPainter3(),
+              child : SizedBox(
                 height: MediaQuery.of(context).size.height,
                 child: Column(
                   children: [
                     Align(
                       child: Container(
-                        transform: Matrix4.translationValues(0.0, -5.0, 0.0),
-                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                        child: Card(
-                          child: Column(
-                          children: [
+                        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.1),
+                        child:ElevatedButton.icon(
+                          icon: const Icon(Icons.close, size: 30),
+                          label: const Text("Kembali", style: TextStyle(fontSize: 16)),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(Colors.white.withOpacity(0.5)),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                              )
+                            )
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        )
+                      )
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 10.0),
+                        padding: const EdgeInsets.all(5),
+                        child: Column(
+                          children:[
                             Align(
                               child: Container(
-                                margin: const EdgeInsets.symmetric(vertical: 10.0),
-                                child: Row(
-                                  children: [ 
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: Image.asset(
-                                          'assets/images/User.jpg', width: 40),
-                                        ),
+                                margin: const EdgeInsets.only(top: 10.0),
+                                transform: Matrix4.translationValues(0.0, -5.0, 0.0),
+                                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                child: Card(
+                                  child: Column(
+                                  children: [
+                                    Align(
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(vertical: 10.0),
+                                        child: Row(
+                                          children: [ 
+                                            Container(
+                                              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(20),
+                                                child: Image.asset(
+                                                  'assets/images/User.jpg', width: 40),
+                                                ),
+                                            ),
+                                                  
+                                            SizedBox(
+                                              width: MediaQuery.of(context).size.width*0.73,
+                                              child: Column (
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Align(
+                                                    alignment: Alignment.centerLeft,
+                                                    child: Text(                     
+                                                      data['namaPengguna'],
+                                                      textAlign: TextAlign.left,
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: 16,
+                                                      )
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment: Alignment.centerLeft,
+                                                    child: Text(                     
+                                                      "${data['kategori']} ~ ${DateFormat('yyyy-MM-dd | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
+                                                      style: const TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 13,
+                                                      )
+                                                    ),
+                                                  )                          
+                                                ]
+                                              ),
+                                            ),
+                                          ]
+                                        )    
+                                      )                   
                                     ),
-                                          
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width*0.73,
-                                      child: Column (
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(                     
-                                              data['namaPengguna'],
-                                              textAlign: TextAlign.left,
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16,
-                                              )
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(                     
-                                              "${data['kategori']} ~ ${DateFormat('yyyy-MM-dd | hh:mm a').format((data['datetime'] as Timestamp).toDate()).toString()}",
-                                              style: const TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 13,
-                                              )
-                                            ),
-                                          )                          
-                                        ]
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                        child: Text(                     
+                                          data['pertanyaan'],
+                                          style: const TextStyle(
+                                            color: Color(0xFF6B6B6B),
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 13,
+                                          )
+                                        ),   
                                       ),
                                     ),
+                                    Row(
+                                      children: [            
+                                        SizedBox(
+                                          width: MediaQuery.of(context).size.width*0.6,
+                                        ),
+                                        TextButton.icon(
+                                          onPressed: () {
+                                              // Respond to button press
+                                          },
+                                          icon: const Icon(Icons.arrow_upward, size: 14),
+                                          label: Text(data['up'].toString()),
+                                        ),
+                                        TextButton.icon(
+                                          onPressed: () {
+                                              // Respond to button press
+                                          },
+                                          icon: const Icon(Icons.remove_red_eye, size: 14),
+                                          label: Text(data['view'].toString()),
+                                        ),
+                                      ]
+                                    ),       
                                   ]
-                                )    
-                              )                   
+
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                ),
+                              ),
                             ),
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                                child: Text(                     
-                                  data['pertanyaan'],
-                                  style: const TextStyle(
-                                    color: Color(0xFF6B6B6B),
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 13,
-                                  )
-                                ),   
-                              ),
+                                margin: const EdgeInsets.symmetric(vertical: 10.0),
+                                transform: Matrix4.translationValues(0.0, 5.0, 0.0),
+                                child: const Text("  Balasan (3)",
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF4183D7)
+                                  )         
+                                ),
+                              )
                             ),
-                            Row(
-                              children: [            
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width*0.6,
-                                ),
-                                TextButton.icon(
-                                  onPressed: () {
-                                      // Respond to button press
-                                  },
-                                  icon: const Icon(Icons.arrow_upward, size: 14),
-                                  label: Text(data['up'].toString()),
-                                ),
-                                TextButton.icon(
-                                  onPressed: () {
-                                      // Respond to button press
-                                  },
-                                  icon: const Icon(Icons.remove_red_eye, size: 14),
-                                  label: Text(data['view'].toString()),
-                                ),
-                              ]
-                            ),       
-                          ]
-
-                          ),
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10), 
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              blurRadius: 10.0, // soften the shadow
-                              spreadRadius: 0.0, //extend the shadow
-                              offset: const Offset(
-                                5.0, // Move to right 10  horizontally
-                                5.0, // Move to bottom 10 Vertically
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10.0),
-                        transform: Matrix4.translationValues(0.0, 5.0, 0.0),
-                        child: const Text("  Balasan (3)",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.bold
-                          )         
-                        ),
-                      )
-                    ),
-                    Flexible(
-                      child: GetBalasanById(passDocumentId: widget.documentId)
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 10,bottom: 10,top: 10),
-                        margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
-                        height: 60,
-                        width: double.infinity,
-                        child: Row(
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: (){
-                              },
+                            Flexible(
+                              child: GetBalasanById(passDocumentId: widget.documentId)
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
                               child: Container(
-                                height: 30,
-                                width: 30,
+                                padding: const EdgeInsets.only(left: 10,bottom: 10,top: 10),
+                                margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
+                                height: 60,
+                                width: double.infinity,
+                                child: Row(
+                                  children: <Widget>[
+                                    GestureDetector(
+                                      onTap: (){
+                                      },
+                                      child: Container(
+                                        height: 30,
+                                        width: 30,
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          borderRadius: BorderRadius.circular(30),
+                                        ),
+                                        child: const Icon(Icons.image, color: Colors.white, size: 20, ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 15,),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _isiCtrl,
+                                        decoration: const InputDecoration(
+                                          hintText: "Ketik balasan Anda...",
+                                          hintStyle: TextStyle(color: Color(0xFF6B6B6B)),
+                                          border: InputBorder.none
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 15,),
+                                    FloatingActionButton(
+                                      onPressed: () async{
+                                        replyDiscussion();
+                                      },
+                                      child: const Icon(Icons.send,color: Colors.white,size: 18,),
+                                      backgroundColor: Colors.green,
+                                      elevation: 0,
+                                    ),
+                                  ],
+                                  
+                                ),
                                 decoration: BoxDecoration(
-                                  color: Colors.lightBlue,
                                   borderRadius: BorderRadius.circular(30),
+                                  color: Colors.white, 
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      blurRadius: 10.0, // soften the shadow
+                                      spreadRadius: 0.0, //extend the shadow
+                                      offset: const Offset(
+                                        5.0, // Move to right 10  horizontally
+                                        5.0, // Move to bottom 10 Vertically
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                child: const Icon(Icons.image, color: Colors.white, size: 20, ),
                               ),
                             ),
-                            const SizedBox(width: 15,),
-                            Expanded(
-                              child: TextField(
-                                controller: _isiCtrl,
-                                decoration: const InputDecoration(
-                                  hintText: "Ketik balasan Anda...",
-                                  hintStyle: TextStyle(color: Color(0xFF6B6B6B)),
-                                  border: InputBorder.none
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 15,),
-                            FloatingActionButton(
-                              onPressed: () async{
-                                replyDiscussion();
-                              },
-                              child: const Icon(Icons.send,color: Colors.white,size: 18,),
-                              backgroundColor: Colors.green,
-                              elevation: 0,
-                            ),
-                          ],
-                          
+                          ]
                         ),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.white, 
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              blurRadius: 10.0, // soften the shadow
-                              spreadRadius: 0.0, //extend the shadow
-                              offset: const Offset(
-                                5.0, // Move to right 10  horizontally
-                                5.0, // Move to bottom 10 Vertically
-                              ),
-                            )
-                          ],
-                        ),
+                          color: Colors.white.withOpacity(0.5),
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                        )
                       ),
-                    ),
-
+                    )
                   ], 
 
                 )
               )
-              
-            
+            )
           );
         }
 
@@ -1637,7 +1635,7 @@ class _DataKuPage extends State<DataKuPage> {
             Container(
               width: MediaQuery.of(context).size.width,
               margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
                   Align(
@@ -1684,11 +1682,11 @@ class _DataKuPage extends State<DataKuPage> {
                   ),
                   const Align(
                     alignment: Alignment.centerLeft,
-                    child: const CountKebutuhanHarian()
+                    child: CountKebutuhanHarian()
                   ),
                   const Align(
                     alignment: Alignment.centerLeft,
-                    child: const CountTerpenuhiHarian()
+                    child: CountTerpenuhiHarian()
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -2087,249 +2085,252 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height*0.44,
-                      child: ListView(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: Card(
-                              child: const ExpansionTile(
-                                initiallyExpanded: false,
-                                leading: Icon(Icons.security, size: 30),
-                                title: Text('Keamanan'),
-                                subtitle: Text('Ganti Password, Ingat Saya', style: TextStyle(color: Colors.grey)),
-                                children: [
-                                  //
-                                ],
-                              ),
-                              shape: RoundedRectangleBorder(
-                                side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
-                                borderRadius: BorderRadius.circular(6),
+                    Flexible(
+                      child:SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        child: ListView(
+                          padding: const EdgeInsets.only(top: 0),
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: Card(
+                                child: const ExpansionTile(
+                                  initiallyExpanded: false,
+                                  leading: Icon(Icons.security, size: 30),
+                                  title: Text('Keamanan'),
+                                  subtitle: Text('Ganti Password, Ingat Saya', style: TextStyle(color: Colors.grey)),
+                                  children: [
+                                    //
+                                  ],
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: Card(
-                              child: ExpansionTile(
-                                initiallyExpanded: false,
-                                leading: const Icon(Icons.settings, size: 30),
-                                title: const Text('Pengaturan'),
-                                subtitle: const Text('Warna Latar, Bahasa, Perbarui', style: TextStyle(color: Colors.grey)),
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.only(bottom: 5.0),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              const Text(
-                                                "Warna Latar",
-                                              ),
-                                              FlutterSwitch(
-                                                showOnOff: true,
-                                                height: 30,
-                                                activeTextFontWeight: FontWeight.w400,
-                                                inactiveTextFontWeight: FontWeight.w400,
-                                                activeTextColor: Colors.black,
-                                                inactiveTextColor: Colors.blue[50],
-                                                value: mode,
-                                                onToggle: (val) {
-                                                  setState(() {
-                                                    mode = val;
-                                                      //Change dark/light mode.
-                                                      Get.isDarkMode
-                                                      ? Get.changeTheme(ThemeData.light())
-                                                      : Get.changeTheme(ThemeData.dark());
-                                                  });
-                                                },
-                                              ),
-                                            ],
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: Card(
+                                child: ExpansionTile(
+                                  initiallyExpanded: false,
+                                  leading: const Icon(Icons.settings, size: 30),
+                                  title: const Text('Pengaturan'),
+                                  subtitle: const Text('Warna Latar, Bahasa, Perbarui', style: TextStyle(color: Colors.grey)),
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.only(bottom: 5.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: <Widget>[
+                                                const Text(
+                                                  "Warna Latar",
+                                                ),
+                                                FlutterSwitch(
+                                                  showOnOff: true,
+                                                  height: 30,
+                                                  activeTextFontWeight: FontWeight.w400,
+                                                  inactiveTextFontWeight: FontWeight.w400,
+                                                  activeTextColor: Colors.black,
+                                                  inactiveTextColor: Colors.blue[50],
+                                                  value: mode,
+                                                  onToggle: (val) {
+                                                    setState(() {
+                                                      mode = val;
+                                                        //Change dark/light mode.
+                                                        Get.isDarkMode
+                                                        ? Get.changeTheme(ThemeData.light())
+                                                        : Get.changeTheme(ThemeData.dark());
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(bottom: 5.0),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              const Text(
-                                                "Bahasa",
-                                              ),
-                                              FlutterSwitch(
-                                                showOnOff: true,
-                                                height: 30,
-                                                activeTextFontWeight: FontWeight.w400,
-                                                inactiveTextFontWeight: FontWeight.w400,
-                                                activeTextColor: Colors.black,
-                                                inactiveTextColor: Colors.blue[50],
-                                                value: bahasa,
-                                                onToggle: (val) {
-                                                  setState(() {
-                                                    bahasa = val;
-                                                  });
-                                                },
-                                              ),
-                                            ],
+                                          Container(
+                                            padding: const EdgeInsets.only(bottom: 5.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: <Widget>[
+                                                const Text(
+                                                  "Bahasa",
+                                                ),
+                                                FlutterSwitch(
+                                                  showOnOff: true,
+                                                  height: 30,
+                                                  activeTextFontWeight: FontWeight.w400,
+                                                  inactiveTextFontWeight: FontWeight.w400,
+                                                  activeTextColor: Colors.black,
+                                                  inactiveTextColor: Colors.blue[50],
+                                                  value: bahasa,
+                                                  onToggle: (val) {
+                                                    setState(() {
+                                                      bahasa = val;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      )
                                     )
-                                  )
-                                ],
-                              ),
-                              shape: RoundedRectangleBorder(
-                                side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
-                                borderRadius: BorderRadius.circular(6),
+                                  ],
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: Card(
-                              child: ExpansionTile(
-                                initiallyExpanded: false,
-                                leading: const Icon(Icons.notifications, size: 30),
-                                title: const Text('Notifikasi'),
-                                subtitle: const Text('Pembaruan, Aktivitas, Pesan', style: TextStyle(color: Colors.grey)),
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              const Text(
-                                                "Pembaruan",
-                                              ),
-                                              FlutterSwitch(
-                                                showOnOff: true,
-                                                height: 30,
-                                                activeTextFontWeight: FontWeight.w400,
-                                                inactiveTextFontWeight: FontWeight.w400,
-                                                activeTextColor: Colors.black,
-                                                inactiveTextColor: Colors.blue[50],
-                                                value: pembaruan,
-                                                onToggle: (val) {
-                                                  setState(() {
-                                                    pembaruan = val;
-                                                  });
-                                                },
-                                              ),
-                                            ],
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: Card(
+                                child: ExpansionTile(
+                                  initiallyExpanded: false,
+                                  leading: const Icon(Icons.notifications, size: 30),
+                                  title: const Text('Notifikasi'),
+                                  subtitle: const Text('Pembaruan, Aktivitas, Pesan', style: TextStyle(color: Colors.grey)),
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: <Widget>[
+                                                const Text(
+                                                  "Pembaruan",
+                                                ),
+                                                FlutterSwitch(
+                                                  showOnOff: true,
+                                                  height: 30,
+                                                  activeTextFontWeight: FontWeight.w400,
+                                                  inactiveTextFontWeight: FontWeight.w400,
+                                                  activeTextColor: Colors.black,
+                                                  inactiveTextColor: Colors.blue[50],
+                                                  value: pembaruan,
+                                                  onToggle: (val) {
+                                                    setState(() {
+                                                      pembaruan = val;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(bottom: 5.0),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              const Text(
-                                                "Aktivitas",
-                                              ),
-                                              FlutterSwitch(
-                                                showOnOff: true,
-                                                height: 30,
-                                                activeTextFontWeight: FontWeight.w400,
-                                                inactiveTextFontWeight: FontWeight.w400,
-                                                activeTextColor: Colors.black,
-                                                inactiveTextColor: Colors.blue[50],
-                                                value: aktivitas,
-                                                onToggle: (val) {
-                                                  setState(() {
-                                                    aktivitas = val;
-                                                  });
-                                                },
-                                              ),
-                                            ],
+                                          Container(
+                                            padding: const EdgeInsets.only(bottom: 5.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: <Widget>[
+                                                const Text(
+                                                  "Aktivitas",
+                                                ),
+                                                FlutterSwitch(
+                                                  showOnOff: true,
+                                                  height: 30,
+                                                  activeTextFontWeight: FontWeight.w400,
+                                                  inactiveTextFontWeight: FontWeight.w400,
+                                                  activeTextColor: Colors.black,
+                                                  inactiveTextColor: Colors.blue[50],
+                                                  value: aktivitas,
+                                                  onToggle: (val) {
+                                                    setState(() {
+                                                      aktivitas = val;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.only(bottom: 5.0),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              const Text(
-                                                "Pesan",
-                                              ),
-                                              FlutterSwitch(
-                                                showOnOff: true,
-                                                height: 30,
-                                                activeTextFontWeight: FontWeight.w400,
-                                                inactiveTextFontWeight: FontWeight.w400,
-                                                activeTextColor: Colors.black,
-                                                inactiveTextColor: Colors.blue[50],
-                                                value: pesan,
-                                                onToggle: (val) {
-                                                  setState(() {
-                                                    pesan = val;
-                                                  });
-                                                },
-                                              ),
-                                            ],
+                                          Container(
+                                            padding: const EdgeInsets.only(bottom: 5.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: <Widget>[
+                                                const Text(
+                                                  "Pesan",
+                                                ),
+                                                FlutterSwitch(
+                                                  showOnOff: true,
+                                                  height: 30,
+                                                  activeTextFontWeight: FontWeight.w400,
+                                                  inactiveTextFontWeight: FontWeight.w400,
+                                                  activeTextColor: Colors.black,
+                                                  inactiveTextColor: Colors.blue[50],
+                                                  value: pesan,
+                                                  onToggle: (val) {
+                                                    setState(() {
+                                                      pesan = val;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      )
                                     )
-                                  )
-                                ],
-                              ),
-                              shape: RoundedRectangleBorder(
-                                side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: Card(
-                              child: ExpansionTile(
-                                initiallyExpanded: false,
-                                leading: const Icon(Icons.help_center, size: 30),
-                                title: const Text('Pusat Bantuan'),
-                                subtitle: const Text('Cara Penggunaan, Tentang, Kritik & Saran', style: TextStyle(color: Colors.grey)),
-                                children: [
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height*0.3,
-                                    
-                                  )
-                                ],
-                              ),
-                              shape: RoundedRectangleBorder(
-                                side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
-                                borderRadius: BorderRadius.circular(6),
+                                  ],
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: Card(
-                              child: ExpansionTile(
-                                initiallyExpanded: false,
-                                leading: const Icon(Icons.rule, size: 30),
-                                title: const Text('Kebijakan & Privasi'),
-                                subtitle: const Text('Ketentuan, Layanan, Kebijakan', style: TextStyle(color: Colors.grey)),
-                                children: [
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height*0.3,
-                                    
-                                  )
-                                ],
-                              ),
-                              shape: RoundedRectangleBorder(
-                                side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
-                                borderRadius: BorderRadius.circular(6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: Card(
+                                child: ExpansionTile(
+                                  initiallyExpanded: false,
+                                  leading: const Icon(Icons.help_center, size: 30),
+                                  title: const Text('Pusat Bantuan'),
+                                  subtitle: const Text('Cara Penggunaan, Tentang, Kritik & Saran', style: TextStyle(color: Colors.grey)),
+                                  children: [
+                                    SizedBox(
+                                      height: MediaQuery.of(context).size.height*0.3,
+                                      
+                                    )
+                                  ],
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
                               ),
                             ),
-                          ),
-                        ]
-                      ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: Card(
+                                child: ExpansionTile(
+                                  initiallyExpanded: false,
+                                  leading: const Icon(Icons.rule, size: 30),
+                                  title: const Text('Kebijakan & Privasi'),
+                                  subtitle: const Text('Ketentuan, Layanan, Kebijakan', style: TextStyle(color: Colors.grey)),
+                                  children: [
+                                    SizedBox(
+                                      height: MediaQuery.of(context).size.height*0.3,
+                                      
+                                    )
+                                  ],
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                            ),
+                          ]
+                        ),
+                      )
                     ),
                     Align(
                       alignment: Alignment.centerLeft,

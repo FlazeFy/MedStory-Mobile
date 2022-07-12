@@ -529,6 +529,7 @@ class _GetBalasanById extends State<GetBalasanById> {
         }
 
         return ListView(
+          padding: const EdgeInsets.only(top: 0),
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             if(data['pengirim'] == passUsername){

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
-import 'package:medstory/landing.dart';
 import 'package:medstory/main.dart';
+import 'package:medstory/widgets/custombg.dart';
 
 class EditAccPage extends StatefulWidget {
   const EditAccPage({Key key, this.passUsername, this.passDocumentId}) : super(key: key);

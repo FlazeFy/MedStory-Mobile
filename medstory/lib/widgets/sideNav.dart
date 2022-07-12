@@ -12,12 +12,11 @@ class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          Flexible(child: 
-            SizedBox(
-              height: MediaQuery.of(context).size.height*0.25,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: <Widget>[
+            Flexible(
               child: DrawerHeader(
                 child: Column(
                   children: [
@@ -25,7 +24,7 @@ class NavDrawer extends StatelessWidget {
                       'Kebutuhan Kalori',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
-                    const SizedBox(height:10),
+                    const SizedBox(height:5),
                     Row(
                       children: [
                         const GetBeratTinggi(),
@@ -35,7 +34,6 @@ class NavDrawer extends StatelessWidget {
                               'Hari Ini',
                               style: TextStyle(color: Colors.white, fontSize: 14),
                             ),
-                            const SizedBox(height: 10),
                             //Kalori grafik
                             SizedBox(
                               height: MediaQuery.of(context).size.height*0.08,
@@ -52,148 +50,146 @@ class NavDrawer extends StatelessWidget {
                   color: Color(0xFF4183D7),
                 ),
               ),
+              
             ),
-          ),
-          Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    height: 46,
-                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
-                        side: const BorderSide(width: 2.0, color: Color(0xFF22A7F0))
-                      ),
-                      onPressed: () => showDialog<String>(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: Row(
-                            children: const [
-                              Text(                     
-                                'Asupan Hari Ini',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                )
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      height: 46,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white,
+                          side: const BorderSide(width: 2.0, color: Color(0xFF22A7F0))
+                        ),
+                        onPressed: () => showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: Row(
+                              children: const [
+                                Text(                     
+                                  'Asupan Hari Ini',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  )
+                                ),
+                                SizedBox(width:5),
+                                DropDown()
+                              ],
+                            ),
+                            content: Container(
+                              transform: Matrix4.translationValues(0.0, -25.0, 0.0),
+                              height: MediaQuery.of(context).size.height*0.55,
+                              child: Column(
+                                children: [
+                                  AutocompleteBasicExample(),
+                                  SizedBox(   
+                                    height: MediaQuery.of(context).size.height*0.48,
+                                    width: MediaQuery.of(context).size.width*0.9,
+                                    child: const Flexible(
+                                      child: GetAllAsupan()
+                                    ),
+                                  )
+                                ]               
+                              )
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'Cancel'),
+                                child: const Text('Batal', style: TextStyle(color: Color(0xFFd9534f))),
                               ),
-                              SizedBox(width:5),
-                              DropDown()
+                              ElevatedButton(
+                                onPressed: () {
+                              
+                                },
+                                child: const Text('Simpan'),
+                              ),
                             ],
                           ),
-                          content: Container(
-                            transform: Matrix4.translationValues(0.0, -25.0, 0.0),
-                            height: MediaQuery.of(context).size.height*0.55,
-                            child: Column(
-                              children: [
-                                AutocompleteBasicExample(),
-                                SizedBox(   
-                                  height: MediaQuery.of(context).size.height*0.48,
-                                  width: MediaQuery.of(context).size.width*0.9,
-                                  child: const Flexible(
-                                    child: GetAllAsupan()
-                                  ),
-                                )
-                              ]               
-                            )
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Batal', style: TextStyle(color: Color(0xFFd9534f))),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                            
-                              },
-                              child: const Text('Simpan'),
-                            ),
-                          ],
                         ),
+                        icon: const Icon(Icons.add, size: 18, color: Color(0xFF22A7F0)),
+                        label: const Text("Tambah Asupan", style: TextStyle(color: Color(0xFF22A7F0), fontSize: 15)),
                       ),
-                      icon: const Icon(Icons.add, size: 18, color: Color(0xFF22A7F0)),
-                      label: const Text("Tambah Asupan", style: TextStyle(color: Color(0xFF22A7F0), fontSize: 15)),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                    child: IconButton(
-                      icon: const Icon(Icons.calendar_month),
-                      color: Colors.white,
-                      onPressed: () {},
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: IconButton(
+                        icon: const Icon(Icons.calendar_month),
+                        color: Colors.white,
+                        onPressed: () {},
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.blue,
+                      ) 
                     ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      color: Colors.blue,
-                    ) 
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                    child:IconButton(
-                      icon: const Icon(Icons.refresh),
-                      color: Colors.white,
-                      onPressed: () {
-                       //
-                      },
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child:IconButton(
+                        icon: const Icon(Icons.refresh),
+                        color: Colors.white,
+                        onPressed: () {
+                        //
+                        },
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.green,
+                      ) 
                     ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      color: Colors.green,
-                    ) 
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    const SizedBox(width: 5),
+                    const Text(
+                      'Total: ',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width*0.25),
+                    const Text(
+                      'Sisa: ',
+                      style: TextStyle(fontSize: 14),
+                    )
+                  ],
+                ),
+                Row(children: <Widget>[
+                  Expanded(
+                    child: Container(
+                        margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                        child: const Divider(
+                          color: Colors.grey,
+                          thickness: 1,
+                          height: 25,
+                        )),
                   ),
-                ],
-              ),
-              const SizedBox(height: 5),
-              Row(
-                children: [
-                  const SizedBox(width: 5),
                   const Text(
-                    'Total: ',
-                    style: TextStyle(fontSize: 14),
+                    "Hari ini", 
+                    style: TextStyle(color: Colors.grey, fontSize: 14)
                   ),
-                  SizedBox(width: MediaQuery.of(context).size.width*0.25),
-                  const Text(
-                    'Sisa: ',
-                    style: TextStyle(fontSize: 14),
-                  )
-                ],
-              ),
-              Row(children: <Widget>[
-                Expanded(
-                  child: Container(
-                      margin: const EdgeInsets.only(left: 10.0, right: 20.0),
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 20.0, right: 10.0),
                       child: const Divider(
                         color: Colors.grey,
                         thickness: 1,
                         height: 25,
-                      )),
-                ),
-                const Text(
-                  "Hari ini", 
-                  style: TextStyle(color: Colors.grey, fontSize: 14)
-                ),
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 20.0, right: 10.0),
-                    child: const Divider(
-                      color: Colors.grey,
-                      thickness: 1,
-                      height: 25,
-                    )
+                      )
+                    ),
                   ),
-                ),
-              ]),
-            ],
-          ),
-          Flexible(
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height*0.6,
+                ]),
+              ],
+            ),
+            Expanded(
               child:GetAsupanDayById(passDocumentId: passIdUserNav)
-            )
-          )    
-        ],
-      ),
+            )    
+          ],
+        ),
+      )
     );
   }
 }
@@ -221,27 +217,24 @@ class _GetKebutuhanKaloriState extends State<GetKebutuhanKalori> {
           return const Text("Loading");
         }
 
-        return Flexible(
-          child: Column(
-            children: snapshot.data.docs.map((DocumentSnapshot document) {
-            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-              //Get jadwal kalori by date.
-              var dt = DateTime.fromMicrosecondsSinceEpoch(data['date'].microsecondsSinceEpoch).toString();
-              var date = DateTime.parse(dt);
-              var formattedDate = "${date.day}-${date.month}-${date.year}";
+        return Column(
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            //Get jadwal kalori by date.
+            var dt = DateTime.fromMicrosecondsSinceEpoch(data['date'].microsecondsSinceEpoch).toString();
+            var date = DateTime.parse(dt);
+            var formattedDate = "${date.day}-${date.month}-${date.year}";
 
-              //Get today date.
-              var now = DateTime.now().toString();
-              var now2 = DateTime.parse(now);
-              var formattedNow = "${now2.day}-${now2.month}-${now2.year}";
-              
-              if((formattedDate == formattedNow)&&(data['id_user'] == passIdUser)){
-                return Text("${data['kalori'].toString()} Cal", style: const TextStyle(color: Colors.white)); 
-              } 
-              return const SizedBox(height: 0);
-            }).toList(),
-          ), 
-
+            //Get today date.
+            var now = DateTime.now().toString();
+            var now2 = DateTime.parse(now);
+            var formattedNow = "${now2.day}-${now2.month}-${now2.year}";
+            
+            if((formattedDate == formattedNow)&&(data['id_user'] == passIdUser)){
+              return Text("${data['kalori'].toString()} Cal", style: const TextStyle(color: Colors.white)); 
+            } 
+            return const SizedBox(height: 0);
+          }).toList(),
         );
       },
     );
@@ -332,27 +325,26 @@ class _GetAsupanDayById extends State<GetAsupanDayById> {
           );
         }
 
-        return Flexible(
-          child: ListView(
-            children: snapshot.data.docs.map((DocumentSnapshot document) {
-            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-              //Get jadwal kalori by date.
-              var dt = DateTime.fromMicrosecondsSinceEpoch(data['date'].microsecondsSinceEpoch).toString();
-              var date = DateTime.parse(dt);
-              var formattedDate = "${date.day}-${date.month}-${date.year}";
+        return ListView(
+          padding: const EdgeInsets.only(top: 0),
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            //Get jadwal kalori by date.
+            var dt = DateTime.fromMicrosecondsSinceEpoch(data['date'].microsecondsSinceEpoch).toString();
+            var date = DateTime.parse(dt);
+            var formattedDate = "${date.day}-${date.month}-${date.year}";
 
-              //Get today date.
-              var now = DateTime.now().toString();
-              var now2 = DateTime.parse(now);
-              var formattedNow = "${now2.day}-${now2.month}-${now2.year}";
-              
-              if((formattedDate == formattedNow)&&(data['id_user'] == passIdUser)){
-                return GetAsupanDetailById(passIdAsupan: data['id_asupan']);
-              } else {
-                return const SizedBox();
-              }
-            }).toList(),
-          )
+            //Get today date.
+            var now = DateTime.now().toString();
+            var now2 = DateTime.parse(now);
+            var formattedNow = "${now2.day}-${now2.month}-${now2.year}";
+            
+            if((formattedDate == formattedNow)&&(data['id_user'] == passIdUser)){
+              return GetAsupanDetailById(passIdAsupan: data['id_asupan']);
+            } else {
+              return const SizedBox();
+            }
+          }).toList(),
         );
       },
     );
