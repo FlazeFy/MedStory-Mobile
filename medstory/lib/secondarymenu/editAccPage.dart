@@ -2,7 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:medstory/main.dart';
+import 'package:medstory/mainMenu/profilePage.dart';
 import 'package:medstory/widgets/custombg.dart';
+
+int editTinggi = 0;
+int editBerat = 0;
 
 class EditAccPage extends StatefulWidget {
   const EditAccPage({Key key, this.passUsername, this.passDocumentId}) : super(key: key);
@@ -27,6 +31,8 @@ class _EditAccPageState extends State<EditAccPage> {
   var pekerjaan = "";
   var alamat = "";
   var password = "";
+  int tinggiEdit = 0;
+  int beratEdit = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +41,7 @@ class _EditAccPageState extends State<EditAccPage> {
     Future<void> updatePengguna() {
       return users
         .doc(widget.passDocumentId)
-        .update({'namaLengkap': namaLengkap, 'email': email, 'ponsel': ponsel, 'pekerjaan': pekerjaan, 'alamat': alamat, 'password': password})
+        .update({'namaLengkap': namaLengkap, 'email': email, 'ponsel': ponsel, 'pekerjaan': pekerjaan, 'alamat': alamat, 'password': password, 'tinggiBadan': tinggiEdit, 'beratBadan': beratEdit})
         .then((value) => print("Profil berhasil diupdate"))
         .catchError((error) => print("Failed to update user: $error"));
     }
@@ -163,6 +169,7 @@ class _EditAccPageState extends State<EditAccPage> {
                       child: SizedBox(
                         height: MediaQuery.of(context).size.height,
                         child: ListView(
+                          padding: const EdgeInsets.only(top: 0),
                           children:[ 
                             Align(
                               alignment: Alignment.centerLeft,
@@ -272,6 +279,7 @@ class _EditAccPageState extends State<EditAccPage> {
                                     textStyle: const TextStyle(
                                       fontSize: 16.0,
                                     ),
+                                    onChanged: (value) => editTinggi = value.toInt(),
                                     decoration: const InputDecoration(labelText: 'Tinggi Badan (Cm)'),
                                   ),
                                 ),
@@ -286,6 +294,7 @@ class _EditAccPageState extends State<EditAccPage> {
                                     textStyle: const TextStyle(
                                       fontSize: 16.0,
                                     ),
+                                    onChanged: (value) => editBerat = value.toInt(),
                                     decoration: const InputDecoration(labelText: 'Berat Badan (Kg)'),
                                   ),
                                 ),
@@ -338,11 +347,18 @@ class _EditAccPageState extends State<EditAccPage> {
                                   } else {
                                     password = _passwordCtrl.text;
                                   }
+                                  if(editTinggi == 0){
+                                    tinggiEdit = data['tinggiBadan'];
+                                  } else {
+                                    tinggiEdit = editTinggi;
+                                  }
+                                  if(editBerat == 0){
+                                    beratEdit = data['beratBadan'];
+                                  } else {
+                                    beratEdit = editBerat;
+                                  }
                                   updatePengguna();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const NavBar()),
-                                  );
+                                  Navigator.pop(context);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.green, // Background color

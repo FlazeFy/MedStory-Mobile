@@ -656,3 +656,42 @@ class _GetBalasanById extends State<GetBalasanById> {
     );
   }
 }
+
+//Dropdown kategori untuk buat pertanyaan
+class DropDown2 extends StatefulWidget {
+  const DropDown2({Key key}) : super(key: key);
+
+  @override
+  State<DropDown2> createState() => _DropDown2State();
+}
+
+class _DropDown2State extends State<DropDown2> {
+  String dropdownValue = 'Penyakit Dalam';
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_drop_down),
+      elevation: 16,
+      style: const TextStyle(color: Color(0xFF212121)),
+      underline: Container(
+        height: 2,
+        color: const Color(0xFF4183D7),
+      ),
+      onChanged: (String newValue) {
+        setState(() {
+          dropdownValue = newValue;
+          passKategori = dropdownValue;
+        });
+      },
+      items: <String>['Penyakit Dalam', 'Penyakit Menular', 'Vaksin & Imunisasi', 'Kulit & Kelamin', 'Otot & Saraf', 'THT & Mata', 'Penyakit Lansia', 'Obat-Obatan', 'Gaya Hidup Sehat', 'Kandungan & Bedah', 'Gigi', 'Anak']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+}

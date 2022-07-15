@@ -347,7 +347,7 @@ class _GetDokterState extends State<GetDokter> {
                         'assets/images/dokter/${data['namaDokter']}.jpg', width: MediaQuery.of(context).size.width),
                       ),
                       Container(
-                        padding: const EdgeInsets.all(6.0),
+                        padding: const EdgeInsets.all(7.0),
                         child: Column(
                           children: [
                             Align(
@@ -363,7 +363,6 @@ class _GetDokterState extends State<GetDokter> {
                                 maxLines: 1,
                               ),
                             ),
-                            const SizedBox(height: 5),
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(                     
