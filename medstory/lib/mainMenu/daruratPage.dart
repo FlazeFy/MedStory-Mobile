@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:medstory/main.dart';
 import 'package:medstory/mainMenu/faskes&praktek/tabDokter.dart';
 import 'package:medstory/mainMenu/faskes&praktek/tabFaskes.dart';
-import 'package:medstory/secondarymenu/mapsPage.dart';
 import 'package:medstory/widgets/sideNav.dart';
 
 class DaruratPage extends StatefulWidget {

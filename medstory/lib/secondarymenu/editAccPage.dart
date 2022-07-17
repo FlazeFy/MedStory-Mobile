@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
-import 'package:medstory/main.dart';
-import 'package:medstory/mainMenu/profilePage.dart';
 import 'package:medstory/widgets/custombg.dart';
 
 int editTinggi = 0;
