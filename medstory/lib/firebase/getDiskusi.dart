@@ -29,6 +29,50 @@ class GetDiskusi extends StatelessWidget {
           padding: const EdgeInsets.all(3.0),
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            Widget getImage(){
+              if(data['type'] == "text"){
+                return Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                  child: Text("${data['pertanyaan']}", 
+                  style: const TextStyle(
+                    color: Color(0xFF6B6B6B),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 13,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  )
+                );
+              } else if (data['type'] == "image"){
+                return Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                  child: Column(
+                    children:[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(data['url']),
+                      ),
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: const EdgeInsets.only(top: 5),
+                        child: Text("${data['pertanyaan']}", 
+                         style: const TextStyle(
+                          color: Color(0xFF6B6B6B),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
+                        )
+                      )
+                    ]
+                  )
+                );
+              }
+            }
+            
             return Container(
               transform: Matrix4.translationValues(0.0, -5.0, 0.0),
               padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -68,31 +112,16 @@ class GetDiskusi extends StatelessWidget {
                               ]
                             ),
                           ),
-                          ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.asset(
-                            'assets/images/verified.png', width: 30),
-                          ),
+                          // ClipRRect(
+                          // borderRadius: BorderRadius.circular(20),
+                          // child: Image.asset(
+                          //   'assets/images/verified.png', width: 30),
+                          // ),
                         ]
                       )    
                     )                   
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Text(                     
-                        data['pertanyaan'],
-                        style: const TextStyle(
-                          color: Color(0xFF6B6B6B),
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 3,
-                      ),   
-                    ),
-                  ),
+                  getImage(),
                   Row(
                     children: [            
                       TextButton.icon(

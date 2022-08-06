@@ -32,9 +32,9 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
       
       // Create a Reference to the file
       Reference ref = FirebaseStorage.instance
-          .ref()
-          .child('diskusi')
-          .child(seed);
+        .ref()
+        .child('diskusi')
+        .child(seed);
 
       final metadata = SettableMetadata(
         //contentType: 'image', 
