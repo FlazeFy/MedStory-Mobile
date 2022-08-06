@@ -49,6 +49,49 @@ class _GetBalasanById extends State<GetBalasanById> {
                 return const SizedBox();
               }
             }
+
+            Widget getImage(){
+              if(data['type'] == "text"){
+                return Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                  child: Text("${data['isi']}", 
+                  style: const TextStyle(
+                    color: Color(0xFF212121),
+                    fontWeight: FontWeight.w400,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  )
+                );
+              } else if (data['type'] == "image"){
+                return Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
+                  child: Column(
+                    children:[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(data['url']),
+                      ),
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: const EdgeInsets.only(top: 5),
+                        child: Text("${data['isi']}", 
+                        style: const TextStyle(
+                          color: Color(0xFF212121),
+                          fontWeight: FontWeight.w400,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
+                        )
+                      )
+                    ]
+                  )
+                );
+              }
+            }
+
             if(widget.passDocumentId == data['id_diskusi']){
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -97,22 +140,9 @@ class _GetBalasanById extends State<GetBalasanById> {
                         )    
                       )                   
                     ),
+                    getImage(),
                     Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(                     
-                          data['isi'],
-                          style: const TextStyle(
-                            color: Color(0xFF6B6B6B),
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13,
-                          )
-                        ),   
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomLeft,
+                      alignment: Alignment.bottomRight,
                       child: TextButton.icon(
                         onPressed: () {
                             // Respond to button press

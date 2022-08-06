@@ -36,9 +36,8 @@ class GetDiskusi extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
                   child: Text("${data['pertanyaan']}", 
                   style: const TextStyle(
-                    color: Color(0xFF6B6B6B),
+                    color: Color(0xFF212121),
                     fontWeight: FontWeight.w400,
-                    fontSize: 13,
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 3,
@@ -58,10 +57,9 @@ class GetDiskusi extends StatelessWidget {
                         alignment: Alignment.topLeft,
                         margin: const EdgeInsets.only(top: 5),
                         child: Text("${data['pertanyaan']}", 
-                         style: const TextStyle(
-                          color: Color(0xFF6B6B6B),
+                        style: const TextStyle(
+                          color: Color(0xFF212121),
                           fontWeight: FontWeight.w400,
-                          fontSize: 13,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 3,

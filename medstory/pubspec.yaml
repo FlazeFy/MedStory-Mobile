@@ -41,6 +41,7 @@ dependencies:
   im_stepper: 0.1.2+10
   pinput: ^2.2.11
   syncfusion_flutter_charts: ^20.2.38
+  full_screen_menu: ^1.0.0
   
   #Google Maps
   dio: ^4.0.0

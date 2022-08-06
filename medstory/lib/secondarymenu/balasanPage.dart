@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:full_screen_menu/full_screen_menu.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:medstory/firebase/getBalasan.dart';
 import 'package:medstory/firebase/getDiskusionBalasan.dart';
-import 'package:medstory/firebase/getUsername.dart';
 import 'package:medstory/main.dart';
-import 'package:medstory/secondaryMenu/myDiskusiPage.dart';
 import 'package:medstory/widgets/custombg.dart';
+import 'dart:math';
 
 class DiscussionPage extends StatefulWidget {
   const DiscussionPage({Key key, this.documentId}) : super(key: key);
@@ -20,27 +21,72 @@ class DiscussionPage extends StatefulWidget {
 class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderStateMixin{
   _DiscussionPage(documentId);
   final _isiCtrl = TextEditingController();
-  CollectionReference diskusi = FirebaseFirestore.instance.collection('diskusi');
   CollectionReference balasan = FirebaseFirestore.instance.collection('balasan');
-  Future<void> replyDiscussion() {
+  XFile file;
+  String seed = "null";
+  
+  Future<void> replyDiscussion(XFile imageFile, String seed) async {
+    String type;
+
+    if(imageFile != null){
+      seed = getRandomString(20);
+      
+      // Create a Reference to the file
+      Reference ref = FirebaseStorage.instance
+        .ref()
+        .child('balasan')
+        .child(seed);
+
+      final metadata = SettableMetadata(
+        //contentType: 'image', 
+        customMetadata: {'picked-file-path': imageFile.path},
+      );
+
+      //return await ref.putData(await imageFile.readAsBytes(), metadata);
+      await ref.putData(await imageFile.readAsBytes(), metadata);
+      seed = await ref.getDownloadURL();
+      type = 'image';
+    } else {
+      type = 'text';
+    }
+
     return balasan
       .add({
         'id_diskusi': widget.documentId, 
         'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
-        'imageURL': 'null', //initial user for now
         'isi': _isiCtrl.text,
-        'pengirim': passIdUser,
+        'id_user': passIdUser,
         'status': 'null',
+        'url': seed,
+        'type': type,
       })
       .then((value) => print("Balasan terkirim"))
       .catchError((error) => print("Failed to add balasan: $error"));
   }
 
+  //Create random string.
+  var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random _rnd = Random();
+
+  String getRandomString(int length) => 
+    String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(
+        _rnd.nextInt(_chars.length)
+      )
+    )
+  );
+
+  //Get image picker
+  Future<XFile> getImage() async {
+    return await ImagePicker().pickImage(source: ImageSource.gallery);
+  }
+
   @override
   Widget build(BuildContext context) {
     double fullHeight = MediaQuery.of(context).size.height;
+    double fullWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      //Body.
       body: CustomPaint(
         painter : CurvedPainter3(),
         child : SizedBox(
@@ -105,74 +151,98 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                   )
                 ),
               ),
-              Align(
+              
+              Container(
                 alignment: Alignment.bottomCenter,
-                child: Container(
-                  padding: const EdgeInsets.only(left: 10,bottom: 10,top: 10),
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
-                  height: 60,
-                  width: double.infinity,
-                  child: Row(
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: (){
-                        },
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                            color: Colors.lightBlue,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: const Icon(Icons.image, color: Colors.white, size: 20, ),
+                padding: const EdgeInsets.only(left: 10,bottom: 10,top: 10),
+                margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
+                height: 60,
+                width: double.infinity,
+                child: Row(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: (){
+                        //Bug : not close after back button is pressed
+                        FullScreenMenu.show(
+                          context,
+                          backgroundColor: Colors.white,
+                          items: [
+                            FSMenuItem(
+                              icon: Icon(Icons.mic, color: Colors.white),
+                              text: Text('Audio', style: TextStyle(color: Colors.blue)),
+                              gradient: blueGradient,
+                            ),
+                            FSMenuItem(
+                              icon: Icon(Icons.file_copy, color: Colors.white),
+                              text: Text('Document', style: TextStyle(color: Colors.blue)),
+                              gradient: purpleGradient,
+                            ),
+                            FSMenuItem(
+                              icon: Icon(Icons.image, color: Colors.white),
+                              text: Text('Image', style: TextStyle(color: Colors.blue)),
+                              gradient: redGradient,
+                              onTap: () async {
+                                file = await getImage();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.lightBlue,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: const Icon(Icons.add, color: Colors.white, size: 20, ),
+                      ),
+                    ),
+                    Spacer(),
+                    Container(
+                      width: fullWidth*0.7,
+                      child: TextField(
+                        controller: _isiCtrl,
+                        decoration: const InputDecoration(
+                          hintText: "Ketik balasan Anda...",
+                          hintStyle: TextStyle(color: Color(0xFF6B6B6B)),
+                          border: InputBorder.none
                         ),
                       ),
-                      const SizedBox(width: 15,),
-                      Expanded(
-                        child: TextField(
-                          controller: _isiCtrl,
-                          decoration: const InputDecoration(
-                            hintText: "Ketik balasan Anda...",
-                            hintStyle: TextStyle(color: Color(0xFF6B6B6B)),
-                            border: InputBorder.none
-                          ),
-                        ),
+                    ),
+                    Spacer(),
+                    FloatingActionButton(
+                      onPressed: () async{
+                        replyDiscussion(file, seed);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => DiscussionPage(documentId: widget.documentId)),
+                        );
+                      },
+                      child: const Icon(Icons.send,color: Colors.white,size: 18,),
+                      backgroundColor: Colors.green,
+                      elevation: 0,
+                    ),
+                  ],
+                  
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.white, 
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      blurRadius: 10.0, // soften the shadow
+                      spreadRadius: 0.0, //extend the shadow
+                      offset: const Offset(
+                        5.0, // Move to right 10  horizontally
+                        5.0, // Move to bottom 10 Vertically
                       ),
-                      const SizedBox(width: 15,),
-                      FloatingActionButton(
-                        onPressed: () async{
-                          replyDiscussion();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => DiscussionPage(documentId: widget.documentId)),
-                          );
-                        },
-                        child: const Icon(Icons.send,color: Colors.white,size: 18,),
-                        backgroundColor: Colors.green,
-                        elevation: 0,
-                      ),
-                    ],
-                    
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.white, 
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        blurRadius: 10.0, // soften the shadow
-                        spreadRadius: 0.0, //extend the shadow
-                        offset: const Offset(
-                          5.0, // Move to right 10  horizontally
-                          5.0, // Move to bottom 10 Vertically
-                        ),
-                      )
-                    ],
-                  ),
+                    )
+                  ],
                 ),
               ),
             ], 
-
           )
         )
       )
