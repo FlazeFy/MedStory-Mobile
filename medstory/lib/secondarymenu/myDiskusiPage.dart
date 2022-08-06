@@ -290,7 +290,7 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                           ) 
                                         ),
                                         Container(
-                                          margin: EdgeInsets.symmetric(horizontal: 5),
+                                          margin: const EdgeInsets.symmetric(horizontal: 5),
                                           child: IconButton(
                                             icon: const Icon(Icons.image_search),
                                             color: Colors.white,
@@ -303,7 +303,7 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                             color: Colors.green,
                                           ) 
                                         ),
-                                        Spacer(),
+                                        const Spacer(),
                                         SizedBox(
                                           height: 45,
                                           child: ElevatedButton.icon(
@@ -494,7 +494,7 @@ class _GetMyDiskusiState extends State<GetMyDiskusi> {
                           icon: const Icon(Icons.arrow_drop_down, size: 14),
                           label: const Text("Lihat komentar (3)"),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         TextButton.icon(
                           onPressed: () {
                             //
@@ -535,7 +535,7 @@ class _GetMyDiskusiState extends State<GetMyDiskusi> {
                 ),
               );
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           }).toList(),
         );

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medstory/firebase/getUsername.dart';
+import 'package:medstory/firebase/getVoteButton.dart';
 
 class GetDiskusiOnBalasan extends StatefulWidget {
   @override
@@ -83,9 +84,8 @@ class _GetDiskusiOnBalasanState extends State<GetDiskusiOnBalasan> {
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Card(
                     child: Column(
-                    children: [
-                      Align(
-                        child: Container(
+                      children: [
+                        Container(
                           margin: const EdgeInsets.symmetric(vertical: 10.0),
                           child: Row(
                             children: [ 
@@ -119,32 +119,22 @@ class _GetDiskusiOnBalasanState extends State<GetDiskusiOnBalasan> {
                               ),
                             ]
                           )    
-                        )                   
-                      ),
-                      getImage(),
-                      Row(
-                        children: [            
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width*0.6,
-                          ),
-                          TextButton.icon(
-                            onPressed: () {
-                                // Respond to button press
-                            },
-                            icon: const Icon(Icons.arrow_upward, size: 14),
-                            label: Text(data['up'].toString()),
-                          ),
-                          TextButton.icon(
-                            onPressed: () {
-                                // Respond to button press
-                            },
-                            icon: const Icon(Icons.remove_red_eye, size: 14),
-                            label: Text(data['view'].toString()),
-                          ),
-                        ]
-                      ),       
-                    ]
-
+                        ),                
+                        getImage(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [            
+                            GetVoteButton(passDocumentId: document.id),
+                            TextButton.icon(
+                              onPressed: () {
+                                  // Respond to button press
+                              },
+                              icon: const Icon(Icons.remove_red_eye, size: 14),
+                              label: Text(data['view'].toString()),
+                            ),
+                          ]
+                        ),       
+                      ]
                     ),
                     shape: RoundedRectangleBorder(
                       side: const BorderSide(color: Color(0xFFe8e8e8), width: 1),

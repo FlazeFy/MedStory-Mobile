@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medstory/firebase/countUp.dart';
 import 'package:medstory/firebase/getUsername.dart';
+import 'package:medstory/firebase/getVoteButton.dart';
 import 'package:medstory/secondaryMenu/balasanPage.dart';
 
 class GetDiskusi extends StatelessWidget {
@@ -147,13 +149,7 @@ class GetDiskusi extends StatelessWidget {
                         label: const Text("Lihat komentar (3)"),
                       ),
                       Spacer(),
-                      TextButton.icon(
-                        onPressed: () {
-                          //
-                        },
-                        icon: const Icon(Icons.arrow_upward, size: 14),
-                        label: Text(data['up'].toString()),
-                      ),
+                      GetVoteButton(passDocumentId: document.id),
                       TextButton.icon(
                         onPressed: () {
                             // Respond to button press

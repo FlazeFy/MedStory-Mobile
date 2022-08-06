@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medstory/firebase/getUsername.dart';
+import 'package:medstory/firebase/getVoteButton.dart';
 import 'package:medstory/main.dart';
 
 class GetBalasanById extends StatefulWidget {
@@ -143,13 +144,7 @@ class _GetBalasanById extends State<GetBalasanById> {
                     getImage(),
                     Align(
                       alignment: Alignment.bottomRight,
-                      child: TextButton.icon(
-                        onPressed: () {
-                            // Respond to button press
-                        },
-                        icon: const Icon(Icons.arrow_upward, size: 14),
-                        label: const Text("2"),
-                      ),
+                      child: GetVoteButton(passDocumentId: document.id),
                     ),       
                   ]
 
