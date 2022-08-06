@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medstory/firebase/getProfileImage.dart';
 import 'package:medstory/firebase/getUsername.dart';
 import 'package:medstory/firebase/getVoteButton.dart';
 import 'package:medstory/main.dart';
@@ -108,8 +109,7 @@ class _GetBalasanById extends State<GetBalasanById> {
                               margin: const EdgeInsets.symmetric(horizontal: 5.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/User.jpg', width: 40),
+                                child: GetProfileImage(data['id_user']),
                                 ),
                             ),
                                   

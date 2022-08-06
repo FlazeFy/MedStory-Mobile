@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:medstory/firebase/countUp.dart';
+import 'package:medstory/firebase/getProfileImage.dart';
 import 'package:medstory/firebase/getUsername.dart';
 import 'package:medstory/firebase/getVoteButton.dart';
 import 'package:medstory/secondaryMenu/balasanPage.dart';
@@ -27,8 +27,8 @@ class GetDiskusi extends StatelessWidget {
           );
         }
 
-        return ListView(
-          padding: const EdgeInsets.all(3.0),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             Widget getImage(){
@@ -88,8 +88,7 @@ class GetDiskusi extends StatelessWidget {
                             margin: const EdgeInsets.symmetric(horizontal: 5.0),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(
-                                'assets/images/User.jpg', width: 40),
+                              child: GetProfileImage(data['id_user']),
                               ),
                           ),
                                   
@@ -148,7 +147,7 @@ class GetDiskusi extends StatelessWidget {
                         icon: const Icon(Icons.arrow_drop_down, size: 14),
                         label: const Text("Lihat komentar (3)"),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       GetVoteButton(passDocumentId: document.id),
                       TextButton.icon(
                         onPressed: () {

@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:medstory/widgets/custombg.dart';
+import 'dart:math';
 
 int editTinggi = 0;
 int editBerat = 0;
@@ -32,18 +35,144 @@ class _EditAccPageState extends State<EditAccPage> {
   int tinggiEdit = 0;
   int beratEdit = 0;
 
+  CollectionReference users = FirebaseFirestore.instance.collection('pengguna');
+  XFile file;
+  String seed = "null";
+
+  Future<void> updatePengguna() async {
+    return users
+      .doc(widget.passDocumentId)
+      .update({
+        'namaLengkap': namaLengkap, 
+        'email': email, 
+        'ponsel': ponsel, 
+        'pekerjaan': pekerjaan, 
+        'alamat': alamat, 
+        'password': password, 
+        'tinggiBadan': tinggiEdit, 
+        'beratBadan': beratEdit
+      })
+      .then((value) => print("Profil berhasil diupdate"))
+      .catchError((error) => print("Failed to update user: $error"));
+  }
+
+  Future<void> updateImage(XFile imageFile, String seed, String oldUrl) async {
+    if(imageFile != null){
+      seed = getRandomString(20);
+      
+      // Create a Reference to the file
+      Reference ref = FirebaseStorage.instance
+        .ref()
+        .child('pengguna')
+        .child(seed);
+
+      final metadata = SettableMetadata(
+        //contentType: 'image', 
+        customMetadata: {'picked-file-path': imageFile.path},
+      );
+
+      //return await ref.putData(await imageFile.readAsBytes(), metadata);
+      await ref.putData(await imageFile.readAsBytes(), metadata);
+      seed = await ref.getDownloadURL();
+
+      //Split url into filename.
+      final url = oldUrl.split('%2F');
+      final location = url[1].split('?alt'); 
+      oldUrl = location[0];
+
+      // Call the user's CollectionReference to add a new user
+      await users
+        .doc(widget.passDocumentId)
+        .update({
+          'url': seed
+        })
+        .then((value) => 
+          showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Informasi', style: TextStyle(fontWeight: FontWeight.bold)),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      ClipRRect(
+                        child: Image.asset(
+                          'assets/icon/Success.png', width: 35),
+                      ),
+                      const Text('Foto Profil berhasil diubah'),
+                      const Text('Perubahan memakan waktu berapa saat'),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Oke'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            }
+          ),
+        )
+        .catchError((error) => print("Failed to add diskusi: $error"));
+
+      //Delete old image.
+      Reference desertRef = FirebaseStorage.instance.ref().child('pengguna').child(oldUrl);
+      await desertRef.delete();
+    } else {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Informasi', style: TextStyle(fontWeight: FontWeight.bold)),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  ClipRRect(
+                    child: Image.asset(
+                      'assets/icon/Failed.png', width: 35),
+                  ),
+                  const Text('Anda belum memilih foto profil'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Oke'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+      );
+    }
+  }
+
+  //Create random string.
+  var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random _rnd = Random();
+
+  String getRandomString(int length) => 
+    String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(
+        _rnd.nextInt(_chars.length)
+      )
+    )
+  );
+
+  //Get image picker
+  Future<XFile> getImage() async {
+    return await ImagePicker().pickImage(source: ImageSource.gallery);
+  }
+
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('pengguna');
-
-    Future<void> updatePengguna() {
-      return users
-        .doc(widget.passDocumentId)
-        .update({'namaLengkap': namaLengkap, 'email': email, 'ponsel': ponsel, 'pekerjaan': pekerjaan, 'alamat': alamat, 'password': password, 'tinggiBadan': tinggiEdit, 'beratBadan': beratEdit})
-        .then((value) => print("Profil berhasil diupdate"))
-        .catchError((error) => print("Failed to update user: $error"));
-    }
-
     return FutureBuilder<DocumentSnapshot>(
       future: users.doc(widget.passDocumentId).get(),
       builder:
@@ -109,8 +238,7 @@ class _EditAccPageState extends State<EditAccPage> {
                               alignment: Alignment.topRight,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
-                                child: Image.asset(
-                                  'assets/images/User.jpg', width: 180),
+                                child: Image.network(data['url'], width: 180),
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -127,16 +255,22 @@ class _EditAccPageState extends State<EditAccPage> {
                                   )
                                 ],
                               ),
-                            ),
+                            ),  
                             Container(
                               transform: Matrix4.translationValues(120.0, MediaQuery.of(context).size.height*0.23, 0.0),                    
                               alignment: Alignment.bottomRight,
                               height: 60,
                               width: 60,
                               padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),                              
-                              child: ClipRRect(
-                                child: Image.asset(
-                                  'assets/icon/Add Image.png', width: 40),
+                              child: GestureDetector(
+                              onTap: () async {
+                                  file = await getImage();
+                                  updateImage(file, seed, data['url']);
+                                  setState(() {});
+                                },  
+                                child: ClipRRect(
+                                  child: Image.asset('assets/icon/Add Image.png', width: 40),
+                                ),
                               ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFF4183D7),
@@ -157,7 +291,8 @@ class _EditAccPageState extends State<EditAccPage> {
                                   )
                                 ],
                               ),
-                            ),
+                            )
+                            
                           ]
                         )
                       ]

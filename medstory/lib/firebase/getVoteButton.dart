@@ -5,7 +5,7 @@ import 'package:medstory/main.dart';
 
 class GetVoteButton extends StatefulWidget {
   @override
-  GetVoteButton({Key key, this.passDocumentId}) : super(key: key);
+  const GetVoteButton({Key key, this.passDocumentId}) : super(key: key);
   final String passDocumentId;
 
   @override
@@ -48,9 +48,6 @@ class _GetVoteButtonState extends State<GetVoteButton> {
           .catchError((error) => print("Failed to re-up question: $error"));
       });
     }
-
-    double fullWidth = MediaQuery.of(context).size.width;
-    double fullHeight = MediaQuery.of(context).size.height;
 
     final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('up').snapshots();
 

@@ -17,11 +17,13 @@ class DaruratPage extends StatefulWidget {
 class _DaruratPage extends State<DaruratPage> { 
   @override
   Widget build(BuildContext context) {
+    double fullHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       drawer: NavDrawer(),
       body: Container(
         height: MediaQuery.of(context).size.height,
-        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.08),
+        margin: EdgeInsets.only(top: fullHeight*0.05),
         child: Column(
           children: [
             Container(

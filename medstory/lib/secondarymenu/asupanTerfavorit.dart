@@ -180,7 +180,6 @@ class _CountTerpenuhiHarian extends State<CountTerpenuhiHarian> {
           );
         }
 
-        int asupanCal = 0;
         int i = 0;
         jadwalCount = snapshot.data.size;
         return Column(

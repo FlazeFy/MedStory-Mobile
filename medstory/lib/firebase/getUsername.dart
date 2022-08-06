@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:medstory/main.dart';
 
 class GetUsername extends StatefulWidget {
   @override
@@ -29,13 +30,21 @@ class _GetUsernameState extends State<GetUsername> {
         return Column(
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            getname(){
+              if(document.id == passIdUser){
+                return "You";
+              } else {
+                return data['namaPengguna'];
+              }
+            }
+
             if(document.id == widget.passDocumentId){
               return Align(
                 alignment: Alignment.centerLeft,
                 child: RichText(
                   text: TextSpan(                     
-                    text: data['namaPengguna'],
-                    style: TextStyle(
+                    text: getname(),
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w600,
                       fontSize: 16,

@@ -110,7 +110,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => NavBar()),
+                        MaterialPageRoute(builder: (context) => const NavBar()),
                       );
                     },
                   )
@@ -122,7 +122,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                   padding: const EdgeInsets.all(5),
                   height: fullHeight*0.8,
                   child: ListView(
-                    padding: EdgeInsets.all(0),
+                    padding: const EdgeInsets.all(0),
                     children:[
                       GetDiskusiOnBalasan(passDocumentId: widget.documentId),
                       Align(
@@ -168,18 +168,18 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                           backgroundColor: Colors.white,
                           items: [
                             FSMenuItem(
-                              icon: Icon(Icons.mic, color: Colors.white),
-                              text: Text('Audio', style: TextStyle(color: Colors.blue)),
+                              icon: const Icon(Icons.mic, color: Colors.white),
+                              text: const Text('Audio', style: TextStyle(color: Colors.blue)),
                               gradient: blueGradient,
                             ),
                             FSMenuItem(
-                              icon: Icon(Icons.file_copy, color: Colors.white),
-                              text: Text('Document', style: TextStyle(color: Colors.blue)),
+                              icon: const Icon(Icons.file_copy, color: Colors.white),
+                              text: const Text('Document', style: TextStyle(color: Colors.blue)),
                               gradient: purpleGradient,
                             ),
                             FSMenuItem(
-                              icon: Icon(Icons.image, color: Colors.white),
-                              text: Text('Image', style: TextStyle(color: Colors.blue)),
+                              icon: const Icon(Icons.image, color: Colors.white),
+                              text: const Text('Image', style: TextStyle(color: Colors.blue)),
                               gradient: redGradient,
                               onTap: () async {
                                 file = await getImage();
@@ -198,8 +198,8 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                         child: const Icon(Icons.add, color: Colors.white, size: 20, ),
                       ),
                     ),
-                    Spacer(),
-                    Container(
+                    const Spacer(),
+                    SizedBox(
                       width: fullWidth*0.7,
                       child: TextField(
                         controller: _isiCtrl,
@@ -210,7 +210,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                         ),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     FloatingActionButton(
                       onPressed: () async{
                         replyDiscussion(file, seed);

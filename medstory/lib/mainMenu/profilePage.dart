@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:medstory/firebase/getUserStast.dart';
 import 'package:medstory/main.dart';
 import 'package:medstory/secondaryMenu/editAccPage.dart';
 import 'package:medstory/widgets/custombg.dart';
@@ -90,8 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               alignment: Alignment.topRight,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
-                                child: Image.asset(
-                                  'assets/images/User.jpg', width: 180),
+                                child: Image.network(data['url'], width: 180),
                               ),
                               decoration: BoxDecoration(
                                 color: Colors.white,
