@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:medstory/firebase/countDoctorFaskes.dart';
 import 'package:medstory/secondaryMenu/mapsPage.dart';
 
 class GetFaskes extends StatelessWidget {
@@ -227,9 +228,17 @@ class GetFaskes extends StatelessWidget {
                             icon: const Icon(Icons.copy, size: 14),
                             label: const Text("Kordinat"),
                           ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width*0.3,
+                          Spacer(),
+                          Row(
+                            children: [
+                              ClipRRect(
+                              child: Image.asset(
+                                'assets/icon/doctor2.png', width: 20),
+                              ),
+                              CountDoctorFaskes(passDocumentId: document.id) 
+                            ],
                           ),
+                          SizedBox(width: 10),
                           Row(
                             children: [
                               ClipRRect(

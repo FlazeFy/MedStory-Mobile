@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medstory/firebase/countKomentar.dart';
 import 'package:medstory/firebase/getProfileImage.dart';
 import 'package:medstory/firebase/getUsername.dart';
 import 'package:medstory/firebase/getVoteButton.dart';
@@ -123,30 +124,7 @@ class GetDiskusi extends StatelessWidget {
                   getImage(),
                   Row(
                     children: [            
-                      TextButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (c, a1, a2) => DiscussionPage(documentId: document.id),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                final tween = Tween(begin: const Offset(0.0, 1.0), end: Offset.zero);
-                                final curvedAnimation = CurvedAnimation(
-                                  parent: animation,
-                                  curve: Curves.ease,
-                                );
-
-                                return SlideTransition(
-                                  position: tween.animate(curvedAnimation),
-                                  child: child,
-                                );
-                              }
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.arrow_drop_down, size: 14),
-                        label: const Text("Lihat komentar (3)"),
-                      ),
+                      CountKomentar(passDocumentId: document.id),
                       const Spacer(),
                       GetVoteButton(passDocumentId: document.id),
                       TextButton.icon(

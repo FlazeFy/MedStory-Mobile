@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:full_screen_menu/full_screen_menu.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medstory/firebase/countKomentar.dart';
 import 'package:medstory/firebase/getBalasan.dart';
 import 'package:medstory/firebase/getDiskusionBalasan.dart';
 import 'package:medstory/main.dart';
@@ -125,20 +126,7 @@ class _DiscussionPage extends State<DiscussionPage> with SingleTickerProviderSta
                     padding: const EdgeInsets.all(0),
                     children:[
                       GetDiskusiOnBalasan(passDocumentId: widget.documentId),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10.0),
-                          transform: Matrix4.translationValues(0.0, 5.0, 0.0),
-                          child: const Text("  Balasan (3)",
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF4183D7)
-                            )         
-                          ),
-                        )
-                      ),
+                      CountKomentar2(passDocumentId: widget.documentId),
                       Flexible(
                         child: GetBalasanById(passDocumentId: widget.documentId)
                       ),
