@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:medstory/firebase/getUsername.dart';
 import 'package:medstory/main.dart';
 import 'package:medstory/secondaryMenu/balasanPage.dart';
 import 'package:medstory/widgets/custombg.dart';
+import 'dart:math';
 
 class MyDiscussionPage extends StatefulWidget {
   const MyDiscussionPage({Key key, this.passUsername}) : super(key: key);
@@ -16,55 +20,97 @@ class MyDiscussionPage extends StatefulWidget {
 
 class _MyDiscussionPage extends State<MyDiscussionPage> {
   final _pertanyaanCtrl = TextEditingController();
+  CollectionReference disc = FirebaseFirestore.instance.collection('diskusi');
+  XFile file;
+  String seed = "null";
+
+  Future<void> addDiskusi(XFile imageFile, String seed) async {
+    String type;
+
+    if(imageFile != null){
+      seed = getRandomString(20);
+      
+      // Create a Reference to the file
+      Reference ref = FirebaseStorage.instance
+          .ref()
+          .child('diskusi')
+          .child(seed);
+
+      final metadata = SettableMetadata(
+        //contentType: 'image', 
+        customMetadata: {'picked-file-path': imageFile.path},
+      );
+
+      //return await ref.putData(await imageFile.readAsBytes(), metadata);
+      await ref.putData(await imageFile.readAsBytes(), metadata);
+      seed = await ref.getDownloadURL();
+      type = 'image';
+    } else {
+      type = 'text';
+    }
+
+    // Call the user's CollectionReference to add a new user
+    return disc
+      .add({
+        'kategori': passKategori,
+        'id_user': passIdUser, 
+        'pertanyaan': _pertanyaanCtrl.text,
+        'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
+        'url': seed,
+        'type': type,
+      })
+      .then((value) => 
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Informasi', style: TextStyle(fontWeight: FontWeight.bold)),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    ClipRRect(
+                      child: Image.asset(
+                        'assets/icon/Success.png', width: 35),
+                    ),
+                    const Text('Pertanyaan berhasil diunggah'),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Oke'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          }
+        )
+      )
+      .catchError((error) => print("Failed to add diskusi: $error"));
+  }
+
+  //Create random string.
+  var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random _rnd = Random();
+
+  String getRandomString(int length) => 
+    String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(
+        _rnd.nextInt(_chars.length)
+      )
+    )
+  );
+
+  //Get image picker
+  Future<XFile> getImage() async {
+    return await ImagePicker().pickImage(source: ImageSource.gallery);
+  }
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference disc = FirebaseFirestore.instance.collection('diskusi');
-
-    Future<void> addDiskusi() {
-      // Call the user's CollectionReference to add a new user
-      return disc
-        .add({
-          'kategori': passKategori,
-          'namaPengguna': widget.passUsername, 
-          'pertanyaan': _pertanyaanCtrl.text,
-          'datetime': DateTime.tryParse(DateTime.now().toIso8601String()),
-          'imageURL': 'null', //initial user for now
-          'view': 0,
-          'up': 0, //initial user for now
-        })
-        .then((value) => 
-          showDialog<void>(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Informasi', style: TextStyle(fontWeight: FontWeight.bold)),
-                content: SingleChildScrollView(
-                  child: ListBody(
-                    children: <Widget>[
-                      ClipRRect(
-                        child: Image.asset(
-                          'assets/icon/Success.png', width: 35),
-                      ),
-                      const Text('Pertanyaan berhasil diunggah'),
-                    ],
-                  ),
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Oke'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            }
-          )
-        )
-        .catchError((error) => print("Failed to add user: $error"));
-    }
     return Scaffold(
       //Body.
       body: CustomPaint(
@@ -243,12 +289,27 @@ class _MyDiscussionPage extends State<MyDiscussionPage> {
                                             color: Colors.blue,
                                           ) 
                                         ),
-                                        const SizedBox(width: 10),
+                                        Container(
+                                          margin: EdgeInsets.symmetric(horizontal: 5),
+                                          child: IconButton(
+                                            icon: const Icon(Icons.image_search),
+                                            color: Colors.white,
+                                            onPressed: () async {
+                                              file = await getImage();
+                                            }
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(6),
+                                            color: Colors.green,
+                                          ) 
+                                        ),
+                                        Spacer(),
                                         SizedBox(
                                           height: 45,
                                           child: ElevatedButton.icon(
-                                            onPressed: () {
-                                              addDiskusi();
+                                            onPressed: () async {
+                                              addDiskusi(file, seed);
+                                              setState(() {});
                                             },
                                             label: const Text("Unggah Pertanyaan", style: TextStyle(color: Colors.white),),
 
@@ -342,7 +403,7 @@ class _GetMyDiskusiState extends State<GetMyDiskusi> {
           padding: const EdgeInsets.only(top: 0),
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-            if(data['namaPengguna'] == passUsername){
+            if(data['id_user'] == passIdUser){
               return Container(
                 transform: Matrix4.translationValues(0.0, -5.0, 0.0),
                 padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -368,18 +429,7 @@ class _GetMyDiskusiState extends State<GetMyDiskusi> {
                               child: Column (
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(                     
-                                      data['namaPengguna'],
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      )
-                                    ),
-                                  ),
+                                  GetUsername(passDocumentId: data['id_user']),
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(                     

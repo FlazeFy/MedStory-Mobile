@@ -281,13 +281,6 @@ class _SmartDocPage extends State<SmartDocPage> {
                     child: Row(
                       children: [
                         const Flexible(
-                          // child: TextField(
-                          //   maxLines: 3, //or null 
-                          //   decoration: InputDecoration(hintText: "Sertakan tanda ',' untuk menambahkan gejala lainnya", labelText: "Gejala"),
-                          //   style: TextStyle(
-                          //     fontSize: 16.0,
-                          //   )
-                          // ),
                           child: AutocompleteBasicExample(),
                         ),
                         SizedBox(
@@ -543,12 +536,13 @@ class _SmartDocPage extends State<SmartDocPage> {
   }
 }
 
-//Autocomplete still no data passing
 class AutocompleteBasicExample extends StatelessWidget {
   const AutocompleteBasicExample({Key key}) : super(key: key);
 
-  static final List<String> _kOptions = <String>[
-    GetDiskusi().toString()
+  static const List<String> _kOptions = <String>[
+    'aardvark',
+    'bobcat',
+    'chameleon',
   ];
 
   @override
@@ -564,52 +558,6 @@ class AutocompleteBasicExample extends StatelessWidget {
       },
       onSelected: (String selection) {
         debugPrint('You just selected $selection');
-      },
-    );
-  }
-}
-
-class GetGejala extends StatefulWidget {
-  const GetGejala({Key key}) : super(key: key);
-
-  @override
-    _GetGejalaState createState() => _GetGejalaState();
-}
-
-class _GetGejalaState extends State<GetGejala> {
- 
-  final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('gejala').snapshots();
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: _usersStream,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Something went wrong');
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center( 
-            child: CircularProgressIndicator()
-          );
-        }
-
-        // return ListView(
-        //   children: snapshot.data.docs.map((DocumentSnapshot document) {
-        //   Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-        //     return ListTile(
-        //       title: Text(data['full_name']),
-        //       subtitle: Text(data['company']),
-        //     );
-        //   }).toList(),
-        // );
-        snapshot.data.docs.map((DocumentSnapshot document) {
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-          return data['nama_gejala'].toString();
-        }).toList();
-        
-        
       },
     );
   }
