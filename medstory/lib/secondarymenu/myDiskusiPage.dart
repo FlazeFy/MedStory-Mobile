@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:medstory/firebase/getMyDiskusi.dart';
+import 'package:medstory/firebase/forum/getMyDiskusi.dart';
 import 'package:medstory/main.dart';
 import 'package:medstory/widgets/custombg.dart';
 import 'dart:math';

@@ -2,7 +2,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:medstory/firebase/getDiskusi.dart';
+import 'package:medstory/firebase/forum/getDiskusi.dart';
 import 'package:medstory/main.dart';
 import 'package:medstory/secondaryMenu/newsItem.dart';
 import 'package:medstory/secondaryMenu/myDiskusiPage.dart';

@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
+import 'package:medstory/firebase/kebutuhankalori/getJadwal.dart';
 import '../main.dart';
 
-int kebutuhan = 0;
 int checkCal = 0;
 
 class NavDrawer extends StatelessWidget{
@@ -44,6 +44,7 @@ class NavDrawer extends StatelessWidget{
                 transform: Matrix4.translationValues(0.0, -25.0, 0.0),
                 height: MediaQuery.of(context).size.height*0.55,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     AutocompleteBasicExample(),
                     SizedBox(   
@@ -132,129 +133,129 @@ class NavDrawer extends StatelessWidget{
   
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: <Widget>[
-            Flexible(
-              child: DrawerHeader(
-                child: Column(
-                  children: [
-                    const Text(
-                      'Kebutuhan Kalori',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                    const SizedBox(height:5),
-                    Row(
-                      children: [
-                        const GetBeratTinggi(),
-                        Column(
-                          children: [
-                            const Text(
-                              'Hari Ini',
-                              style: TextStyle(color: Colors.white, fontSize: 14),
-                            ),
-                            //Kalori grafik
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height*0.08,
-                              width: MediaQuery.of(context).size.width*0.37,
-                              child: const GetKebutuhanKalori()
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ), 
-                decoration: const BoxDecoration(
-                  color: Color(0xFF4183D7),
-                ),
-              ),
-              
-            ),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    getButtonCalorie(context),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: IconButton(
-                        icon: const Icon(Icons.calendar_month),
-                        color: Colors.white,
-                        onPressed: () {},
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        color: Colors.blue,
-                      ) 
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child:IconButton(
-                        icon: const Icon(Icons.refresh),
-                        color: Colors.white,
-                        onPressed: () {
-                        //
-                        },
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        color: Colors.green,
-                      ) 
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    const SizedBox(width: 5),
-                    const Text(
-                      'Total: ',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width*0.25),
-                    const Text(
-                      'Sisa: ',
-                      style: TextStyle(fontSize: 14),
-                    )
-                  ],
-                ),
-                Row(children: <Widget>[
-                  Expanded(
-                    child: Container(
-                        margin: const EdgeInsets.only(left: 10.0, right: 20.0),
-                        child: const Divider(
-                          color: Colors.grey,
-                          thickness: 1,
-                          height: 25,
-                        )),
-                  ),
+    double fullWidth = MediaQuery.of(context).size.width;
+
+    return Drawer(   
+      width: fullWidth*0.8,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children:[
+          Flexible(
+            child: DrawerHeader(
+              child: Column(
+                children: [
                   const Text(
-                    "Hari ini", 
-                    style: TextStyle(color: Colors.grey, fontSize: 14)
+                    'Kebutuhan Kalori',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
-                  Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 20.0, right: 10.0),
+                  const SizedBox(height:5),
+                  Row(
+                    children: [
+                      const GetBeratTinggi(),
+                      Spacer(),
+                      Column(
+                        children: [
+                          const Text(
+                            'Hari Ini',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                          //Kalori grafik
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height*0.08,
+                            width: MediaQuery.of(context).size.width*0.37,
+                            child: const GetKebutuhanKalori()
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ), 
+              decoration: const BoxDecoration(
+                color: Color(0xFF4183D7),
+              ),
+            ),
+            
+          ),
+          Column(
+            children: [
+              Row(
+                children: [
+                  getButtonCalorie(context),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: IconButton(
+                      icon: const Icon(Icons.calendar_month),
+                      color: Colors.white,
+                      onPressed: () {},
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      color: Colors.blue,
+                    ) 
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child:IconButton(
+                      icon: const Icon(Icons.refresh),
+                      color: Colors.white,
+                      onPressed: () {
+                      //
+                      },
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      color: Colors.green,
+                    ) 
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Row(
+                children: [
+                  const SizedBox(width: 5),
+                  GetJadwal(),
+                  SizedBox(width: MediaQuery.of(context).size.width*0.25),
+                  const Text(
+                    'Sisa: ',
+                    style: TextStyle(fontSize: 14),
+                  )
+                ],
+              ),
+              Row(children: <Widget>[
+                Expanded(
+                  child: Container(
+                      margin: const EdgeInsets.only(left: 10.0, right: 20.0),
                       child: const Divider(
                         color: Colors.grey,
                         thickness: 1,
                         height: 25,
-                      )
-                    ),
+                      )),
+                ),
+                const Text(
+                  "Hari ini", 
+                  style: TextStyle(color: Colors.grey, fontSize: 14)
+                ),
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 20.0, right: 10.0),
+                    child: const Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                      height: 25,
+                    )
                   ),
-                ]),
-              ],
-            ),
-            Expanded(
-              child:GetAsupanDayById(passDocumentId: passIdUserNav)
-            )    
-          ],
-        ),
+                ),
+              ]),
+            ],
+          ),
+          Flexible(
+            child:GetAsupanDayById(passDocumentId: passIdUserNav)
+          )    
+        ],
       )
-    );
+    );  
   }
 }
 
@@ -391,7 +392,7 @@ class _GetAsupanDayById extends State<GetAsupanDayById> {
         }
 
         return ListView(
-          padding: const EdgeInsets.only(top: 0),
+          padding: EdgeInsets.zero,
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             //Get jadwal kalori by date.
@@ -447,6 +448,8 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
         }
 
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             if(document.id == widget.passIdAsupan){
@@ -463,13 +466,15 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
                       ),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width*0.3,
+                      width: MediaQuery.of(context).size.width*0.35,
                       margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             data['nama'], 
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(color: Colors.blue, fontSize: 14)
                           ),
                           const SizedBox(height: 2),
@@ -484,7 +489,9 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
                         ],
                       )
                     ),
+                    Spacer(),
                     Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5),
                       child:IconButton(
                         icon: const Icon(Icons.delete),
                         color: Colors.white,
@@ -536,7 +543,7 @@ class _GetAsupanDetailById extends State<GetAsupanDetailById> {
                 ),              
               );
             } else {
-              return const SizedBox(height: 0);
+              return const SizedBox();
             }
           }).toList(),
         );
@@ -558,6 +565,7 @@ class _GetAllAsupan extends State<GetAllAsupan> {
 
   @override
   Widget build(BuildContext context) {
+    double fullWidth = MediaQuery.of(context).size.width;
     CollectionReference calday = FirebaseFirestore.instance.collection('jadwalkalori');
 
     return StreamBuilder<QuerySnapshot>(
@@ -574,6 +582,7 @@ class _GetAllAsupan extends State<GetAllAsupan> {
         }
 
         return ListView(
+          padding: EdgeInsets.zero,
           children: snapshot.data.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             
@@ -582,9 +591,9 @@ class _GetAllAsupan extends State<GetAllAsupan> {
                 // print(document.id);
               },
               child: Container(
-                height: 70,
-                width: MediaQuery.of(context).size.width*0.6,
-                margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                height: 80,
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Row(
                   children: [
                     Container(
@@ -595,14 +604,16 @@ class _GetAllAsupan extends State<GetAllAsupan> {
                       ),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width*0.26,
                       margin: const EdgeInsets.symmetric(vertical: 10),
+                      width: fullWidth*0.35,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             data['nama'], 
-                            style: const TextStyle(color: Colors.blue, fontSize: 14)
+                            style: const TextStyle(color: Colors.blue, fontSize: 14),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 2),
                           Text(
@@ -616,6 +627,7 @@ class _GetAllAsupan extends State<GetAllAsupan> {
                         ],
                       )
                     ),
+                    Spacer(),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5.0),
                       child:IconButton(

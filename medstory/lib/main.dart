@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medstory/firebase/getProfileImage.dart';
+import 'package:medstory/firebase/profile/getProfileImage.dart';
 import 'package:medstory/mainMenu/daruratPage.dart';
 import 'package:medstory/mainMenu/datakuPage.dart';
 import 'package:medstory/mainMenu/forumPage.dart';

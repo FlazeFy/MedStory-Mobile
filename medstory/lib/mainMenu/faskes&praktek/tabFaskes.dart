@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medstory/firebase/countDoctorFaskes.dart';
+import 'package:medstory/firebase/darurat/countDoctorFaskes.dart';
 import 'package:medstory/secondaryMenu/mapsPage.dart';
 
 class GetFaskes extends StatelessWidget {
